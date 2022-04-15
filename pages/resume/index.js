@@ -1,8 +1,8 @@
 import { Grid, GridItem } from '@chakra-ui/react';
 import { differenceInMonths } from 'date-fns';
-import data from './data';
 import ResumeCard from '../../components/resumecard';
 import ResumeStats from '../../components/resumestats';
+import { resume_data as data } from '../../localdata';
 
 export default function Resume({ resume, stats }) {
   return (

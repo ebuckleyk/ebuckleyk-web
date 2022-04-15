@@ -1,6 +1,6 @@
 import { Grid, GridItem } from '@chakra-ui/react';
 import ConsultingCard from '../../components/consulting_card';
-import data from './data';
+import { consulting_data as data } from '../../localdata';
 export default function Consulting({ companies }) {
   return (
     <Grid
