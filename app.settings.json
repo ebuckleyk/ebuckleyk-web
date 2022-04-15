@@ -1,0 +1,54 @@
+{
+  "website_name": "Emmanuel K Buckley",
+  "website_desc": "Most things Emmanuel Buckley",
+  "social_media": {
+    "facebook": {
+      "url": "https://www.facebook.com/ebuckley23"
+    },
+    "instagram": {
+      "url": "https://www.instagram.com/ebuckleyk/"
+    },
+    "twitter": {
+      "userid": 2405155761,
+      "username": "ebuckleyk",
+      "url": "https://twitter.com/ebuckleyk"
+    },
+    "email": {
+      "url": "mailto:me@ebuckleyk.com"
+    }
+  },
+  "navigation": [
+    {
+      "label": "Blogs",
+      "href": "/blogs",
+      "subLabel": "My thoughts from various mediums"
+    },
+    {
+      "label": "Projects",
+      "href": "/projects",
+      "subLabel": "Past and current projects from various hobbies",
+      "isQuickLink": true
+    },
+    {
+      "label": "Consulting",
+      "href": "/consulting",
+      "subLabel": "Information regarding my consulting services",
+      "isQuickLink": true
+    },
+    {
+      "label": "Resume",
+      "href": "/resume",
+      "subLabel": "Checkout my virtual resume",
+      "isQuickLink": true
+    },
+    {
+      "label": "Contact",
+      "href": "/contact",
+      "subLabel": "Let's talk!"
+    }
+  ],
+  "api": {
+    "twitterApi": "https://api.twitter.com",
+    "contentfulApi": "https://graphql.contentful.com"
+  }
+}
