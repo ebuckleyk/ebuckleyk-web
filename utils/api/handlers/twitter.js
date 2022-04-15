@@ -1,5 +1,6 @@
 import needle from 'needle';
 import settings from '../../../app.settings.json';
+import logger from '../../logger';
 import { getDateDisplay } from '../helper';
 
 export async function getMyTwitterData() {
@@ -37,7 +38,7 @@ export async function getMyTwitterData() {
         };
       });
   } catch (error) {
-    console.log({ error });
+    logger.error({ error, handler: 'twitter - getMyTwitterData' });
     throw new Error(error);
   }
 }

@@ -1,6 +1,7 @@
 import sgMail from '@sendgrid/mail';
 import settings from '../../../app.settings.json';
 import { CONTACT_TYPE } from '../../constants';
+import logger from '../../logger';
 
 sgMail.setApiKey(process.env.SENDGRID_APIKEY);
 
@@ -23,6 +24,11 @@ export async function sendContactEmail(inqType, name, emailAddress, message) {
     await sgMail.send(msg);
   } catch (error) {
     // log error
+    logger.error({
+      error,
+      handler: 'sendgrid - sendContactEmail',
+      params: { inqType, name, emailAddress, message }
+    });
     throw new Error('Problem sending email');
   }
 }

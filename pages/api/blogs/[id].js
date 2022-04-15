@@ -1,4 +1,5 @@
 import { getBlogById } from '../../../utils/api/handlers/contentful';
+import logger from '../../../utils/logger';
 
 export default async function handler(req, res) {
   const { id } = req.query;
@@ -6,7 +7,12 @@ export default async function handler(req, res) {
     const data = await getBlogById(id);
     res.status(200).json(data);
   } catch (e) {
-    console.error(e);
+    logger.error({
+      error: e,
+      handler: '/api/blogs/[id]',
+      params: { id },
+      method: req.method
+    });
     res.status(400).json({ error: 'An error occurred', message: e });
   }
 }

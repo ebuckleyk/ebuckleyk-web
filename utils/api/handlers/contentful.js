@@ -1,9 +1,9 @@
 import needle from 'needle';
 import { getDateDisplay } from '../helper';
 import settings from '../../../app.settings.json';
+import logger from '../../logger';
 
 // see for graphql exploration: https://graphql.contentful.com/content/v1/spaces/{spaceId}/explore?access_token={access_token}
-const contentfulUrl = 'https://graphql.contentful.com/content/v1';
 const POST_BY_ID_GRAPHQL_QUERY = (id) => `
 {
   post(id: "${id}") {
@@ -127,10 +127,21 @@ async function baseQuery(query) {
         }
       }
     );
-    if (!response.body)
+    if (!response.body) {
+      logger.error({
+        error: 'Response body was empty',
+        handler: 'contentful - baseQuery',
+        params: { query }
+      });
       throw new Error('Error occurred retrieving data from contentful');
+    }
     return response.body.data;
   } catch (error) {
+    logger.error({
+      error,
+      handler: 'contentful - baseQuery',
+      params: { query }
+    });
     throw new Error(error);
   }
 }
