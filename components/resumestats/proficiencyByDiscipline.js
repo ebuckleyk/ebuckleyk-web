@@ -53,7 +53,7 @@ export default function ProficiencyByDiscipline() {
       s = { ...s, fontSize: 10 };
     }
     return s;
-  }, [responsive.isMobile, responsive.isTablet, responsive.isDesktop]);
+  }, [responsive.isDesktop]);
   return (
     <ResponsiveContainer height={300} width="100%">
       <RadarChart data={data} outerRadius={'70%'}>

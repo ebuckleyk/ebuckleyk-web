@@ -58,7 +58,13 @@ const Carousel = ({ children, autoPlay = false }) => {
     }
 
     setConfig({ transformPerc: t, width: w });
-  }, [responsive.isDesktop, responsive.isMobile, responsive.isTablet]);
+  }, [
+    config.transformPerc,
+    config.width,
+    responsive.isDesktop,
+    responsive.isMobile,
+    responsive.isTablet
+  ]);
 
   const updateIndex = useCallback(
     (newIdx) => {
@@ -69,16 +75,16 @@ const Carousel = ({ children, autoPlay = false }) => {
       }
       setActiveIndex(newIdx);
     },
-    [children]
+    [childrenCount]
   );
 
   const next = useCallback(() => {
     updateIndex(activeIndex + 1);
-  }, [activeIndex]);
+  }, [activeIndex, updateIndex]);
 
   const prev = useCallback(() => {
     updateIndex(activeIndex - 1);
-  }, [activeIndex]);
+  }, [activeIndex, updateIndex]);
 
   const handlers = useSwipeable({
     onSwipedLeft: () => updateIndex(activeIndex + 1),
@@ -103,12 +109,7 @@ const Carousel = ({ children, autoPlay = false }) => {
 
       return borderStyle;
     },
-    [
-      childrenCount,
-      responsive.isDesktop,
-      responsive.isMobile,
-      responsive.isTablet
-    ]
+    [childrenCount, responsive.isDesktop, responsive.isTablet]
   );
 
   return (

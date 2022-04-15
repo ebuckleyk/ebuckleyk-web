@@ -194,12 +194,7 @@ export default function PercentOfTimeSpentAtCompany({ companyStats }) {
     }
 
     return props;
-  }, [
-    responsive.isMobile,
-    responsive.isTablet,
-    responsive.isDesktop,
-    activeIndex
-  ]);
+  }, [responsive.isDesktop, activeIndex]);
 
   return (
     <ResponsiveContainer height={300}>

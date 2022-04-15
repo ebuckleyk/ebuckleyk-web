@@ -66,7 +66,7 @@ function Thumbnail({ asset }) {
   const isexternal_link = asset.type === 'external';
   useEffect(() => {
     return () => onClose();
-  }, []);
+  }, [onClose]);
 
   const getStyles = () => {
     return isexternal_link

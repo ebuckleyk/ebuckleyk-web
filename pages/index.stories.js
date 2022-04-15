@@ -1,8 +1,9 @@
 import Home from './';
 
-export default {
+const story = {
   component: Home,
   title: 'Pages/Home'
 };
 
 export const HomePage = () => <Home />;
+export default story;

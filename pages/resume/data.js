@@ -1,4 +1,4 @@
-export default [
+const data = [
   {
     company: 'Office Depot',
     companyLogo:
@@ -112,3 +112,5 @@ export default [
     industries: ['Security']
   }
 ];
+
+export default data;

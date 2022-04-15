@@ -56,21 +56,22 @@ const SEO = ({
 }) => {
   const twitterHandler = '@ebuckleyk';
   return [
-    <meta name="twitter:card" content="summary_large_image" />,
-    <meta name="twitter:site" content={twitterHandler} />,
-    <meta name="twitter:title" content={title} />,
-    <meta name="twitter:description" content={description} />,
-    <meta name="twitter:creator" contrent={twitterHandler} />,
-    <meta name="twitter:image:src" content={image} />,
-    <meta name="og:title" content="summary_large_image" />,
-    <meta name="og:type" content={openGraphType} />,
-    <meta name="og:url" content={url} />,
-    <meta name="og:image" content={image} />,
-    <meta name="og:description" content={description} />,
-    <meta name="og:site_name" content={'Emmanuel K. Buckley'} />,
-    <meta name="og:published_time" content={createdAt} />,
-    <meta name="og:modified_time" content={updatedAt} />,
+    <meta key={0} name="twitter:card" content="summary_large_image" />,
+    <meta key={1} name="twitter:site" content={twitterHandler} />,
+    <meta key={2} name="twitter:title" content={title} />,
+    <meta key={3} name="twitter:description" content={description} />,
+    <meta key={4} name="twitter:creator" contrent={twitterHandler} />,
+    <meta key={5} name="twitter:image:src" content={image} />,
+    <meta key={6} name="og:title" content="summary_large_image" />,
+    <meta key={7} name="og:type" content={openGraphType} />,
+    <meta key={8} name="og:url" content={url} />,
+    <meta key={9} name="og:image" content={image} />,
+    <meta key={10} name="og:description" content={description} />,
+    <meta key={11} name="og:site_name" content={'Emmanuel K. Buckley'} />,
+    <meta key={12} name="og:published_time" content={createdAt} />,
+    <meta key={13} name="og:modified_time" content={updatedAt} />,
     <script
+      key={14}
       type="application/ld+json"
       dangerouslySetInnerHTML={{
         __html: JSON.stringify({

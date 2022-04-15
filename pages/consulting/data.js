@@ -1,4 +1,4 @@
-export default [
+const data = [
   {
     companyName: 'Arbolus Technologies',
     companyLogo:
@@ -12,3 +12,5 @@ export default [
     website: 'https://www.cdkglobal.com/'
   }
 ];
+
+export default data;

@@ -73,7 +73,7 @@ export default function BlogCard({
       e.preventDefault();
       router.push(navigateTo);
     },
-    [navigateTo]
+    [navigateTo, router]
   );
 
   return (
