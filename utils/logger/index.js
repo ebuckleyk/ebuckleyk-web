@@ -9,7 +9,7 @@ const { stream, send } = logflarePinoVercel({
 });
 
 // create pino logger
-export default pino(
+const logger = pino(
   {
     browser: {
       transmit: {
@@ -20,8 +20,10 @@ export default pino(
     level: 'debug',
     base: {
       env: process.env.NODE_ENV,
-      revision: process.env.VERCEL_GITHUB_COMMIT_SHA
+      revision: process.env.VERCEL_GIT_COMMIT_SHA
     }
   },
   stream
 );
+
+export default logger;

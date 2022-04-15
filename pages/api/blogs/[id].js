@@ -1,7 +1,8 @@
+import { withSentry } from '@sentry/nextjs';
 import { getBlogById } from '../../../utils/api/handlers/contentful';
 import logger from '../../../utils/logger';
 
-export default async function handler(req, res) {
+async function handler(req, res) {
   const { id } = req.query;
   try {
     const data = await getBlogById(id);
@@ -16,3 +17,5 @@ export default async function handler(req, res) {
     res.status(400).json({ error: 'An error occurred', message: e });
   }
 }
+
+export default withSentry(handler);

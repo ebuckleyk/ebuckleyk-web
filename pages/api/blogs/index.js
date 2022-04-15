@@ -1,3 +1,4 @@
+import { withSentry } from '@sentry/nextjs';
 import { getAllBlogs } from '../../../utils/api/handlers/contentful';
 import { getMyTwitterData } from '../../../utils/api/handlers/twitter';
 import logger from '../../../utils/logger';
@@ -6,7 +7,7 @@ function mergeData(data = []) {
   return data.sort((a, b) => b.date - a.date);
 }
 
-export default async function handler(req, res) {
+async function handler(req, res) {
   try {
     const twitterData = await getMyTwitterData();
     const contentfulData = await getAllBlogs();
@@ -17,3 +18,5 @@ export default async function handler(req, res) {
     res.status(400).json({ error: 'An error occurred.', message: error });
   }
 }
+
+export default withSentry(handler);

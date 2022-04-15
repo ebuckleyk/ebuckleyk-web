@@ -1,7 +1,8 @@
+import { withSentry } from '@sentry/nextjs';
 import { getAllProjects } from '../../../utils/api/handlers/contentful';
 import logger from '../../../utils/logger';
 
-export default async function handler(req, res) {
+async function handler(req, res) {
   try {
     const projects = await getAllProjects();
     res.status(200).json(projects);
@@ -10,3 +11,5 @@ export default async function handler(req, res) {
     res.status(400).json({ error: 'An error occurred.', message: error });
   }
 }
+
+export default withSentry(handler);

@@ -27,9 +27,7 @@ export async function getServerSideProps(context) {
   const blog = await api.getBlogById(context.params.id);
   return {
     props: {
-      blog: blog.post,
-      url: `https://${context?.req?.headers?.host}/${context.params.id}`,
-      ctx: context?.req?.headers
+      blog: blog?.post
     }
   };
 }
