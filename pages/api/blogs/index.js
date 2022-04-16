@@ -9,9 +9,14 @@ function mergeData(data = []) {
 
 async function handler(req, res) {
   try {
+    logger.info(`${req.method} - /api/blogs`);
     const twitterData = await getMyTwitterData();
     const contentfulData = await getAllBlogs();
-    logger.info('Retrieved blog data successfully');
+    logger.info(
+      'Retrieved blog data successfully',
+      twitterData,
+      contentfulData
+    );
     res.status(200).json(mergeData([...twitterData, ...contentfulData]));
   } catch (error) {
     logger.error({ error, handler: '/api/blogs', method: req.method });

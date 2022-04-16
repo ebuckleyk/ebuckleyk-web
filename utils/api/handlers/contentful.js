@@ -82,10 +82,15 @@ export async function getBlogById(id) {
 }
 
 export async function getAllBlogs() {
+  logger.info('getAllBlogs() - fetching contentful blogs');
+  console.log('getAllBlogs() - fetching contentful blogs');
   const response = await baseQuery(ALL_POSTS_GRAPHQL_QUERY);
+
   const { postCollection = {} } = response;
   const { items = [] } = postCollection;
   return items.map((d) => {
+    logger.info('getAllBlogs() - mapping response data', d);
+    console.log('getAllBlogs() - mapping response data', d);
     return {
       id: d.sys.id,
       title: d.title,
@@ -100,10 +105,14 @@ export async function getAllBlogs() {
 }
 
 export async function getAllProjects() {
+  logger.info('getAllProjects() - fetching contentful projects');
+  console.log('getAllProjects() - fetching contentful projects');
   const response = await baseQuery(ALL_PROJECTS_GRAPHQL_QUERY);
   const { projectCollection = {} } = response;
   const { items = [] } = projectCollection;
   return items.map((i) => {
+    logger.info('getAllProjects() - mapping response data', i);
+    console.log('getAllProjects() - mapping response data', i);
     return {
       id: i.sys.id,
       title: i.title,
@@ -116,6 +125,8 @@ export async function getAllProjects() {
 
 async function baseQuery(query) {
   try {
+    logger.info('baseQuery()', query);
+    console.log('baseQuery()', query);
     const response = await needle(
       'post',
       `${settings.api.contentfulApi}/content/v1/spaces/${process.env.CONTENTFUL_SPACE_ID}`,
@@ -127,8 +138,15 @@ async function baseQuery(query) {
         }
       }
     );
+    logger.info('baseQuery() - response received', response);
+    console.log('baseQuery() - response received', response);
     if (!response.body) {
       logger.error({
+        error: 'Response body was empty',
+        handler: 'contentful - baseQuery',
+        params: { query }
+      });
+      console.log({
         error: 'Response body was empty',
         handler: 'contentful - baseQuery',
         params: { query }
@@ -138,6 +156,11 @@ async function baseQuery(query) {
     return response.body.data;
   } catch (error) {
     logger.error({
+      error,
+      handler: 'contentful - baseQuery',
+      params: { query }
+    });
+    console.log({
       error,
       handler: 'contentful - baseQuery',
       params: { query }
