@@ -23,8 +23,14 @@ export async function getMyTwitterData() {
         }
       }
     );
-    logger.info('getMyTwitterData() - response received', response);
-    console.log('getMyTwitterData() - response received', response);
+    logger.info('getMyTwitterData() - response received', {
+      body: response.body,
+      statusCode: response.statusCode
+    });
+    console.log('getMyTwitterData() - response received', {
+      body: response.body,
+      statusCode: response.statusCode
+    });
     if (!response.body) {
       logger.error('getMyTwitterData() - response body is empty');
       console.log('getMyTwitterData() - response body is empty');

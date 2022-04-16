@@ -138,8 +138,14 @@ async function baseQuery(query) {
         }
       }
     );
-    logger.info('baseQuery() - response received', response);
-    console.log('baseQuery() - response received', response);
+    logger.info('baseQuery() - response received', {
+      body: response.body,
+      statusCode: response.statusCode
+    });
+    console.log('baseQuery() - response received', {
+      body: response.body,
+      statusCode: response.statusCode
+    });
     if (!response.body) {
       logger.error({
         error: 'Response body was empty',
