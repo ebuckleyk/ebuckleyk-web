@@ -89,8 +89,6 @@ export async function getAllBlogs() {
   const { postCollection = {} } = response;
   const { items = [] } = postCollection;
   return items.map((d) => {
-    logger.info('getAllBlogs() - mapping response data', d);
-    console.log('getAllBlogs() - mapping response data', d);
     return {
       id: d.sys.id,
       title: d.title,
@@ -111,8 +109,6 @@ export async function getAllProjects() {
   const { projectCollection = {} } = response;
   const { items = [] } = projectCollection;
   return items.map((i) => {
-    logger.info('getAllProjects() - mapping response data', i);
-    console.log('getAllProjects() - mapping response data', i);
     return {
       id: i.sys.id,
       title: i.title,
@@ -125,8 +121,18 @@ export async function getAllProjects() {
 
 async function baseQuery(query) {
   try {
-    logger.info('baseQuery()', query);
-    console.log('baseQuery()', query);
+    logger.info('baseQuery()', {
+      query,
+      at: process.env.CONTENTFUL_ACCESS_TOKEN,
+      spaceid: process.env.CONTENTFUL_SPACE_ID,
+      api: settings.api.contentfulApi
+    });
+    console.log('baseQuery()', {
+      query,
+      at: process.env.CONTENTFUL_ACCESS_TOKEN,
+      spaceid: process.env.CONTENTFUL_SPACE_ID,
+      api: settings.api.contentfulApi
+    });
     const response = await needle(
       'post',
       `${settings.api.contentfulApi}/content/v1/spaces/${process.env.CONTENTFUL_SPACE_ID}`,
@@ -158,6 +164,17 @@ async function baseQuery(query) {
         params: { query }
       });
       throw new Error('Error occurred retrieving data from contentful');
+    }
+
+    if (response.statusCode === 401) {
+      logger.error({
+        errors: response.body.errors
+      });
+      console.log({
+        errors: response.body.errors
+      });
+
+      throw new Error(response.body.errors);
     }
     return response.body.data;
   } catch (error) {

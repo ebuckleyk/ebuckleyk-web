@@ -40,8 +40,6 @@ export async function getMyTwitterData() {
     return response.body.data
       .filter((x) => x['in_reply_to_user_id'] === undefined)
       .map((d) => {
-        logger.info('getMyTwitterData() - mapping response data', d);
-        console.log('getMyTwitterData() - mapping response data', d);
         return {
           id: d.id,
           content: d.text,
