@@ -9,7 +9,7 @@ const { stream, send } = logflarePinoVercel({
 });
 
 // create pino logger
-const logger = pino(
+const pino_logger = pino(
   {
     browser: {
       transmit: {
@@ -25,5 +25,28 @@ const logger = pino(
   },
   stream
 );
+
+const info = (message, ...args) => {
+  pino_logger.info({ message, ...args });
+  console.info({ message, ...args });
+};
+
+const error = (message, ...args) => {
+  pino_logger.error({ message, ...args });
+  console.error({ message, ...args });
+};
+
+const extractReqInfo = (req) => {
+  if (!req) return '';
+  return `${req.method} - ${req.url}`;
+};
+
+const logger = {
+  info,
+  error,
+  helper: {
+    extractReqInfo
+  }
+};
 
 export default logger;

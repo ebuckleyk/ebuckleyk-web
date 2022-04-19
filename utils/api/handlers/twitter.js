@@ -5,8 +5,6 @@ import { getDateDisplay } from '../helper';
 
 export async function getMyTwitterData() {
   try {
-    logger.info('getMyTwitterData() - fetching tweets');
-    console.log('getMyTwitterData() - fetching tweets');
     const response = await needle(
       'get',
       `${settings.api.twitterApi}/2/users/${settings.social_media.twitter.userid}/tweets`,
@@ -23,17 +21,9 @@ export async function getMyTwitterData() {
         }
       }
     );
-    logger.info('getMyTwitterData() - response received', {
-      body: response.body,
-      statusCode: response.statusCode
-    });
-    console.log('getMyTwitterData() - response received', {
-      body: response.body,
-      statusCode: response.statusCode
-    });
+
     if (!response.body) {
       logger.error('getMyTwitterData() - response body is empty');
-      console.log('getMyTwitterData() - response body is empty');
       throw new Error('Error occurred retrieving data');
     }
 
@@ -51,8 +41,7 @@ export async function getMyTwitterData() {
         };
       });
   } catch (error) {
-    logger.error({ error, handler: 'twitter - getMyTwitterData' });
-    console.log({ error, handler: 'twitter - getMyTwitterData' });
+    logger.error(error);
     throw new Error(error);
   }
 }

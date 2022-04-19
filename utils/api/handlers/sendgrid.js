@@ -24,11 +24,7 @@ export async function sendContactEmail(inqType, name, emailAddress, message) {
     await sgMail.send(msg);
   } catch (error) {
     // log error
-    logger.error({
-      error,
-      handler: 'sendgrid - sendContactEmail',
-      params: { inqType, name, emailAddress, message }
-    });
+    logger.error(error);
     throw new Error('Problem sending email');
   }
 }
