@@ -24,6 +24,7 @@ import {
 } from '@chakra-ui/react';
 import { FaGithub } from 'react-icons/fa';
 import settings from '../../app.settings.json';
+import React from 'react';
 
 /**
  * navigation structure
@@ -40,13 +41,16 @@ import settings from '../../app.settings.json';
  * }]
  */
 
-function LinkWrapper({ href, children, ...rest }) {
+const LinkWrapper = React.forwardRef((props, ref) => {
+  const { href, children, ...rest } = props;
   return (
     <NextLink href={href} passHref>
-      <Link {...rest}>{children}</Link>
+      <Link ref={ref} {...rest}>
+        {children}
+      </Link>
     </NextLink>
   );
-}
+});
 
 function MobileNavItem({ label, children, href }) {
   const { isOpen, onToggle } = useDisclosure();
