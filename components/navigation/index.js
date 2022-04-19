@@ -41,7 +41,7 @@ import React from 'react';
  * }]
  */
 
-const LinkWrapper = React.forwardRef((props, ref) => {
+const LinkWrapper = React.forwardRef(function T(props, ref) {
   const { href, children, ...rest } = props;
   return (
     <NextLink href={href} passHref>
