@@ -31,3 +31,5 @@ export async function getServerSideProps(context) {
     }
   };
 }
+
+BlogPost.displayName = 'Blog Post';

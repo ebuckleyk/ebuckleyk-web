@@ -31,3 +31,5 @@ export default function Projects() {
     </Grid>
   );
 }
+
+Projects.displayName = 'Projects';

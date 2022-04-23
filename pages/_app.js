@@ -5,7 +5,7 @@ import Layout from '../components/layout';
 
 function MyApp({ Component, pageProps, router }) {
   const headerInfo = {
-    pageTitle: Component.name,
+    pageTitle: Component.displayName,
     url: pageProps?.url
   };
   // get page specific layout. If not, fallback to default

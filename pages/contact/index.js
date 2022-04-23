@@ -41,3 +41,5 @@ export default function Contact() {
     </Flex>
   );
 }
+
+Contact.displayName = 'Contact';

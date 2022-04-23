@@ -110,58 +110,6 @@ function extractStatistics(resume = []) {
   });
 
   return { byCompany };
-  const allRoles = resume.reduce((prevVal, curVal) => {
-    const roles = curVal.roles.map((r) => {
-      return {
-        ...r
-      };
-    });
-    return [...prevVal, ...roles];
-  }, []);
-
-  const allIndustries = resume.reduce((prevVal, curVal) => {
-    const industries = curVal.industries.map((i) => {
-      return i;
-    });
-  }, []);
-
-  const groupRolesByLocation = new Map();
-  allRoles.forEach((r) => {
-    groupRolesByLocation.set(r.location, r.location);
-  });
-  return {
-    totalRoles: allRoles.length,
-    allRoles
-    // groupRolesByLocation,
-    // test: locationStatistics(allRoles),
-    // test2: industryStatistics(allIndustries)
-  };
 }
 
-function locationStatistics(allRoles) {
-  const groupedRoles = new Map();
-  allRoles.forEach((r) => {
-    const v = groupedRoles.get(r.location)
-      ? [...groupedRoles.get(r.location), r.location]
-      : [r.location];
-    groupedRoles.set(r.location, v);
-  });
-
-  const ret = {};
-  for (let [k, v] of groupedRoles) {
-    ret[k] = {
-      perc: v.length / allRoles.length
-    };
-  }
-  return { groupedRoles, ret };
-}
-
-function industryStatistics(industries = []) {
-  const groupedIndustries = new Map();
-  industries.forEach((i) => {
-    const v = groupedIndustries.get(i) ? [...groupedIndustries.get(i), i] : [i];
-    groupedIndustries.set(i, v);
-  });
-
-  const ret = {};
-}
+Resume.displayName = 'Resume';

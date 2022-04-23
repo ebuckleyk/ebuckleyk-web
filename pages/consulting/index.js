@@ -35,3 +35,5 @@ export async function getStaticProps() {
     }
   };
 }
+
+Consulting.displayName = 'Consulting';

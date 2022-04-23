@@ -11,7 +11,9 @@ export default function Loader({ loading }) {
         isIndeterminate
         color="green.300"
       >
-        <CircularProgressLabel fontSize={14}>Loading...</CircularProgressLabel>
+        <CircularProgressLabel color={'white'} fontSize={14}>
+          Loading...
+        </CircularProgressLabel>
       </CircularProgress>
     </Box>
   );
