@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import Script from 'next/script';
 import { Box, ScaleFade } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import Navigation from '../navigation';
@@ -104,8 +105,11 @@ export default function Layout({ children, router, headerInfo = {} }) {
   return (
     <>
       <HeaderInfo headerInfo={headerInfo} />
+      <Script
+        src={`${settings.api.reCaptchaJsApi}?render=${process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}`}
+      />
       <Box
-        minHeight={'100%'}
+        // minHeight={'100%'}
         bgRepeat="no-repeat"
         bgPos={'center'}
         bgSize="cover"

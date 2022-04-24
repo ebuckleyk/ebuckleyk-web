@@ -42,6 +42,16 @@
       "isQuickLink": true
     },
     {
+      "label": "Community",
+      "children": [
+        {
+          "label": "Scholarships & Awards",
+          "subLabel": "View Available Scholarships & Awards",
+          "href": "/awards"
+        }
+      ]
+    },
+    {
       "label": "Contact",
       "href": "/contact",
       "subLabel": "Let's talk!"
@@ -49,6 +59,19 @@
   ],
   "api": {
     "twitterApi": "https://api.twitter.com",
-    "contentfulApi": "https://graphql.contentful.com"
+    "contentfulApi": "https://graphql.contentful.com",
+    "reCaptchaApi": "https://www.google.com/recaptcha/api/siteverify",
+    "reCaptchaJsApi": "https://www.google.com/recaptcha/api.js"
+  },
+  "awards": {
+    "max_file_size_in_MB": 1,
+    "valid_file_types": [
+      "application/pdf",
+      "application/msword",
+      ".doc",
+      ".docx"
+    ],
+    "filepond_fileSize_key": "file_size",
+    "filepond_fileType_key": "file_type"
   }
 }

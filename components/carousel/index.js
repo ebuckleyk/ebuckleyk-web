@@ -157,7 +157,12 @@ const Carousel = ({ children, autoPlay = false }) => {
           color="white"
         />
       )}
-      <Flex justifyContent={'center'} alignItems={'center'} mt={2}>
+      <Flex
+        display={{ base: 'flex', lg: 'none' }}
+        justifyContent={'center'}
+        alignItems={'center'}
+        mt={2}
+      >
         {React.Children.map(children, (child, idx) => {
           return (
             <Icon

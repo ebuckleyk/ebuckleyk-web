@@ -35,12 +35,4 @@ export default function Blogs() {
   );
 }
 
-export function getServerSideProps(context) {
-  return {
-    props: {
-      url: `https://${context?.req?.headers?.host}/blogs`
-    }
-  };
-}
-
 Blogs.displayName = 'Blogs';

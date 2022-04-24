@@ -3,11 +3,14 @@ const { withSentryConfig } = require('@sentry/nextjs');
 const isProd = process.env.NODE_ENV === 'production';
 
 const ContentSecurityPolicy = `
-  default-src 'self' https://*.sentry.io;
+  default-src 'self';
   script-src 'self' ${isProd ? '' : "'unsafe-eval'"};
   style-src 'self' 'unsafe-inline';
   font-src 'self';
   img-src 'self' https://www.cdkglobal.com data:;
+  connect-src 'self' https://*.sentry.io https://*.amazonaws.com;
+  script-src-elem 'self' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/;
+  frame-src 'self' https://www.google.com/recaptcha/ https://recaptcha.google.com/recaptcha/;
 `;
 const securityHeaders = [
   {

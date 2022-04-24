@@ -9,7 +9,8 @@ import {
   Button,
   Flex,
   Box,
-  Select
+  Select,
+  Text
 } from '@chakra-ui/react';
 import { Formik, Field, Form } from 'formik';
 import * as Yup from 'yup';
@@ -104,6 +105,35 @@ export default function ContactForm({ onSubmit }) {
                       <FormLabel htmlFor="message">Message</FormLabel>
                       <Textarea {...field} id="message" type="message" />
                       <FormErrorMessage>{form.errors.message}</FormErrorMessage>
+                    </FormControl>
+                  );
+                }}
+              </Field>
+              <Field name="captcha">
+                {({ field, form }) => {
+                  return (
+                    <FormControl>
+                      <FormHelperText>
+                        {'This site is protected by reCAPTCHA and the Google '}
+                        <Text
+                          color="blue.400"
+                          as="a"
+                          target="_blank"
+                          href="https://policies.google.com/privacy"
+                        >
+                          Privacy Policy
+                        </Text>
+                        {' and '}
+                        <Text
+                          color="blue.400"
+                          as="a"
+                          target="_blank"
+                          href="https://policies.google.com/terms"
+                        >
+                          Terms of Service
+                        </Text>{' '}
+                        apply.
+                      </FormHelperText>
                     </FormControl>
                   );
                 }}

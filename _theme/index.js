@@ -1,4 +1,4 @@
-import { extendTheme } from '@chakra-ui/react';
+import { extendTheme, theme } from '@chakra-ui/react';
 
 const breakpoints = {
   sm: '360px',
@@ -8,4 +8,4 @@ const breakpoints = {
   '2xl': '1536px'
 };
 
-export default extendTheme({ breakpoints });
+export default extendTheme({ ...theme, breakpoints });

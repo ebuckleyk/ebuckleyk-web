@@ -19,6 +19,8 @@ const buildMessage = (inqType, name, message, emailAddress) => {
 };
 
 export async function sendContactEmail(inqType, name, emailAddress, message) {
+  if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test')
+    return;
   const msg = buildMessage(inqType, name, message, emailAddress);
   try {
     await sgMail.send(msg);

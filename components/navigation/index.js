@@ -128,14 +128,14 @@ function DesktopSubNav({ label, href, subLabel }) {
       role={'group'}
       display={'block'}
       p={2}
-      rounded={'md'}
-      _hover={{ bg: useColorModeValue('pink.50', 'gray.900') }}
+      rounded={'sm'}
+      _hover={{ bg: useColorModeValue('blue.50', 'gray.900') }}
     >
       <Stack direction="row" align="center">
         <Box>
           <Text
             transition={'all .3s ease'}
-            _groupHover={{ color: 'pink.400' }}
+            _groupHover={{ color: 'blue.400' }}
             fontWeight={500}
           >
             {label}
@@ -182,6 +182,12 @@ function DesktopNav() {
                   }}
                 >
                   {item.label}
+                  {item.children && (
+                    <Icon
+                      as={ChevronDownIcon}
+                      transition={'all .25s ease-in-out'}
+                    />
+                  )}
                 </LinkWrapper>
               </PopoverTrigger>
 
@@ -190,8 +196,7 @@ function DesktopNav() {
                   border={0}
                   boxShadow="xl"
                   bg={popoverContentBgColor}
-                  p={4}
-                  rounded="xl"
+                  p={2}
                   minW="sm"
                 >
                   <Stack>
@@ -208,6 +213,7 @@ function DesktopNav() {
     </Stack>
   );
 }
+
 function Overlay({ isOpen }) {
   if (!isOpen) return null;
   return (

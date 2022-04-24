@@ -12,8 +12,10 @@ import {
   Divider,
   Thead,
   Tr,
-  Td
+  Td,
+  Link
 } from '@chakra-ui/react';
+import { ExternalLinkIcon } from '@chakra-ui/icons';
 
 export default function RichText({ richText, children, ...rest }) {
   return (
@@ -44,10 +46,14 @@ export default function RichText({ richText, children, ...rest }) {
             <Heading as="h4">{children}</Heading>
           ),
           [BLOCKS.HEADING_5]: (_, children) => (
-            <Heading as="h5">{children}</Heading>
+            <Heading as="h5" fontSize={'lg'}>
+              {children}
+            </Heading>
           ),
           [BLOCKS.HEADING_6]: (_, children) => (
-            <Heading as="h6">{children}</Heading>
+            <Heading as="h6" fontSize={'md'}>
+              {children}
+            </Heading>
           ),
           [BLOCKS.UL_LIST]: (_, children) => (
             <UnorderedList>{children}</UnorderedList>
@@ -67,7 +73,13 @@ export default function RichText({ richText, children, ...rest }) {
             <Thead>{children}</Thead>
           ),
           [BLOCKS.TABLE_ROW]: (_, children) => <Tr>{children}</Tr>,
-          [BLOCKS.TABLE_CELL]: (_, children) => <Td>{children}</Td>
+          [BLOCKS.TABLE_CELL]: (_, children) => <Td>{children}</Td>,
+          hyperlink: (_, children) => (
+            <Link as="a" color="blue.500" href={_?.data?.uri} target={'_blank'}>
+              {children}
+              <ExternalLinkIcon color="gray.500" mx="2px" />
+            </Link>
+          )
         },
 
         renderText: (text) => {
