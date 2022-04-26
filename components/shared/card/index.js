@@ -3,6 +3,7 @@ import { Box, Button, Container, Flex, Text } from '@chakra-ui/react';
 import RichText from '../../richtext';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
+import { EVENTS, GA } from '../../../utils/analytics';
 
 function CardImage({ img }) {
   if (!img || !img?.url) return null;
@@ -35,15 +36,16 @@ function CardContent({ isPreview, content, isRichText }) {
   );
 }
 
-function Footer({ navigateTo }) {
+function Footer({ navigateTo, navEvent }) {
   const router = useRouter();
 
   const navigate = useCallback(
     (e) => {
       e.preventDefault();
+      GA.event(navEvent);
       router.push(navigateTo);
     },
-    [navigateTo, router]
+    [navigateTo, router, navEvent]
   );
 
   if (!navigateTo) return null;
@@ -61,6 +63,7 @@ export default function Card({
   title,
   content,
   navigateTo,
+  gaEvent = EVENTS.VIEW_CARD,
   isPreview = true,
   isRichText = false
 }) {
@@ -82,7 +85,7 @@ export default function Card({
       <CardImage img={img} />
       <CardTitle title={title} />
       <CardContent {...{ isRichText, content, isPreview }} />
-      <Footer navigateTo={navigateTo} />
+      <Footer navigateTo={navigateTo} navEvent={gaEvent} />
       {children}
     </Box>
   );

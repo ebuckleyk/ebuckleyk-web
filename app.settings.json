@@ -61,7 +61,8 @@
     "twitterApi": "https://api.twitter.com",
     "contentfulApi": "https://graphql.contentful.com",
     "reCaptchaApi": "https://www.google.com/recaptcha/api/siteverify",
-    "reCaptchaJsApi": "https://www.google.com/recaptcha/api.js"
+    "reCaptchaJsApi": "https://www.google.com/recaptcha/api.js",
+    "googTagManager": "https://www.googletagmanager.com/gtag/js"
   },
   "awards": {
     "max_file_size_in_MB": 1,

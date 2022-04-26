@@ -17,6 +17,7 @@ import { format } from 'date-fns';
 import NextImage from 'next/image';
 import { useEffect } from 'react';
 import { FaRegCircle } from 'react-icons/fa';
+import { EVENTS, GA } from '../../utils/analytics';
 
 function getDateDisplay(startDate, endDate, timeIn) {
   const s = new Date(startDate);
@@ -71,7 +72,12 @@ function Thumbnail({ asset }) {
   const getStyles = () => {
     return isexternal_link
       ? { as: 'a', target: '_blank', rel: 'noreferrer', href: asset.url }
-      : { onClick: onOpen };
+      : {
+          onClick: () => {
+            GA.event(EVENTS.VIEW_RESUME_JOB_ASSET);
+            onOpen();
+          }
+        };
   };
   return (
     <>

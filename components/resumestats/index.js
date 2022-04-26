@@ -13,6 +13,7 @@ import {
   SimpleGrid,
   Divider
 } from '@chakra-ui/react';
+import { EVENTS, GA } from '../../utils/analytics';
 import useResponsive from '../../utils/hooks/useResponsive';
 import PercentOfTimeSpentAtCompany from './percentOfTimeSpentAtCompany';
 import ProficiencyByDiscipline from './proficiencyByDiscipline';
@@ -26,9 +27,15 @@ function MobileDisplay({ companyStats }) {
   return (
     <Tabs>
       <TabList>
-        <Tab>{TIME_AT_COMPANY_LABEL}</Tab>
-        <Tab>{PROFICIENCY_BY_DISC_LABEL}</Tab>
-        <Tab>{PROFICIENCY_BY_LANG_LABEL}</Tab>
+        <Tab onClick={() => GA.event(EVENTS.VIEW_TAC_RESUME_STAT)}>
+          {TIME_AT_COMPANY_LABEL}
+        </Tab>
+        <Tab onClick={() => GA.event(EVENTS.VIEW_PBD_RESUME_STAT)}>
+          {PROFICIENCY_BY_DISC_LABEL}
+        </Tab>
+        <Tab onClick={() => GA.event(EVENTS.VIEW_PBL_RESUME_STAT)}>
+          {PROFICIENCY_BY_LANG_LABEL}
+        </Tab>
       </TabList>
 
       <TabPanels>

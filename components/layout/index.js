@@ -108,6 +108,20 @@ export default function Layout({ children, router, headerInfo = {} }) {
       <Script
         src={`${settings.api.reCaptchaJsApi}?render=${process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}`}
       />
+      <Script
+        strategy="afterInteractive"
+        src={`${settings.api.googTagManager}?id=${process.env.NEXT_PUBLIC_GA}`}
+      />
+      <Script id="googleAnalytics" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag() { dataLayer.push(arguments); }
+          gtag('js', new Date());
+          gtag('config', '${process.env.NEXT_PUBLIC_GA}', {
+            page_path: window.location.pathname
+          });
+        `}
+      </Script>
       <Box
         // minHeight={'100%'}
         bgRepeat="no-repeat"

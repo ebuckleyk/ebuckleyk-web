@@ -1,6 +1,7 @@
 import { Flex, useToast } from '@chakra-ui/react';
 import { useCallback } from 'react';
 import ContactForm from '../../components/contact_form';
+import { GA, EVENTS } from '../../utils/analytics';
 import { withCaptcha } from '../../utils/api/helper';
 
 export default function Contact() {
@@ -27,6 +28,8 @@ export default function Contact() {
             duration: 3000,
             isClosable: true
           });
+
+          GA.event(EVENTS.SUBMIT_CONTACT_FORM);
         } catch (error) {
           toast({
             title: 'Error sending information',
