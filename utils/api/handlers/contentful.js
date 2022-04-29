@@ -183,7 +183,7 @@ export async function getallAwards() {
       title: i.title,
       content: i.content,
       image: i.awardImage,
-      link: `/awards/${i.sys.id}`,
+      link: `/community/awards/${i.sys.id}`,
       type: getAwardType(i.title),
       awardAmount: 500
     };

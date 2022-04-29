@@ -1,7 +1,7 @@
 import { Badge, SimpleGrid, Stack, Text } from '@chakra-ui/react';
 import useSWR from 'swr';
-import Card from '../../components/shared/card';
-import { EVENTS } from '../../utils/analytics';
+import Card from '../../../components/shared/card';
+import { EVENTS } from '../../../utils/analytics';
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 

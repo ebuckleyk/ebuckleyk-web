@@ -63,5 +63,15 @@ export const EVENTS = {
     action: 'view_card',
     event_category: 'engagement',
     event_label: 'content_type'
+  },
+  UPDATE_BIO: {
+    action: 'update_bio',
+    event_category: 'engagement',
+    event_label: 'method'
+  },
+  UPDATE_CONTACT_INFORMATION: {
+    action: 'update_contact_info',
+    event_category: 'engagement',
+    event_label: 'method'
   }
 };

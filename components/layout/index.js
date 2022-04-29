@@ -1,7 +1,6 @@
 import Head from 'next/head';
 import Script from 'next/script';
 import { Box, ScaleFade } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
 import Navigation from '../navigation';
 import styles from './index.module.css';
 import Loader from '../loader';
@@ -88,20 +87,12 @@ const SEO = ({
 };
 
 const backgroundImageUrl = '/images/background@1920.jpg';
-export default function Layout({ children, router, headerInfo = {} }) {
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    const handleStart = (url) => {
-      url !== router.pathname ? setLoading(true) : setLoading(false);
-    };
-    const handleComplete = (url) => setLoading(false);
-
-    router.events.on('routeChangeStart', handleStart);
-    router.events.on('routeChangeComplete', handleComplete);
-    router.events.on('routeChangeError', handleComplete);
-  }, [router]);
-
+export default function Layout({
+  children,
+  router,
+  navState,
+  headerInfo = {}
+}) {
   return (
     <>
       <HeaderInfo headerInfo={headerInfo} />
@@ -129,10 +120,10 @@ export default function Layout({ children, router, headerInfo = {} }) {
         bgSize="cover"
         bgImage={backgroundImageUrl}
       >
-        <Navigation />
+        <Navigation activeRoute={navState.activeRoute} />
         <ScaleFade key={router.route} initialScale={0.9} in="true">
           <main className={styles.main}>
-            <Loader loading={loading} />
+            <Loader loading={navState.isLoading} />
             {children}
           </main>
         </ScaleFade>

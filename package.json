@@ -12,6 +12,7 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@auth0/nextjs-auth0": "^1.7.0",
     "@aws-sdk/client-s3": "^3.76.0",
     "@aws-sdk/s3-request-presigner": "^3.76.0",
     "@chakra-ui/icons": "^1.1.7",
@@ -22,6 +23,7 @@
     "@emotion/styled": "^11.8.1",
     "@sendgrid/mail": "^7.6.2",
     "@sentry/nextjs": "^6.19.6",
+    "auth0": "^2.40.0",
     "date-fns": "^2.28.0",
     "filepond": "^4.30.3",
     "filepond-plugin-file-validate-size": "^2.2.6",

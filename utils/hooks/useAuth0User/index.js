@@ -1,0 +1,51 @@
+import { useUser } from '@auth0/nextjs-auth0';
+import { useCallback } from 'react';
+
+const role_namespace = 'https://www.ebuckleyk.com/roles';
+
+const is_in_all_roles = (roles = [], user) => {
+  let ret = true;
+  for (let i = 0; i < roles.length; i++) {
+    const check_role = roles[i];
+    if (!user[role_namespace].includes(check_role)) {
+      ret = false;
+      break;
+    }
+  }
+  return ret;
+};
+const is_in_role = (user, roles = [], allInclusive = true) => {
+  if (!user || !user[role_namespace] || !user[role_namespace].length)
+    return false;
+  if (allInclusive) return is_in_all_roles(roles, user);
+
+  let ret = false;
+  for (let i = 0; i < roles; i++) {
+    const check_role = roles[i];
+    if (user[role_namespace].includes(check_role)) {
+      ret = true;
+      break;
+    }
+  }
+  return ret;
+};
+export default function useAuth0User() {
+  // const { user, error, isLoading, checkSession } = useUser();
+  const { user, error, isLoading, checkSession } = {};
+  const inRoles = useCallback(
+    (roles, inAllRoles = true) => {
+      const all_roles = Array.isArray(roles) ? roles : roles.split(',');
+      return is_in_role(user, all_roles, inAllRoles);
+    },
+    [user]
+  );
+
+  return {
+    user,
+    error,
+    isLoading,
+    checkSession,
+    inRoles,
+    isLoggedIn: !!user
+  };
+}

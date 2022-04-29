@@ -1,7 +1,5 @@
 import NextImage from 'next/image';
 import {
-  Stat,
-  StatNumber,
   Flex,
   Heading,
   Stack,
@@ -12,14 +10,14 @@ import {
   TabPanel,
   Tooltip,
   useToast,
-  Text,
   Badge
 } from '@chakra-ui/react';
-import * as api from '../../utils/api/handlers/contentful';
-import RichText from '../../components/richtext';
-import AwardForm from '../../components/award_form';
+import * as api from '../../../utils/api/handlers/contentful';
+import RichText from '../../../components/richtext';
+import AwardForm from '../../../components/award_form';
 import { useCallback } from 'react';
-import { withCaptcha, uploadToS3 } from '../../utils/api/helper';
+import { withCaptcha, uploadToS3 } from '../../../utils/api/helper';
+import useAuth0User from '../../../utils/hooks/useAuth0User';
 
 const DisabledTab = ({ isDisabled, children, ...rest }) => (
   <Tooltip
@@ -29,6 +27,7 @@ const DisabledTab = ({ isDisabled, children, ...rest }) => (
   >
     <Tab
       cursor={isDisabled ? 'not-allowed' : 'pointer'}
+      bgColor={isDisabled ? 'gray.50' : 'white'}
       isDisabled={isDisabled}
       {...rest}
     >
@@ -39,6 +38,7 @@ const DisabledTab = ({ isDisabled, children, ...rest }) => (
 
 export default function Award({ award }) {
   const toast = useToast();
+  const { user, isLoggedIn } = useAuth0User();
 
   const onSubmitInfo = useCallback(
     async (formInfo, done) => {
@@ -103,7 +103,10 @@ export default function Award({ award }) {
     >
       <TabList pos="relative">
         <Tab _selected={{ color: 'black', bg: 'blue.50' }}>{award.title}</Tab>
-        <DisabledTab _selected={{ color: 'black', bg: 'blue.50' }}>
+        <DisabledTab
+          isDisabled={!isLoggedIn}
+          _selected={{ color: 'black', bg: 'blue.50' }}
+        >
           Apply
           <Badge ml="1" colorScheme={'green'}>
             $500
@@ -125,7 +128,7 @@ export default function Award({ award }) {
           </Stack>
         </TabPanel>
         <TabPanel>
-          <AwardForm appType={award.type} onSubmit={onSubmitInfo} />
+          <AwardForm user={user} appType={award.type} onSubmit={onSubmitInfo} />
         </TabPanel>
       </TabPanels>
     </Tabs>

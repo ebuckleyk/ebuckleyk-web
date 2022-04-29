@@ -11,7 +11,7 @@ import { Field } from 'formik';
 import * as Yup from 'yup';
 import states from '../../utils/state_abbrev.json';
 
-function AwardFormContactInformation({ values, errors }) {
+function AwardFormContactInformation({ values }) {
   return (
     <SimpleGrid columns={{ sm: 1, md: 4 }} columnGap={3} rowGap={2}>
       <GridItem colSpan={{ sm: 1, md: 2 }}>
@@ -19,6 +19,7 @@ function AwardFormContactInformation({ values, errors }) {
           {({ field, form }) => {
             return (
               <FormControl
+                isDisabled
                 isRequired
                 isInvalid={form.errors.first_name && form.touched.first_name}
               >
@@ -35,6 +36,7 @@ function AwardFormContactInformation({ values, errors }) {
           {({ field, form }) => {
             return (
               <FormControl
+                isDisabled
                 isRequired
                 isInvalid={form.errors.last_name && form.touched.last_name}
               >
@@ -51,6 +53,7 @@ function AwardFormContactInformation({ values, errors }) {
           {({ field, form }) => {
             return (
               <FormControl
+                isDisabled
                 isRequired
                 isInvalid={form.errors.email && form.touched.email}
               >

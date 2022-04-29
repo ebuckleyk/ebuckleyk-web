@@ -1,16 +1,10 @@
 import {
   FormControl,
-  Textarea,
   FormHelperText,
-  FormLabel,
-  Input,
   Stack,
-  FormErrorMessage,
   Button,
   Flex,
   Progress,
-  SimpleGrid,
-  GridItem,
   Accordion,
   AccordionItem,
   AccordionButton,
@@ -55,7 +49,7 @@ function PercentComplete({ values, errors }) {
   );
 }
 
-export default function AwardForm({ onSubmit, appType }) {
+export default function AwardForm({ onSubmit, appType, user }) {
   const application_schema = useMemo(() => {
     return Yup.object().shape({
       ...AwardFormContactInformation.schema,
@@ -64,9 +58,21 @@ export default function AwardForm({ onSubmit, appType }) {
   }, [appType]);
 
   const initialValues = useMemo(
-    () => application_schema.getDefault(),
-    [application_schema]
+    () => ({
+      ...application_schema.getDefault(),
+      first_name: user?.given_name,
+      last_name: user?.family_name,
+      email: user?.email,
+      phone: user?.user_metadata?.contact?.phone,
+      addr1: user?.user_metadata?.contact?.address,
+      addr2: user?.user_metadata?.contact?.address2,
+      city: user?.user_metadata?.contact?.city,
+      state: user?.user_metadata?.contact?.state,
+      zip: user?.user_metadata?.contact?.zip
+    }),
+    [application_schema, user]
   );
+
   const AppForm = useMemo(() => application_form_lookup[appType], [appType]);
   return (
     <Formik
@@ -74,6 +80,7 @@ export default function AwardForm({ onSubmit, appType }) {
         onSubmit({ ...values, appType }, () => actions.setSubmitting(false));
       }}
       validateOnMount
+      enableReinitialize
       initialValues={initialValues}
       validationSchema={application_schema}
     >
@@ -101,7 +108,7 @@ export default function AwardForm({ onSubmit, appType }) {
                   <AccordionIcon />
                 </AccordionButton>
                 <AccordionPanel pb={4}>
-                  <AwardFormContactInformation {...{ values, errors }} />
+                  <AwardFormContactInformation {...{ values, errors, user }} />
                 </AccordionPanel>
               </AccordionItem>
             </Accordion>

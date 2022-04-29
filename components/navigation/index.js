@@ -1,3 +1,4 @@
+import React from 'react';
 import NextLink from 'next/link';
 import {
   ChevronDownIcon,
@@ -6,6 +7,7 @@ import {
   HamburgerIcon
 } from '@chakra-ui/icons';
 import {
+  Avatar,
   Box,
   Button,
   Collapse,
@@ -13,6 +15,11 @@ import {
   Icon,
   IconButton,
   Link,
+  Menu,
+  MenuButton,
+  MenuDivider,
+  MenuItem,
+  MenuList,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -22,9 +29,9 @@ import {
   useColorModeValue,
   useDisclosure
 } from '@chakra-ui/react';
-import { FaGithub } from 'react-icons/fa';
+import { FaGithub, FaSignInAlt, FaSignOutAlt } from 'react-icons/fa';
 import settings from '../../app.settings.json';
-import React from 'react';
+import useAuth0User from '../../utils/hooks/useAuth0User';
 
 /**
  * navigation structure
@@ -158,7 +165,7 @@ function DesktopSubNav({ label, href, subLabel }) {
   );
 }
 
-function DesktopNav() {
+function DesktopNav({ activeRoute }) {
   const linkColor = useColorModeValue('gray.600', 'gray.200');
   const linkHoverColor = useColorModeValue('gray.800', 'white');
   const popoverContentBgColor = useColorModeValue('white', 'gray.800');
@@ -166,6 +173,11 @@ function DesktopNav() {
   return (
     <Stack direction="row" spacing={4}>
       {settings.navigation.map((item) => {
+        const activeStyle =
+          activeRoute === item.href
+            ? { borderBottomColor: 'blue.100', borderBottomWidth: 'medium' }
+            : {};
+
         return (
           <Box key={item.label}>
             <Popover trigger="hover" placement="bottom-start">
@@ -176,6 +188,7 @@ function DesktopNav() {
                   fontSize="sm"
                   fontWeight={500}
                   color={linkColor}
+                  {...activeStyle}
                   _hover={{
                     textDecoration: 'none',
                     color: linkHoverColor
@@ -236,8 +249,9 @@ function Overlay({ isOpen }) {
  *
  * @see https://chakra-templates.dev/navigation/navbar
  */
-export default function Navigation() {
+export default function Navigation({ activeRoute }) {
   const { isOpen, onToggle } = useDisclosure();
+  const { user, isLoggedIn, inRoles } = useAuth0User();
 
   return (
     <Box position={'absolute'} width="100%" zIndex={99}>
@@ -283,7 +297,7 @@ export default function Navigation() {
             </Text>
           </LinkWrapper>
           <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
-            <DesktopNav />
+            <DesktopNav activeRoute={activeRoute} />
           </Flex>
         </Flex>
 
@@ -291,17 +305,68 @@ export default function Navigation() {
           flex={{ base: 1, md: 0 }}
           justify="flex-end"
           direction={'row'}
-          spacing={6}
+          spacing={3}
         >
           <Button
+            display={{ base: 'none', md: 'flex' }}
             as="a"
             href="https://github.com/ebuckley23/ebuckleyk-web"
             target={'_blank'}
             leftIcon={<FaGithub />}
+            fontSize="sm"
             variant="ghost"
           >
             Github
           </Button>
+          <IconButton
+            display={{ sm: 'flex', md: 'none' }}
+            as="a"
+            href="https://github.com/ebuckley23/ebuckleyk-web"
+            target="_blank"
+            icon={<FaGithub />}
+            variant="ghost"
+          />
+
+          <IconButton
+            display={{ sm: !user ? 'flex' : 'none', md: 'none' }}
+            as="a"
+            href="/api/auth/login"
+            icon={<FaSignInAlt />}
+            variant="ghost"
+          />
+          <Button
+            disabled // Disabled until production ready
+            display={{ base: 'none', md: !user ? 'flex' : 'none' }}
+            leftIcon={<FaSignInAlt />}
+            as={Link}
+            fontSize="sm"
+            fontWeight={400}
+            variant="link"
+            href="/api/auth/login"
+          >
+            Sign In
+          </Button>
+          <Menu isLazy>
+            <MenuButton display={isLoggedIn ? 'flex' : 'none'}>
+              <Avatar
+                referrerPolicy="no-referrer"
+                size="sm"
+                src={user?.picture}
+              />
+            </MenuButton>
+            <MenuList>
+              <MenuItem as={LinkWrapper} href="/profile">
+                Profile
+              </MenuItem>
+              <MenuItem display={inRoles('Admin') ? 'flex' : 'none'}>
+                Admin
+              </MenuItem>
+              <MenuDivider />
+              <MenuItem icon={<FaSignOutAlt />} as="a" href="/api/auth/logout">
+                Sign Out
+              </MenuItem>
+            </MenuList>
+          </Menu>
         </Stack>
       </Flex>
 

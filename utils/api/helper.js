@@ -41,7 +41,6 @@ export async function uploadToS3(filepond_file) {
     parseS3XmlResponse(text);
     return Promise.resolve({ hostedContent, name });
   } catch (err) {
-    console.log({ err });
     if (err.message === 'token expired') {
       const newSignedUrl = await getPreSignedUrl(name, type);
       await await fetch(newSignedUrl, {
