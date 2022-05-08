@@ -5,13 +5,21 @@ import withCorrelationId from '../../../utils/api/middleware/withCorrelationId';
 import logger from '../../../utils/logger';
 import {
   getAuth0ManagementClient,
-  getCuratedProfile
+  getCuratedProfile,
+  getCuratedRoles
 } from '../../../utils/api/handlers/auth0';
 
-async function GET(req, res, userId) {
-  const client = await getAuth0ManagementClient('read:users');
+async function GET(userId) {
+  const client = await getAuth0ManagementClient('read:users read:roles');
 
-  return getCuratedProfile(await client.getUser({ id: userId }));
+  const [roles, user] = await Promise.all([
+    client.getUserRoles({ id: userId }),
+    client.getUser({ id: userId })
+  ]);
+
+  const profile = getCuratedProfile(user);
+  const userRoles = getCuratedRoles(roles);
+  return { ...profile, roles: userRoles };
 }
 
 async function handler(req, res) {
@@ -21,7 +29,7 @@ async function handler(req, res) {
       user: { sub }
     } = getSession(req, res);
 
-    const result = await GET(req, res, sub);
+    const result = await GET(sub);
 
     res.status(200).json(result);
   } catch (err) {

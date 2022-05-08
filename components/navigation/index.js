@@ -355,12 +355,17 @@ export default function Navigation({ activeRoute }) {
               />
             </MenuButton>
             <MenuList>
-              <MenuItem as={LinkWrapper} href="/profile">
+              {/* <MenuItem
+                as={LinkWrapper}
+                href="/profile">
                 Profile
               </MenuItem>
-              <MenuItem display={inRoles('Admin') ? 'flex' : 'none'}>
-                Admin
-              </MenuItem>
+              <MenuItem
+                as={LinkWrapper}
+                href='/portal/dashboard'
+                display={inRoles('Subscriber') ? 'flex' : 'none'}>
+                Portal
+              </MenuItem> */}
               <MenuDivider />
               <MenuItem icon={<FaSignOutAlt />} as="a" href="/api/auth/logout">
                 Sign Out

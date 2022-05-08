@@ -26,3 +26,7 @@ export function getCuratedProfile(userProfileResponse) {
   } = userProfileResponse;
   return rest;
 }
+
+export function getCuratedRoles(roles = []) {
+  return roles.map(({ name }) => name);
+}

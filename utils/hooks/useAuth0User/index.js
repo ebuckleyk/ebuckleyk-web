@@ -1,7 +1,7 @@
 import { useUser } from '@auth0/nextjs-auth0';
 import { useCallback } from 'react';
 
-const role_namespace = 'https://www.ebuckleyk.com/roles';
+const role_namespace = 'roles';
 
 const is_in_all_roles = (roles = [], user) => {
   let ret = true;
