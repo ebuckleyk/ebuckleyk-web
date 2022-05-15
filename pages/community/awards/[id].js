@@ -143,7 +143,9 @@ export default function Award({ award, router }) {
         <TabPanel>
           {!isLoggedIn ? (
             <Message>
-              <Text>Please login!</Text>
+              <Button variant={'link'} as={'a'} href={'/api/auth/login'}>
+                Please sign in!
+              </Button>
             </Message>
           ) : null}
           {award.activeCampaignId ? null : (
