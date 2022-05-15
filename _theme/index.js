@@ -1,4 +1,5 @@
 import { extendTheme, theme } from '@chakra-ui/react';
+import { withProse } from '@nikolovlazar/chakra-ui-prose';
 
 const breakpoints = {
   sm: '360px',
@@ -8,4 +9,12 @@ const breakpoints = {
   '2xl': '1536px'
 };
 
-export default extendTheme({ ...theme, breakpoints });
+export default extendTheme(
+  { ...theme, breakpoints },
+  withProse({
+    baseStyle: {
+      bgColor: 'white',
+      padding: 5
+    }
+  })
+);
