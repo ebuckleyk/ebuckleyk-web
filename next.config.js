@@ -1,4 +1,12 @@
 const withPWA = require('next-pwa');
+const withMDX = require('@next/mdx')({
+  extension: /\.mdx?$/,
+  options: {
+    remarkPlugins: [],
+    rehypePlugins: [],
+    providerImportSource: '@mdx-js/react'
+  }
+});
 
 const isProd = process.env.NODE_ENV === 'production';
 const webportalUrl = process.env.EBUCKLEYK_WEBPORTAL_URL || '';
@@ -57,10 +65,12 @@ const securityHeaders = [
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  experimental: {
-    images: {
-      layoutRaw: true
-    }
+  pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
+  pwa: {
+    dest: 'public',
+    register: true,
+    skipWaiting: true,
+    disable: true // process.env.NODE_ENV === 'development'
   },
   images: {
     domains: [
@@ -104,12 +114,4 @@ const nextConfig = {
   }
 };
 
-module.exports = withPWA({
-  ...nextConfig,
-  pwa: {
-    dest: 'public',
-    register: true,
-    skipWaiting: true,
-    disable: true // process.env.NODE_ENV === 'development'
-  }
-});
+module.exports = withPWA(withMDX(nextConfig));
