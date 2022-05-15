@@ -1,4 +1,3 @@
-import { withSentry } from '@sentry/nextjs';
 import { getAllProjects } from '../../../utils/api/handlers/contentful';
 import requestLogger from '../../../utils/api/middleware/requestLogger';
 import withCorrelationId from '../../../utils/api/middleware/withCorrelationId';
@@ -14,4 +13,4 @@ async function handler(req, res) {
   }
 }
 
-export default withSentry(withCorrelationId(requestLogger(handler)));
+export default withCorrelationId(requestLogger(handler));

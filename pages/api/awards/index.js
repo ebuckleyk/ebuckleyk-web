@@ -1,12 +1,11 @@
-import { withSentry } from '@sentry/nextjs';
-import { getallAwards } from '../../../utils/api/handlers/contentful';
 import requestLogger from '../../../utils/api/middleware/requestLogger';
 import withCorrelationId from '../../../utils/api/middleware/withCorrelationId';
 import logger from '../../../utils/logger';
+import web_public_api from '../../../utils/api';
 
 async function handler(req, res) {
   try {
-    const awards = await getallAwards();
+    const awards = await web_public_api('/award-public');
     res.status(200).json(awards);
   } catch (error) {
     logger.error(error);
@@ -14,4 +13,4 @@ async function handler(req, res) {
   }
 }
 
-export default withSentry(withCorrelationId(requestLogger(handler)));
+export default withCorrelationId(requestLogger(handler));

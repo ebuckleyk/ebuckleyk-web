@@ -1,4 +1,3 @@
-import { withSentry } from '@sentry/nextjs';
 import * as api from '../../../utils/api/handlers/sendgrid';
 import requestLogger from '../../../utils/api/middleware/requestLogger';
 import withCaptchaValidation from '../../../utils/api/middleware/withCaptchaValidation';
@@ -24,6 +23,4 @@ async function handler(req, res) {
   }
 }
 
-export default withSentry(
-  withCorrelationId(requestLogger(withCaptchaValidation(handler)))
-);
+export default withCorrelationId(requestLogger(withCaptchaValidation(handler)));

@@ -120,7 +120,10 @@ export default function Layout({
         bgSize="cover"
         bgImage={backgroundImageUrl}
       >
-        <Navigation activeRoute={navState.activeRoute} />
+        <Navigation
+          isLoading={navState.isLoading}
+          activeRoute={navState.activeRoute}
+        />
         <ScaleFade key={router.route} initialScale={0.9} in="true">
           <main className={styles.main}>
             <Loader loading={navState.isLoading} />

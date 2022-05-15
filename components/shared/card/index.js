@@ -9,8 +9,15 @@ function CardImage({ img }) {
   if (!img || !img?.url) return null;
 
   return (
-    <Container width={100} height={100}>
-      <NextImage width={100} height={100} src={img.url} layout="responsive" />
+    <Container
+      boxShadow={'xl'}
+      borderRadius={50}
+      borderWidth={'2px'}
+      width={200}
+      height={200}
+      pos="relative"
+    >
+      <NextImage objectFit="cover" src={img.url} layout="fill" />
     </Container>
   );
 }
@@ -18,7 +25,7 @@ function CardImage({ img }) {
 function CardTitle({ title }) {
   if (!title) return null;
   return (
-    <Container>
+    <Container mt={5}>
       <Text align="center" fontWeight={'bold'} fontSize={'large'}>
         {title}
       </Text>
@@ -29,29 +36,14 @@ function CardTitle({ title }) {
 function CardContent({ isPreview, content, isRichText }) {
   if (!content) return null;
   const Content = isRichText ? RichText : Text;
-  return (
-    <Content noOfLines={isPreview ? 4 : Infinity}>
-      {isRichText ? content.json : content}
-    </Content>
-  );
+  return <Content noOfLines={isPreview ? 4 : Infinity}>{content}</Content>;
 }
 
-function Footer({ navigateTo, navEvent }) {
-  const router = useRouter();
-
-  const navigate = useCallback(
-    (e) => {
-      e.preventDefault();
-      GA.event(navEvent);
-      router.push(navigateTo);
-    },
-    [navigateTo, router, navEvent]
-  );
-
-  if (!navigateTo) return null;
+function Footer({ onClick }) {
+  if (!onClick) return null;
   return (
     <Flex justify={'flex-end'} alignItems="center">
-      <Button as="a" onClick={navigate} variant="ghost" color="blue.500">
+      <Button as="a" onClick={onClick} variant="ghost" color="blue.500">
         View
       </Button>
     </Flex>
@@ -67,15 +59,26 @@ export default function Card({
   isPreview = true,
   isRichText = false
 }) {
+  const router = useRouter();
+
+  const navigate = useCallback(
+    (e) => {
+      e.preventDefault();
+      GA.event(gaEvent);
+      router.push(navigateTo);
+    },
+    [navigateTo, router, gaEvent]
+  );
+
   return (
     <Box
       bgColor={'white'}
-      opacity={0.8}
+      // opacity={0.8}
       _hover={{
         opacity: 1
       }}
       cursor={'pointer'}
-      onClick={() => {}}
+      onClick={navigateTo ? navigate : () => {}}
       position={'relative'}
       p={5}
       width={{ sm: '100%' }}
@@ -85,7 +88,7 @@ export default function Card({
       <CardImage img={img} />
       <CardTitle title={title} />
       <CardContent {...{ isRichText, content, isPreview }} />
-      <Footer navigateTo={navigateTo} navEvent={gaEvent} />
+      <Footer onClick={navigate} />
       {children}
     </Box>
   );

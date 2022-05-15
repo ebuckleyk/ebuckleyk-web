@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import NextLink from 'next/link';
+import NextImage from 'next/image';
 import {
   ChevronDownIcon,
   ChevronRightIcon,
@@ -249,10 +250,15 @@ function Overlay({ isOpen }) {
  *
  * @see https://chakra-templates.dev/navigation/navbar
  */
-export default function Navigation({ activeRoute }) {
-  const { isOpen, onToggle } = useDisclosure();
+export default function Navigation({ activeRoute, isLoading }) {
+  const { isOpen, onToggle, onClose } = useDisclosure();
   const { user, isLoggedIn, inRoles } = useAuth0User();
 
+  useEffect(() => {
+    if (isLoading) {
+      onClose();
+    }
+  }, [isLoading, onClose]);
   return (
     <Box position={'absolute'} width="100%" zIndex={99}>
       <Overlay isOpen={isOpen} />
@@ -281,21 +287,23 @@ export default function Navigation({ activeRoute }) {
             aria-label="Toggle Navigation"
           />
         </Flex>
-        <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
+        <Flex justify={{ base: 'center', md: 'start' }}>
           <LinkWrapper
             _hover={{
               textDecoration: 'none'
             }}
             href={'/'}
           >
-            <Text
-              textAlign={useBreakpointValue({ base: 'center', md: 'left' })}
-              fontFamily="heading"
-              color={useColorModeValue('gray.800', 'white')}
-            >
-              Emmanuel K. Buckley
-            </Text>
+            <NextImage
+              src="/images/signature.png"
+              alt="Emmanuel K. Buckley"
+              width={150}
+              height={40}
+              quality={100}
+            />
           </LinkWrapper>
+        </Flex>
+        <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
           <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
             <DesktopNav activeRoute={activeRoute} />
           </Flex>
@@ -335,7 +343,7 @@ export default function Navigation({ activeRoute }) {
             variant="ghost"
           />
           <Button
-            disabled // Disabled until production ready
+            // disabled // Disabled until production ready
             display={{ base: 'none', md: !user ? 'flex' : 'none' }}
             leftIcon={<FaSignInAlt />}
             as={Link}
@@ -355,17 +363,16 @@ export default function Navigation({ activeRoute }) {
               />
             </MenuButton>
             <MenuList>
-              {/* <MenuItem
-                as={LinkWrapper}
-                href="/profile">
+              <MenuItem as={LinkWrapper} href="/profile">
                 Profile
               </MenuItem>
               <MenuItem
                 as={LinkWrapper}
-                href='/portal/dashboard'
-                display={inRoles('Subscriber') ? 'flex' : 'none'}>
+                href="/portal/dashboard"
+                display={inRoles('Admin') ? 'flex' : 'none'}
+              >
                 Portal
-              </MenuItem> */}
+              </MenuItem>
               <MenuDivider />
               <MenuItem icon={<FaSignOutAlt />} as="a" href="/api/auth/logout">
                 Sign Out

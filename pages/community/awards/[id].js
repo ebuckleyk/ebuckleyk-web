@@ -8,9 +8,10 @@ import {
   Tab,
   TabPanels,
   TabPanel,
-  Tooltip,
   useToast,
-  Badge
+  Badge,
+  Text,
+  Button
 } from '@chakra-ui/react';
 import * as api from '../../../utils/api/handlers/contentful';
 import RichText from '../../../components/richtext';
@@ -18,25 +19,23 @@ import AwardForm from '../../../components/award_form';
 import { useCallback } from 'react';
 import { withCaptcha, uploadToS3 } from '../../../utils/api/helper';
 import useAuth0User from '../../../utils/hooks/useAuth0User';
+import LinkWrapper from '../../../components/shared/link_wrapper';
+import { getSession } from '@auth0/nextjs-auth0';
+import { format } from 'date-fns';
 
-const DisabledTab = ({ isDisabled, children, ...rest }) => (
-  <Tooltip
-    hasArrow
-    bg="gray.300"
-    label={isDisabled ? 'Please sign in' : 'Apply Here'}
-  >
-    <Tab
-      cursor={isDisabled ? 'not-allowed' : 'pointer'}
-      bgColor={isDisabled ? 'gray.50' : 'white'}
-      isDisabled={isDisabled}
-      {...rest}
+function Message({ children }) {
+  return (
+    <Flex
+      flexDir={'column'}
+      minH={350}
+      justifyContent={'center'}
+      alignItems="center"
     >
       {children}
-    </Tab>
-  </Tooltip>
-);
-
-export default function Award({ award }) {
+    </Flex>
+  );
+}
+export default function Award({ award, router }) {
   const toast = useToast();
   const { user, isLoggedIn } = useAuth0User();
 
@@ -44,20 +43,25 @@ export default function Award({ award }) {
     async (formInfo, done) => {
       withCaptcha(async (token) => {
         try {
-          const s3FileLocations = await Promise.all(
-            formInfo.attachments.map((f) => {
-              return uploadToS3(f);
-            })
-          );
+          let s3FileLocations = [];
+
+          if (formInfo.attachments?.length) {
+            s3FileLocations = await Promise.all(
+              formInfo.attachments?.map((f) => {
+                return uploadToS3(f);
+              })
+            );
+          }
 
           const postData = {
             ...formInfo,
+            campaignId: award.activeCampaignId,
             attachments: [...s3FileLocations],
             captcha: token
           };
 
           const response = await fetch(
-            `/api/awards/${award.sys.id}?appType=${formInfo.appType}`,
+            `/api/awards/${award._id}?appType=${formInfo.appType}`,
             {
               method: 'POST',
               headers: {
@@ -73,9 +77,12 @@ export default function Award({ award }) {
             description:
               'Thanks for applying. We will review your application.',
             status: 'success',
-            duration: 3000,
+            duration: 1500,
             isClosable: true
           });
+          setTimeout(() => {
+            router.push('/community/awards');
+          }, 1500);
         } catch (error) {
           toast({
             title: 'Error sending information',
@@ -89,8 +96,15 @@ export default function Award({ award }) {
         }
       });
     },
-    [toast, award.sys.id]
+    [toast, award?._id, award?.activeCampaignId, router]
   );
+
+  const cycleDate = award.activeCampaignId ? (
+    <Text fontWeight={'bold'}>
+      {format(new Date(award.start), 'PP')} - $
+      {format(new Date(award.end), 'PP')}
+    </Text>
+  ) : null;
 
   return (
     <Tabs
@@ -102,33 +116,68 @@ export default function Award({ award }) {
       width={{ sm: '100%', md: '90%' }}
     >
       <TabList pos="relative">
-        <Tab _selected={{ color: 'black', bg: 'blue.50' }}>{award.title}</Tab>
-        <DisabledTab
-          isDisabled={!isLoggedIn}
-          _selected={{ color: 'black', bg: 'blue.50' }}
-        >
+        <Tab _selected={{ color: 'black', bg: 'blue.50' }}>{award.name}</Tab>
+        <Tab _selected={{ color: 'black', bg: 'blue.50' }}>
           Apply
-          <Badge ml="1" colorScheme={'green'}>
-            $500
-          </Badge>
-        </DisabledTab>
+          {!!award.rewardAmount && (
+            <Badge ml="1" colorScheme={'green'}>
+              {`$${award.rewardAmount}`}
+            </Badge>
+          )}
+        </Tab>
       </TabList>
       <TabPanels>
         <TabPanel>
           <Stack direction={'column'} spacing={5} p={5}>
             <Flex justify={'center'}>
               <Heading fontSize={{ sm: 'md', xl: 'x-large' }}>
-                {award.title}
+                {award.name}
               </Heading>
             </Flex>
             <Flex maxH={200} justify="center">
-              <NextImage src={award.awardImage.url} width={200} height={300} />
+              <NextImage src={award.image.url} width={200} height={300} />
             </Flex>
-            <RichText>{award.content.json}</RichText>
+            <RichText>{award.content}</RichText>
           </Stack>
         </TabPanel>
         <TabPanel>
-          <AwardForm user={user} appType={award.type} onSubmit={onSubmitInfo} />
+          {!isLoggedIn ? (
+            <Message>
+              <Button variant={'link'} as={'a'} href={'/api/auth/login'}>
+                Please sign in!
+              </Button>
+            </Message>
+          ) : null}
+          {award.activeCampaignId ? null : (
+            <Message>
+              <Text>
+                This award is currently unavailable. Please check back later!
+              </Text>
+            </Message>
+          )}
+          {award.applicationId ? (
+            <Message>
+              <Text textAlign={'center'}>
+                {"You've already applied to this award cycle"}
+                {cycleDate}
+              </Text>
+              <Text>
+                {
+                  'If you would like to check award status or update application, please click below.'
+                }
+              </Text>
+              <Button href="/profile" as={LinkWrapper} mt={5} variant="link">
+                Go To Profile
+              </Button>
+            </Message>
+          ) : null}
+          {award.activeCampaignId && !award.applicationId ? (
+            <AwardForm
+              user={user}
+              appType={award.category}
+              onSubmit={onSubmitInfo}
+            />
+          ) : null}
         </TabPanel>
       </TabPanels>
     </Tabs>
@@ -136,10 +185,11 @@ export default function Award({ award }) {
 }
 
 export async function getServerSideProps(context) {
-  const data = await api.getAwardById(context.params.id);
+  const { user } = (await getSession(context.req, context.res)) || {};
+  const data = await api.getAwardById(context.params.id, user?.sub);
   return {
     props: {
-      award: data.award
+      award: data
     }
   };
 }

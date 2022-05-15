@@ -2,6 +2,7 @@ import needle from 'needle';
 import { getDateDisplay } from '../helper';
 import settings from '../../../app.settings.json';
 import logger from '../../logger';
+import web_public_api from '..';
 
 // see for graphql exploration: https://graphql.contentful.com/content/v1/spaces/{spaceId}/explore?access_token={access_token}
 const POST_BY_ID_GRAPHQL_QUERY = (id) => `
@@ -94,49 +95,15 @@ const ALL_PROJECTS_GRAPHQL_QUERY = `
   }
 }`;
 
-const ALL_AWARDS_GRAPHQL_QUERY = `
-{
-  awardCollection {
-    total
-    items {
-      sys {
-        id
-        publishedAt
-      },
-      title
-      content {
-        json
-      }
-      awardImage {
-        url
-        width
-        height
-      }
-    }
-  }
-}`;
-
-// this is quick, dirty and fragile. I can handle this better
-function getAwardType(title) {
-  if (title.toLowerCase().includes('stem')) return 'stem';
-  if (title.toLowerCase().includes('bridges')) return 'bridges';
-  return 'unknown';
-}
-
 export async function getBlogById(id) {
   return await baseQuery(POST_BY_ID_GRAPHQL_QUERY(id));
 }
 
-export async function getAwardById(id) {
-  const response = await baseQuery(AWARD_BY_ID_GRAPHQL_QUERY(id));
-  return {
-    ...response,
-    award: {
-      ...response.award,
-      type: getAwardType(response.award.title),
-      awardAmount: 500
-    }
-  };
+export async function getAwardById(id, userId) {
+  let url = `/award-public?id=${id}`;
+  userId ? (url = `${url}&userId=${userId}`) : url;
+
+  return await web_public_api(url);
 }
 
 export async function getAllBlogs() {
@@ -169,23 +136,6 @@ export async function getAllProjects() {
       description: i.description,
       image: i.image,
       github: i.github
-    };
-  });
-}
-
-export async function getallAwards() {
-  const response = await baseQuery(ALL_AWARDS_GRAPHQL_QUERY);
-  const { awardCollection = {} } = response;
-  const { items = [] } = awardCollection;
-  return items.map((i) => {
-    return {
-      id: i.sys.id,
-      title: i.title,
-      content: i.content,
-      image: i.awardImage,
-      link: `/community/awards/${i.sys.id}`,
-      type: getAwardType(i.title),
-      awardAmount: 500
     };
   });
 }

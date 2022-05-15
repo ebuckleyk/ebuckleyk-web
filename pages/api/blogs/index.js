@@ -1,4 +1,3 @@
-import { withSentry } from '@sentry/nextjs';
 import { getAllBlogs } from '../../../utils/api/handlers/contentful';
 import { getMyTwitterData } from '../../../utils/api/handlers/twitter';
 import logger from '../../../utils/logger';
@@ -20,4 +19,4 @@ async function handler(req, res) {
   }
 }
 
-export default withSentry(withCorrelationId(requestLogger(handler)));
+export default withCorrelationId(requestLogger(handler));
