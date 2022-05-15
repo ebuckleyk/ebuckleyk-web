@@ -38,7 +38,7 @@ export default function Awards({ data }) {
 }
 
 export async function getServerSideProps(context) {
-  const { user } = await getSession(context.req, context.res);
+  const { user } = (await getSession(context.req, context.res)) || {};
   const query = user ? `?userId=${user.sub}` : '';
   const data = await web_public_api(`/award-public${query}`);
   return {

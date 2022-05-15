@@ -183,7 +183,7 @@ export default function Award({ award, router }) {
 }
 
 export async function getServerSideProps(context) {
-  const { user } = await getSession(context.req, context.res);
+  const { user } = (await getSession(context.req, context.res)) || {};
   const data = await api.getAwardById(context.params.id, user?.sub);
   return {
     props: {
