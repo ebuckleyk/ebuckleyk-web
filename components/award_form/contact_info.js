@@ -104,7 +104,7 @@ function AwardFormContactInformation({ values }) {
           }}
         </Field>
       </GridItem>
-      <GridItem colSpan={1}>
+      <GridItem colSpan={{ sm: 1, md: 2 }}>
         <Field name="city">
           {({ field, form }) => {
             return (

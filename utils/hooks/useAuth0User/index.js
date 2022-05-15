@@ -30,8 +30,7 @@ const is_in_role = (user, roles = [], allInclusive = true) => {
   return ret;
 };
 export default function useAuth0User() {
-  // const { user, error, isLoading, checkSession } = useUser();
-  const { user, error, isLoading, checkSession } = {};
+  const { user, error, isLoading, checkSession } = useUser();
   const inRoles = useCallback(
     (roles, inAllRoles = true) => {
       const all_roles = Array.isArray(roles) ? roles : roles.split(',');

@@ -21,7 +21,7 @@ import AwardFormContactInformation from './contact_info';
 import CareerInSTEM from './award_specific/career_in_stem';
 
 const application_form_lookup = {
-  bridges: BridgesMedicalAwardForm,
+  medical: BridgesMedicalAwardForm,
   stem: CareerInSTEM
 };
 

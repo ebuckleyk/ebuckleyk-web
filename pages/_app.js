@@ -47,9 +47,9 @@ function MyApp({ Component, pageProps, router }) {
     ((page) => <Layout {...{ router, headerInfo, navState }}>{page}</Layout>);
   return (
     <ChakraProvider {...{ theme }}>
-      {/* <UserProvider profileUrl='/api/profile'> */}
-      {getLayout(<Component {...pageProps} />)}
-      {/* </UserProvider> */}
+      <UserProvider profileUrl="/api/profile">
+        {getLayout(<Component {...pageProps} router={router} />)}
+      </UserProvider>
     </ChakraProvider>
   );
 }

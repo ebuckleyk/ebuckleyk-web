@@ -1,4 +1,3 @@
-import { withSentry } from '@sentry/nextjs';
 import { getSession, withApiAuthRequired } from '@auth0/nextjs-auth0';
 import requestLogger from '../../../utils/api/middleware/requestLogger';
 import withCorrelationId from '../../../utils/api/middleware/withCorrelationId';
@@ -38,6 +37,4 @@ async function handler(req, res) {
   }
 }
 
-export default withSentry(
-  withApiAuthRequired(withCorrelationId(requestLogger(handler)))
-);
+export default withApiAuthRequired(withCorrelationId(requestLogger(handler)));
