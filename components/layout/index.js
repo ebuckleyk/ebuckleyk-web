@@ -86,7 +86,7 @@ const SEO = ({
   ];
 };
 
-const backgroundImageUrl = '/images/background@1920.jpg';
+const backgroundImageUrl = '/images/backgroundv2@1920.jpg';
 export default function Layout({
   children,
   router,
