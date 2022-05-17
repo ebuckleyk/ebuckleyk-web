@@ -11,7 +11,8 @@ import {
   useToast,
   Badge,
   Text,
-  Button
+  Button,
+  Box
 } from '@chakra-ui/react';
 import * as api from '../../../utils/api/handlers/contentful';
 import RichText from '../../../components/richtext';
@@ -134,9 +135,24 @@ export default function Award({ award, router }) {
                 {award.name}
               </Heading>
             </Flex>
-            <Flex maxH={200} justify="center">
-              <NextImage src={award.image.url} width={200} height={300} />
-            </Flex>
+            <Box justifyContent={'center'} display="flex" w={'100%'}>
+              <Flex
+                pos="relative"
+                boxShadow={'xl'}
+                borderRadius={50}
+                borderWidth={2}
+                width={200}
+                height={200}
+                justify="center"
+              >
+                <NextImage
+                  layout="fill"
+                  src={award.image.url}
+                  width={200}
+                  height={300}
+                />
+              </Flex>
+            </Box>
             <RichText>{award.content}</RichText>
           </Stack>
         </TabPanel>

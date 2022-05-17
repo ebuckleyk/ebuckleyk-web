@@ -21,7 +21,7 @@ const data = [
     fullMark: 5
   },
   {
-    language: 'Javascript',
+    language: 'pHp',
     ebuckleyk: 2.5,
     fullMark: 5
   },
@@ -31,7 +31,7 @@ const data = [
     fullMark: 5
   },
   {
-    language: 'pHp',
+    language: 'nodejs',
     ebuckleyk: 3,
     fullMark: 5
   },
