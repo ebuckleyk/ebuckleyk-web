@@ -7,7 +7,6 @@ import { EVENTS, GA } from '../../../utils/analytics';
 
 function CardImage({ img }) {
   if (!img || !img?.url) return null;
-  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
   return (
     <Container
@@ -36,6 +35,7 @@ function CardTitle({ title }) {
 
 function CardContent({ isPreview, content, isRichText }) {
   if (!content) return null;
+  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
   const Content = isRichText ? RichText : Text;
   return (
     <Content
