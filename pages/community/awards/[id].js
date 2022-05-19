@@ -102,7 +102,7 @@ export default function Award({ award, router }) {
 
   const cycleDate = award.activeCampaignId ? (
     <Text fontWeight={'bold'}>
-      {format(new Date(award.start), 'PP')} - $
+      {format(new Date(award.start), 'PP')} -{' '}
       {format(new Date(award.end), 'PP')}
     </Text>
   ) : null;
@@ -164,14 +164,14 @@ export default function Award({ award, router }) {
               </Button>
             </Message>
           ) : null}
-          {award.activeCampaignId ? null : (
+          {isLoggedIn && !award.activeCampaignId ? (
             <Message>
               <Text>
                 This award is currently unavailable. Please check back later!
               </Text>
             </Message>
-          )}
-          {award.applicationId ? (
+          ) : null}
+          {isLoggedIn && award.applicationId ? (
             <Message>
               <Text textAlign={'center'}>
                 {"You've already applied to this award cycle"}
@@ -187,7 +187,7 @@ export default function Award({ award, router }) {
               </Button>
             </Message>
           ) : null}
-          {award.activeCampaignId && !award.applicationId ? (
+          {award.activeCampaignId && !award.applicationId && isLoggedIn ? (
             <AwardForm
               user={user}
               appType={award.category}

@@ -18,7 +18,6 @@ const getBucketKey = (fileName, userId) => {
 };
 
 async function handler(req, res) {
-  if (process.env.NODE_ENV === 'production') return; // not ready for production
   try {
     const { user } = getSession(req, res);
     const { fileName } = req.query;
