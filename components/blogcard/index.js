@@ -53,6 +53,8 @@ export default function BlogCard({
   date,
   navigateTo
 }) {
+  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const config = getConfig(source);
@@ -107,9 +109,21 @@ export default function BlogCard({
             {title}
           </Text>
           {source === 'blog' ? (
-            <RichText noOfLines={3}>{content.json}</RichText>
+            <RichText
+              maxHeight={isSafari ? '200px' : undefined}
+              overflow={isSafari ? 'hidden' : undefined}
+              noOfLines={3}
+            >
+              {content.json}
+            </RichText>
           ) : (
-            <Text noOfLines={2}>{content}</Text>
+            <Text
+              maxHeight={isSafari ? '200px' : undefined}
+              overflow={isSafari ? 'hidden' : undefined}
+              noOfLines={2}
+            >
+              {content}
+            </Text>
           )}
         </Container>
         <Box position={'absolute'} right={15} top={15}>
