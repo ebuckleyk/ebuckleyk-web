@@ -33,9 +33,8 @@ function CardTitle({ title }) {
   );
 }
 
-function CardContent({ isPreview, content, isRichText }) {
+function CardContent({ isPreview, content, isRichText, isSafari }) {
   if (!content) return null;
-  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
   const Content = isRichText ? RichText : Text;
   return (
     <Content
@@ -66,7 +65,8 @@ export default function Card({
   navigateTo,
   gaEvent = EVENTS.VIEW_CARD,
   isPreview = true,
-  isRichText = false
+  isRichText = false,
+  isSafari = false
 }) {
   const router = useRouter();
 
@@ -96,7 +96,7 @@ export default function Card({
     >
       <CardImage img={img} />
       <CardTitle title={title} />
-      <CardContent {...{ isRichText, content, isPreview }} />
+      <CardContent {...{ isRichText, content, isPreview, isSafari }} />
       <Footer onClick={navigate} />
       {children}
     </Box>
