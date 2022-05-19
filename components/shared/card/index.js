@@ -7,6 +7,7 @@ import { EVENTS, GA } from '../../../utils/analytics';
 
 function CardImage({ img }) {
   if (!img || !img?.url) return null;
+  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
   return (
     <Container
@@ -36,7 +37,15 @@ function CardTitle({ title }) {
 function CardContent({ isPreview, content, isRichText }) {
   if (!content) return null;
   const Content = isRichText ? RichText : Text;
-  return <Content noOfLines={isPreview ? 4 : Infinity}>{content}</Content>;
+  return (
+    <Content
+      maxHeight={isSafari ? '90px' : undefined}
+      overflow={isSafari ? 'hidden' : undefined}
+      noOfLines={isPreview ? 4 : Infinity}
+    >
+      {content}
+    </Content>
+  );
 }
 
 function Footer({ onClick }) {

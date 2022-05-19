@@ -20,6 +20,7 @@ import { ExternalLinkIcon } from '@chakra-ui/icons';
 
 export default function ProjectCard({ img, title, description, github }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
   return (
     <>
       <Box
@@ -50,7 +51,13 @@ export default function ProjectCard({ img, title, description, github }) {
           <Text fontSize="large" fontWeight="bold" align="center" isTruncated>
             {title}
           </Text>
-          <RichText noOfLines={4}>{description.json}</RichText>
+          <RichText
+            maxHeight={isSafari ? '90px' : undefined}
+            overflow={isSafari ? 'hidden' : undefined}
+            noOfLines={4}
+          >
+            {description.json}
+          </RichText>
         </Container>
         <Flex justify={'flex-end'} alignItems="center">
           <Button
