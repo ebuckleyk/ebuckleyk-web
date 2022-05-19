@@ -110,7 +110,7 @@ export default function BlogCard({
           </Text>
           {source === 'blog' ? (
             <RichText
-              maxHeight={isSafari ? '200px' : undefined}
+              maxHeight={isSafari ? '100px' : undefined}
               overflow={isSafari ? 'hidden' : undefined}
               noOfLines={3}
             >
@@ -118,7 +118,7 @@ export default function BlogCard({
             </RichText>
           ) : (
             <Text
-              maxHeight={isSafari ? '200px' : undefined}
+              maxHeight={isSafari ? '100px' : undefined}
               overflow={isSafari ? 'hidden' : undefined}
               noOfLines={2}
             >
