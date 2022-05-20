@@ -1,5 +1,5 @@
 import * as api from '../../../utils/api/handlers/sendgrid';
-import requestLogger from '../../../utils/api/middleware/requestLogger';
+import { withApplicationInsights } from '../../../utils/api/middleware';
 import withCaptchaValidation from '../../../utils/api/middleware/withCaptchaValidation';
 import withCorrelationId from '../../../utils/api/middleware/withCorrelationId';
 import logger from '../../../utils/logger';
@@ -23,4 +23,6 @@ async function handler(req, res) {
   }
 }
 
-export default withCorrelationId(requestLogger(withCaptchaValidation(handler)));
+export default withApplicationInsights(
+  withCorrelationId(withCaptchaValidation(handler))
+);

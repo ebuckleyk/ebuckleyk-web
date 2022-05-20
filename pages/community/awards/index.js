@@ -1,9 +1,18 @@
 import { getSession } from '@auth0/nextjs-auth0';
 import { Badge, SimpleGrid, Stack, Text } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
 import Card from '../../../components/shared/card';
 import { EVENTS } from '../../../utils/analytics';
 import web_public_api from '../../../utils/api';
 export default function Awards({ data }) {
+  const [isSafari, setIsSafari] = useState(false);
+
+  useEffect(() => {
+    if (/^((?!chrome|android).)*safari/i.test(navigator?.userAgent)) {
+      setIsSafari(true);
+    }
+  }, []);
+
   return (
     <SimpleGrid>
       <Stack spacing={3}>
@@ -21,6 +30,7 @@ export default function Awards({ data }) {
           );
           return (
             <Card
+              isSafari={isSafari}
               isPreview
               isRichText
               navigateTo={`/community/awards/${d._id}`}

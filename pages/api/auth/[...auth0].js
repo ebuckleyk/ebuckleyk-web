@@ -1,4 +1,5 @@
 import { handleAuth } from '@auth0/nextjs-auth0';
+import { withApplicationInsights } from '../../../utils/api/middleware';
 
 /**
  * Executing handleAuth() creates the following route handlers under the hood that perform the different parts of authentication flow:
@@ -9,4 +10,4 @@ import { handleAuth } from '@auth0/nextjs-auth0';
  *  - /api/auth/me: You can fetch user profile information in JSON format.
  */
 
-export default handleAuth();
+export default withApplicationInsights(handleAuth());

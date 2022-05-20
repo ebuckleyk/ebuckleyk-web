@@ -1,7 +1,7 @@
 import { getSession, withApiAuthRequired } from '@auth0/nextjs-auth0';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import requestLogger from '../../../../utils/api/middleware/requestLogger';
+import { withApplicationInsights } from '../../../../utils/api/middleware';
 import withCorrelationId from '../../../../utils/api/middleware/withCorrelationId';
 import logger from '../../../../utils/logger';
 
@@ -36,4 +36,6 @@ async function handler(req, res) {
   }
 }
 
-export default withApiAuthRequired(withCorrelationId(requestLogger(handler)));
+export default withApplicationInsights(
+  withApiAuthRequired(withCorrelationId(handler))
+);

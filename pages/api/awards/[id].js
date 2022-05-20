@@ -1,6 +1,6 @@
 import { getSession, withApiAuthRequired } from '@auth0/nextjs-auth0';
 import web_public_api from '../../../utils/api';
-import requestLogger from '../../../utils/api/middleware/requestLogger';
+import { withApplicationInsights } from '../../../utils/api/middleware';
 import withCaptchaValidation from '../../../utils/api/middleware/withCaptchaValidation';
 import withCorrelationId from '../../../utils/api/middleware/withCorrelationId';
 import logger from '../../../utils/logger';
@@ -68,6 +68,6 @@ async function handler(req, res) {
   }
 }
 
-export default withApiAuthRequired(
-  withCorrelationId(requestLogger(withCaptchaValidation(handler)))
+export default withApplicationInsights(
+  withApiAuthRequired(withCorrelationId(withCaptchaValidation(handler)))
 );

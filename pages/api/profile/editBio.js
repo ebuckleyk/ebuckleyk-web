@@ -1,9 +1,9 @@
 import { getSession, withApiAuthRequired } from '@auth0/nextjs-auth0';
-import requestLogger from '../../../utils/api/middleware/requestLogger';
 import withCorrelationId from '../../../utils/api/middleware/withCorrelationId';
 import logger from '../../../utils/logger';
 import { getAuth0ManagementClient } from '../../../utils/api/handlers/auth0';
 import withCaptchaValidation from '../../../utils/api/middleware/withCaptchaValidation';
+import { withApplicationInsights } from '../../../utils/api/middleware';
 
 async function handler(req, res) {
   try {
@@ -27,6 +27,6 @@ async function handler(req, res) {
   }
 }
 
-export default withApiAuthRequired(
-  withCorrelationId(requestLogger(withCaptchaValidation(handler)))
+export default withApplicationInsights(
+  withApiAuthRequired(withCorrelationId(withCaptchaValidation(handler)))
 );

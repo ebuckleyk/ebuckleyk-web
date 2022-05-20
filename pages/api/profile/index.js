@@ -1,5 +1,4 @@
 import { getSession, withApiAuthRequired } from '@auth0/nextjs-auth0';
-import requestLogger from '../../../utils/api/middleware/requestLogger';
 import withCorrelationId from '../../../utils/api/middleware/withCorrelationId';
 import logger from '../../../utils/logger';
 import {
@@ -7,6 +6,7 @@ import {
   getCuratedProfile,
   getCuratedRoles
 } from '../../../utils/api/handlers/auth0';
+import { withApplicationInsights } from '../../../utils/api/middleware';
 
 async function GET(userId) {
   const client = await getAuth0ManagementClient('read:users read:roles');
@@ -37,4 +37,6 @@ async function handler(req, res) {
   }
 }
 
-export default withApiAuthRequired(withCorrelationId(requestLogger(handler)));
+export default withApplicationInsights(
+  withApiAuthRequired(withCorrelationId(handler))
+);
