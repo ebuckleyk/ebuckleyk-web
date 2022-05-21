@@ -13,15 +13,16 @@ const client = new S3Client({
   region: 'us-east-1'
 });
 
-const getBucketKey = (fileName, userId) => {
-  return `${userId}/${fileName}`;
+const getBucketKey = (fileName, userId, prefix) => {
+  return `${userId}/${prefix}/${fileName}`;
 };
 
 async function handler(req, res) {
   try {
     const { user } = getSession(req, res);
-    const { fileName } = req.query;
-    const key = getBucketKey(fileName, user.sub);
+    const { fileName, prefix } = req.query;
+
+    const key = getBucketKey(fileName, user.sub, prefix);
     const command = new PutObjectCommand({
       Bucket: process.env.S3_BUCKET,
       Key: key

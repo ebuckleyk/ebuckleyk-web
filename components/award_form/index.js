@@ -49,7 +49,12 @@ function PercentComplete({ values, errors }) {
   );
 }
 
-export default function AwardForm({ onSubmit, appType, user }) {
+export default function AwardForm({
+  onSubmit,
+  appType,
+  user,
+  activeCampaignId
+}) {
   const application_schema = useMemo(() => {
     return Yup.object().shape({
       ...AwardFormContactInformation.schema,
@@ -97,7 +102,14 @@ export default function AwardForm({ onSubmit, appType, user }) {
                   <AccordionIcon />
                 </AccordionButton>
                 <AccordionPanel pb={4}>
-                  <AppForm {...{ values, setFieldValue }} />
+                  <AppForm
+                    {...{
+                      values,
+                      setFieldValue,
+                      activeCampaignId,
+                      userId: user?.user_id
+                    }}
+                  />
                 </AccordionPanel>
               </AccordionItem>
               <AccordionItem>

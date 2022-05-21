@@ -14,11 +14,18 @@ import { Field } from 'formik';
 import * as Yup from 'yup';
 import FileUpload from '../../shared/file_upload';
 import * as utils from '../../../utils';
+import { getAwardCampaignApplicationDocS3Format } from '../../../utils/api/helper';
 
 /**
  * This should go away in future iterations as forms will be generated dynamically
  */
-function BridgesMedicalAwardForm({ values }) {
+function BridgesMedicalAwardForm({ values, setFieldValue, activeCampaignId }) {
+  const onAddAttachments = (files) => {
+    setFieldValue('attachments', files);
+  };
+
+  const prefix = getAwardCampaignApplicationDocS3Format(activeCampaignId);
+
   return (
     <SimpleGrid columns={{ sm: 1, md: 4 }} columnGap={3} rowGap={2}>
       <GridItem colSpan={{ sm: 1, md: 3 }}>
@@ -77,7 +84,13 @@ function BridgesMedicalAwardForm({ values }) {
         </Field>
       </GridItem>
       <GridItem colSpan={{ sm: 1, md: 4 }}>
-        <FileUpload {...{ values }} />
+        <FileUpload
+          {...{
+            values,
+            onAddFiles: onAddAttachments,
+            prefix
+          }}
+        />
       </GridItem>
     </SimpleGrid>
   );

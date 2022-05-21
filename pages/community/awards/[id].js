@@ -189,6 +189,7 @@ export default function Award({ award, router }) {
           ) : null}
           {award.activeCampaignId && !award.applicationId && isLoggedIn ? (
             <AwardForm
+              activeCampaignId={award.activeCampaignId}
               user={user}
               appType={award.category}
               onSubmit={onSubmitInfo}

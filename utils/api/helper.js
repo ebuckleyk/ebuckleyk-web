@@ -1,5 +1,9 @@
 import { format, formatDistance } from 'date-fns';
 
+export function getAwardCampaignApplicationDocS3Format(activeCampaignId) {
+  return `award_campaign/${activeCampaignId}/application_docs`;
+}
+
 export function getDateDisplay(publishDate) {
   const publishDateAsDate = new Date(publishDate);
   const displayDate = format(publishDateAsDate, 'MMMM do, yyyy');
@@ -54,10 +58,10 @@ export async function uploadToS3(filepond_file) {
   }
 }
 
-export async function getPreSignedUrl(fileName, fileType) {
+export async function getPreSignedUrl(fileName, fileType, prefix) {
   return await (
     await fetch(
-      `/api/s3/preSignedUrl?fileName=${fileName}&fileType=${fileType}`
+      `/api/s3/preSignedUrl?fileName=${fileName}&fileType=${fileType}&prefix=${prefix}`
     )
   ).json();
 }

@@ -14,7 +14,7 @@ import * as utils from '../../../utils/api/helper';
 
 registerPlugin(FilePondPluginFileValidateType, FilePondPluginFileValidateSize);
 
-export default function FileUpload({ values, onAddFiles }) {
+export default function FileUpload({ values, onAddFiles, prefix = '' }) {
   const onupdatefiles = useCallback(
     (files) => {
       files.forEach((f) => {
@@ -35,7 +35,8 @@ export default function FileUpload({ values, onAddFiles }) {
         progress(false, 0, file.size);
         const { signedUrl, hostedContent } = await utils.getPreSignedUrl(
           file.name,
-          file.type
+          file.type,
+          prefix
         );
         load(JSON.stringify({ signedUrl, hostedContent }));
         progress(false, file.size, file.size);
@@ -44,7 +45,7 @@ export default function FileUpload({ values, onAddFiles }) {
         abort();
       }
     },
-    []
+    [prefix]
   );
 
   return (
