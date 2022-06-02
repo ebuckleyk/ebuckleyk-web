@@ -11,7 +11,7 @@ import { Field } from 'formik';
 import * as Yup from 'yup';
 import states from '../../utils/state_abbrev.json';
 
-function AwardFormContactInformation({ values }) {
+function AwardFormContactInformation({ values, isEditable }) {
   return (
     <SimpleGrid columns={{ sm: 1, md: 4 }} columnGap={3} rowGap={2}>
       <GridItem colSpan={{ sm: 1, md: 2 }}>
@@ -69,7 +69,10 @@ function AwardFormContactInformation({ values }) {
         <Field name="phone">
           {({ field, form }) => {
             return (
-              <FormControl isInvalid={form.errors.phone && form.touched.phone}>
+              <FormControl
+                isDisabled={!isEditable}
+                isInvalid={form.errors.phone && form.touched.phone}
+              >
                 <FormLabel htmlFor="phone">Phone</FormLabel>
                 <Input {...field} id="phone" type="number" />
                 <FormErrorMessage>{form.errors.phone}</FormErrorMessage>
@@ -82,7 +85,10 @@ function AwardFormContactInformation({ values }) {
         <Field name="addr1">
           {({ field, form }) => {
             return (
-              <FormControl isInvalid={form.errors.addr1 && form.touched.addr1}>
+              <FormControl
+                isDisabled={!isEditable}
+                isInvalid={form.errors.addr1 && form.touched.addr1}
+              >
                 <FormLabel htmlFor="addr1">Address 1</FormLabel>
                 <Input {...field} id="addr1" type="text" />
                 <FormErrorMessage>{form.errors.addr1}</FormErrorMessage>
@@ -95,7 +101,10 @@ function AwardFormContactInformation({ values }) {
         <Field name="addr2">
           {({ field, form }) => {
             return (
-              <FormControl isInvalid={form.errors.addr2 && form.touched.addr2}>
+              <FormControl
+                isDisabled={!isEditable}
+                isInvalid={form.errors.addr2 && form.touched.addr2}
+              >
                 <FormLabel htmlFor="addr2">Address 2</FormLabel>
                 <Input {...field} id="addr2" type="text" />
                 <FormErrorMessage>{form.errors.addr2}</FormErrorMessage>
@@ -108,7 +117,10 @@ function AwardFormContactInformation({ values }) {
         <Field name="city">
           {({ field, form }) => {
             return (
-              <FormControl isInvalid={form.errors.city && form.touched.city}>
+              <FormControl
+                isDisabled={!isEditable}
+                isInvalid={form.errors.city && form.touched.city}
+              >
                 <FormLabel htmlFor="city">City</FormLabel>
                 <Input {...field} id="city" type="city" />
                 <FormErrorMessage>{form.errors.city}</FormErrorMessage>
@@ -119,9 +131,12 @@ function AwardFormContactInformation({ values }) {
       </GridItem>
       <GridItem colSpan={1}>
         <Field name="state">
-          {({ field }) => {
+          {({ field, form }) => {
             return (
-              <FormControl>
+              <FormControl
+                isDisabled={!isEditable}
+                isInvalid={form.errors.state && form.touched.state}
+              >
                 <FormLabel htmlFor="state">State</FormLabel>
                 <Select {...field} value={values.state} variant={'flushed'}>
                   {[{ Abbrev: 99, Code: '' }, ...states].map((s) => {
@@ -141,7 +156,10 @@ function AwardFormContactInformation({ values }) {
         <Field name="zip">
           {({ field, form }) => {
             return (
-              <FormControl isInvalid={form.errors.zip && form.touched.zip}>
+              <FormControl
+                isDisabled={!isEditable}
+                isInvalid={form.errors.zip && form.touched.zip}
+              >
                 <FormLabel htmlFor="zip">Zip</FormLabel>
                 <Input {...field} id="zip" type="zip" />
                 <FormErrorMessage>{form.errors.zip}</FormErrorMessage>

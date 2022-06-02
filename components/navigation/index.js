@@ -288,12 +288,7 @@ export default function Navigation({ activeRoute, isLoading }) {
           />
         </Flex>
         <Flex justify={{ base: 'center', md: 'start' }}>
-          <LinkWrapper
-            _hover={{
-              textDecoration: 'none'
-            }}
-            href={'/'}
-          >
+          <LinkWrapper href={'/'}>
             <NextImage
               src="/images/signature.png"
               alt="Emmanuel K. Buckley"
@@ -363,15 +358,30 @@ export default function Navigation({ activeRoute, isLoading }) {
               />
             </MenuButton>
             <MenuList>
-              <MenuItem as={LinkWrapper} href="/profile">
-                Profile
+              <MenuItem
+                _hover={{
+                  bg: useColorModeValue('blue.50', 'gray.900'),
+                  textDecoration: 'none'
+                }}
+                as={LinkWrapper}
+                href="/profile"
+              >
+                {`${user?.name}'s Profile`}
               </MenuItem>
               <MenuItem
+                _hover={{
+                  bg: useColorModeValue('blue.50', 'gray.900'),
+                  textDecoration: 'none'
+                }}
                 as={LinkWrapper}
                 href="/portal/dashboard"
-                display={inRoles('Admin') ? 'flex' : 'none'}
+                display={
+                  inRoles(['Admin', 'Committee Member'], false)
+                    ? 'flex'
+                    : 'none'
+                }
               >
-                Portal
+                Award Committee Dashboard
               </MenuItem>
               <MenuDivider />
               <MenuItem icon={<FaSignOutAlt />} as="a" href="/api/auth/logout">

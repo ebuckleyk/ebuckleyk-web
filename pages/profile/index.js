@@ -8,16 +8,23 @@ import {
   TabPanel,
   useToast
 } from '@chakra-ui/react';
+import useSWR from 'swr';
 import useAuth0User from '../../utils/hooks/useAuth0User';
 import HeaderInfo from '../../components/profile/header_info';
 import ContactInfo from '../../components/profile/contact_info';
 import { useCallback } from 'react';
 import { withCaptcha } from '../../utils/api/helper';
 import { EVENTS, GA } from '../../utils/analytics';
+import ApplicationHistory from '../../components/profile/application_history';
 
-export default function Profile() {
+const fetcher = (...args) => fetch(...args).then((res) => res.json());
+export default function Profile({ router }) {
   const { user, isLoading, isLoggedIn, checkSession } = useAuth0User();
   const toast = useToast();
+  const { data: applications } = useSWR(
+    '/api/profile/application_history',
+    fetcher
+  );
 
   const updateBio = useCallback(
     async (bio) => {
@@ -109,6 +116,7 @@ export default function Profile() {
       flexDir="column"
       justifyContent={'center'}
       alignItems="center"
+      minH={{ sm: '100vh', md: 0 }}
     >
       <Stack width={'100%'} spacing={5}>
         <HeaderInfo
@@ -121,7 +129,7 @@ export default function Profile() {
         <Tabs>
           <TabList>
             <Tab fontSize={14}>Contact Information</Tab>
-            <Tab fontSize={14}>Award History</Tab>
+            <Tab fontSize={14}>Application History</Tab>
             <Tab fontSize={14}>Contact Preferences</Tab>
           </TabList>
           <TabPanels>
@@ -131,7 +139,14 @@ export default function Profile() {
                 onUpdateContactInfo={updateContact}
               />
             </TabPanel>
-            <TabPanel>None</TabPanel>
+            <TabPanel>
+              <ApplicationHistory
+                onClick={(applicationId) =>
+                  router.push(`/profile/${applicationId}`)
+                }
+                applications={applications}
+              />
+            </TabPanel>
             <TabPanel>None</TabPanel>
           </TabPanels>
         </Tabs>

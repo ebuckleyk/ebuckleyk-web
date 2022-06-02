@@ -6,24 +6,18 @@ import {
   Input,
   FormErrorMessage,
   FormHelperText,
-  Textarea
+  Textarea,
+  NumberInput,
+  NumberInputField
 } from '@chakra-ui/react';
-import { Field } from 'formik';
+import { Field, FieldArray } from 'formik';
 import * as Yup from 'yup';
-import FileUpload from '../../shared/file_upload';
-import * as utils from '../../../utils';
-import { getAwardCampaignApplicationDocS3Format } from '../../../utils/api/helper';
+import FileZone from '../../shared/file_zone';
 
 /**
  * This should go away in future iterations as forms will be generated dynamically
  */
-function CareerInSTEM({ values, setFieldValue, activeCampaignId }) {
-  const onAddAttachments = (files) => {
-    setFieldValue('attachments', files);
-  };
-
-  const prefix = getAwardCampaignApplicationDocS3Format(activeCampaignId);
-
+function CareerInSTEM({ isEditable, onSelectFile }) {
   return (
     <SimpleGrid columns={{ sm: 1, md: 4 }} columnGap={3} rowGap={2}>
       <GridItem colSpan={{ sm: 1, md: 3 }}>
@@ -31,6 +25,7 @@ function CareerInSTEM({ values, setFieldValue, activeCampaignId }) {
           {({ field, form }) => {
             return (
               <FormControl
+                isDisabled={!isEditable}
                 isRequired
                 isInvalid={form.errors.institution && form.touched.institution}
               >
@@ -49,9 +44,14 @@ function CareerInSTEM({ values, setFieldValue, activeCampaignId }) {
         <Field name="gpa">
           {({ field, form }) => {
             return (
-              <FormControl isInvalid={form.errors.gpa && form.touched.gpa}>
+              <FormControl
+                isDisabled={!isEditable}
+                isInvalid={form.errors.gpa && form.touched.gpa}
+              >
                 <FormLabel htmlFor="gpa">GPA</FormLabel>
-                <Input {...field} id="gpa" type="number" />
+                <NumberInput id="gpa" {...field} precision={1} max={4.0}>
+                  <NumberInputField {...field} id="gpa" />
+                </NumberInput>
                 <FormErrorMessage>{form.errors.gpa}</FormErrorMessage>
               </FormControl>
             );
@@ -63,6 +63,7 @@ function CareerInSTEM({ values, setFieldValue, activeCampaignId }) {
           {({ field, form }) => {
             return (
               <FormControl
+                isDisabled={!isEditable}
                 isRequired
                 isInvalid={
                   form.errors.field_of_study && form.touched.field_of_study
@@ -83,6 +84,7 @@ function CareerInSTEM({ values, setFieldValue, activeCampaignId }) {
           {({ field, form }) => {
             return (
               <FormControl
+                isDisabled={!isEditable}
                 isInvalid={form.errors.message && form.touched.message}
               >
                 <FormLabel htmlFor="message">Message</FormLabel>
@@ -97,11 +99,37 @@ function CareerInSTEM({ values, setFieldValue, activeCampaignId }) {
         </Field>
       </GridItem>
       <GridItem colSpan={{ sm: 1, md: 4 }}>
-        <FileUpload
-          values={values}
-          onAddFiles={onAddAttachments}
-          prefix={prefix}
-        />
+        <FieldArray name="attachments">
+          {({ form, remove }) => {
+            return (
+              <FormControl isRequired>
+                <FormLabel>Attachments</FormLabel>
+                <FileZone
+                  onSelectFile={onSelectFile}
+                  onRemoveFile={(file, idx) => {
+                    const id = file._id;
+                    if (id) {
+                      const newAttachments = form.values.attachments.map((a) =>
+                        a._id === id ? { ...a, isDeleted: true } : a
+                      );
+                      form.setFieldValue('attachments', newAttachments);
+                    } else {
+                      remove(idx);
+                    }
+                  }}
+                  files={form.values.attachments}
+                  onAddFiles={(files) =>
+                    form.setFieldValue('attachments', [
+                      ...form.values.attachments,
+                      ...files
+                    ])
+                  }
+                  isEditable={isEditable}
+                />
+              </FormControl>
+            );
+          }}
+        </FieldArray>
       </GridItem>
     </SimpleGrid>
   );
@@ -131,17 +159,17 @@ CareerInSTEM.schema = {
     .max(3, 'Only a max of 3 files can be uploaded')
     .min(1, 'There should be at least 1 doc submitted with this application')
     .nullable()
-    .test(
-      'is-correct-size',
-      'VALIDATION_FILE_SIZE_TOO_BIG',
-      utils.filepond_validateCorrectFileSize
-    )
-    .test(
-      'is-correct-type',
-      'VALIDATION_WRONG_FILE_TYPE',
-      utils.filepond_validateCorrectFileType
-    )
-    .default(null)
+    // .test(
+    //   'is-correct-size',
+    //   'VALIDATION_FILE_SIZE_TOO_BIG',
+    //   utils.filepond_validateCorrectFileSize
+    // )
+    // .test(
+    //   'is-correct-type',
+    //   'VALIDATION_WRONG_FILE_TYPE',
+    //   utils.filepond_validateCorrectFileType
+    // )
+    .default([])
 };
 
 export default CareerInSTEM;

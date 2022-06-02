@@ -18,7 +18,10 @@ import * as api from '../../../utils/api/handlers/contentful';
 import RichText from '../../../components/richtext';
 import AwardForm from '../../../components/award_form';
 import { useCallback } from 'react';
-import { withCaptcha, uploadToS3 } from '../../../utils/api/helper';
+import {
+  withCaptcha,
+  handleAwardApplicationAttachments
+} from '../../../utils/api/helper';
 import useAuth0User from '../../../utils/hooks/useAuth0User';
 import LinkWrapper from '../../../components/shared/link_wrapper';
 import { getSession } from '@auth0/nextjs-auth0';
@@ -44,33 +47,25 @@ export default function Award({ award, router }) {
     async (formInfo, done) => {
       withCaptcha(async (token) => {
         try {
-          let s3FileLocations = [];
-
-          if (formInfo.attachments?.length) {
-            s3FileLocations = await Promise.all(
-              formInfo.attachments?.map((f) => {
-                return uploadToS3(f);
-              })
-            );
-          }
+          const attachments = await handleAwardApplicationAttachments(
+            formInfo.attachments ?? [],
+            award.activeCampaignId
+          );
 
           const postData = {
             ...formInfo,
             campaignId: award.activeCampaignId,
-            attachments: [...s3FileLocations],
+            attachments,
             captcha: token
           };
 
-          const response = await fetch(
-            `/api/awards/${award._id}?appType=${formInfo.appType}`,
-            {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify(postData)
-            }
-          );
+          const response = await fetch(`/api/awards/${award._id}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(postData)
+          });
 
           if (response.status !== 200) throw new Error();
           toast({

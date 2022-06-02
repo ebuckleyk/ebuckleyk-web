@@ -1,6 +1,4 @@
 import {
-  FormControl,
-  FormHelperText,
   Stack,
   Button,
   Flex,
@@ -10,19 +8,40 @@ import {
   AccordionButton,
   Box,
   AccordionPanel,
-  AccordionIcon,
-  Text
+  AccordionIcon
 } from '@chakra-ui/react';
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form } from 'formik';
 import { useMemo } from 'react';
 import * as Yup from 'yup';
 import BridgesMedicalAwardForm from './award_specific/bridges_medical_award';
 import AwardFormContactInformation from './contact_info';
 import CareerInSTEM from './award_specific/career_in_stem';
+import CaptchaField from '../shared/captcha_field';
 
 const application_form_lookup = {
   medical: BridgesMedicalAwardForm,
   stem: CareerInSTEM
+};
+
+const getApplicationFormValues = (type, application) => {
+  const { application_form: form, docs = [] } = application;
+
+  const mapping = {
+    medical: {
+      institution: form.institution,
+      gpa: Number(form.gpa),
+      message: form.message,
+      attachments: docs
+    },
+    stem: {
+      institution: form.institution,
+      gpa: Number(form.gpa),
+      message: form.message,
+      field_of_study: form.field_of_study,
+      attachments: docs
+    }
+  };
+  return mapping[type];
 };
 
 function PercentComplete({ values, errors }) {
@@ -53,7 +72,10 @@ export default function AwardForm({
   onSubmit,
   appType,
   user,
-  activeCampaignId
+  activeCampaignId,
+  application,
+  isEditable = true,
+  onSelectFile
 }) {
   const application_schema = useMemo(() => {
     return Yup.object().shape({
@@ -62,21 +84,41 @@ export default function AwardForm({
     });
   }, [appType]);
 
-  const initialValues = useMemo(
-    () => ({
+  const initialValues = useMemo(() => {
+    let default_values = {
       ...application_schema.getDefault(),
       first_name: user?.given_name,
       last_name: user?.family_name,
       email: user?.email,
-      phone: user?.user_metadata?.contact?.phone,
-      addr1: user?.user_metadata?.contact?.address,
-      addr2: user?.user_metadata?.contact?.address2,
-      city: user?.user_metadata?.contact?.city,
-      state: user?.user_metadata?.contact?.state,
-      zip: user?.user_metadata?.contact?.zip
-    }),
-    [application_schema, user]
-  );
+      phone: application
+        ? application.contact_info?.phone
+        : user?.user_metadata?.contact?.phone,
+      addr1: application
+        ? application.contact_info?.addr
+        : user?.user_metadata?.contact?.address,
+      addr2: application
+        ? application.contact_info?.addr2
+        : user?.user_metadata?.contact?.address2,
+      city: application
+        ? application.contact_info?.city
+        : user?.user_metadata?.contact?.city,
+      state: application
+        ? application.contact_info?.state
+        : user?.user_metadata?.contact?.state,
+      zip: application
+        ? application.contact_info?.zip
+        : user?.user_metadata?.contact?.zip
+    };
+
+    if (application) {
+      default_values = {
+        ...default_values,
+        ...getApplicationFormValues(application.award.category, application)
+      };
+    }
+
+    return default_values;
+  }, [application_schema, user, application]);
 
   const AppForm = useMemo(() => application_form_lookup[appType], [appType]);
   return (
@@ -89,7 +131,7 @@ export default function AwardForm({
       initialValues={initialValues}
       validationSchema={application_schema}
     >
-      {({ values, errors, isValid, isSubmitting, setFieldValue }) => {
+      {({ values, errors, isValid, isSubmitting, setFieldValue, dirty }) => {
         return (
           <Stack spacing={5} as={Form}>
             <PercentComplete {...{ values, errors }} />
@@ -107,7 +149,9 @@ export default function AwardForm({
                       values,
                       setFieldValue,
                       activeCampaignId,
-                      userId: user?.user_id
+                      userId: user?.user_id,
+                      isEditable,
+                      onSelectFile
                     }}
                   />
                 </AccordionPanel>
@@ -120,48 +164,26 @@ export default function AwardForm({
                   <AccordionIcon />
                 </AccordionButton>
                 <AccordionPanel pb={4}>
-                  <AwardFormContactInformation {...{ values, errors, user }} />
+                  <AwardFormContactInformation
+                    {...{ values, errors, user, isEditable }}
+                  />
                 </AccordionPanel>
               </AccordionItem>
             </Accordion>
-            <Field name="captcha">
-              {() => {
-                return (
-                  <FormControl>
-                    <FormHelperText>
-                      {'This site is protected by reCAPTCHA and the Google '}
-                      <Text
-                        color="blue.400"
-                        as="a"
-                        target="_blank"
-                        href="https://policies.google.com/privacy"
-                      >
-                        Privacy Policy
-                      </Text>
-                      {' and '}
-                      <Text
-                        color="blue.400"
-                        as="a"
-                        target="_blank"
-                        href="https://policies.google.com/terms"
-                      >
-                        Terms of Service
-                      </Text>{' '}
-                      apply.
-                    </FormHelperText>
-                  </FormControl>
-                );
-              }}
-            </Field>
-            <Flex justifyContent={'flex-end'}>
+            <CaptchaField />
+            <Flex
+              visibility={dirty ? 'visible' : 'hidden'}
+              justifyContent={'flex-end'}
+            >
               <Button
+                isDisabled={!isEditable}
                 isLoading={isSubmitting}
                 loadingText={'Sending application...'}
                 disabled={!isValid}
                 width={{ sm: '100%', lg: 'fit-content' }}
                 type="submit"
               >
-                Apply
+                {application?._id ? 'Update Application' : 'Apply'}
               </Button>
             </Flex>
           </Stack>

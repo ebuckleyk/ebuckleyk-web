@@ -20,7 +20,7 @@ const is_in_role = (user, roles = [], allInclusive = true) => {
   if (allInclusive) return is_in_all_roles(roles, user);
 
   let ret = false;
-  for (let i = 0; i < roles; i++) {
+  for (let i = 0; i < roles.length; i++) {
     const check_role = roles[i];
     if (user[role_namespace].includes(check_role)) {
       ret = true;

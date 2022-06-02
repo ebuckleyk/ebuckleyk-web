@@ -15,6 +15,7 @@ import {
 import { Formik, Field, Form } from 'formik';
 import * as Yup from 'yup';
 import { CONTACT_TYPE } from '../../utils/constants';
+import CaptchaField from '../shared/captcha_field';
 
 const initialValues = {
   name: '',
@@ -109,35 +110,7 @@ export default function ContactForm({ onSubmit }) {
                   );
                 }}
               </Field>
-              <Field name="captcha">
-                {({ field, form }) => {
-                  return (
-                    <FormControl>
-                      <FormHelperText>
-                        {'This site is protected by reCAPTCHA and the Google '}
-                        <Text
-                          color="blue.400"
-                          as="a"
-                          target="_blank"
-                          href="https://policies.google.com/privacy"
-                        >
-                          Privacy Policy
-                        </Text>
-                        {' and '}
-                        <Text
-                          color="blue.400"
-                          as="a"
-                          target="_blank"
-                          href="https://policies.google.com/terms"
-                        >
-                          Terms of Service
-                        </Text>{' '}
-                        apply.
-                      </FormHelperText>
-                    </FormControl>
-                  );
-                }}
-              </Field>
+              <CaptchaField />
               <Flex justifyContent={'flex-end'}>
                 <Button
                   isLoading={isSubmitting}

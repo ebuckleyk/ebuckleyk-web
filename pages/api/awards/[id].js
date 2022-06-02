@@ -5,6 +5,58 @@ import withCaptchaValidation from '../../../utils/api/middleware/withCaptchaVali
 import withCorrelationId from '../../../utils/api/middleware/withCorrelationId';
 import logger from '../../../utils/logger';
 
+const PUT = async (formData, userId) => {
+  const {
+    applicationId,
+    campaignId,
+    addr1,
+    addr2,
+    appType,
+    attachments = [],
+    captcha,
+    city,
+    email,
+    first_name,
+    last_name,
+    phone,
+    state,
+    zip,
+    ...rest
+  } = formData;
+  const dbApplication = await web_public_api(
+    `/application-public?id=${applicationId}&userId=${userId}`
+  );
+  const updateApplication = {
+    applicationId,
+    campaignId: dbApplication.campaign_id,
+    form: rest,
+    contact_info: {
+      ...dbApplication.contact_info,
+      addr: addr1,
+      addr2,
+      city,
+      state,
+      zip,
+      phone
+    },
+    docs: attachments.map((a) => {
+      if (!a._id)
+        return {
+          ...a,
+          path: `${process.env.S3_BUCKET}/${a.path}`,
+          fileType: a.type
+        };
+      return a;
+    })
+  };
+
+  const result = await web_public_api('/application-public', {
+    method: 'PUT',
+    body: updateApplication
+  });
+  return result;
+};
+
 const POST = async (formData, userId) => {
   const {
     campaignId,
@@ -31,11 +83,13 @@ const POST = async (formData, userId) => {
       addr2,
       city,
       state,
-      zip
+      zip,
+      phone
     },
     docs: attachments.map((a) => ({
-      name: a.name,
-      path: `${process.env.S3_BUCKET}/${a.hostedContent}`
+      ...a,
+      path: `${process.env.S3_BUCKET}/${a.path}`,
+      fileType: a.type
     })),
     applicant: {
       auth0Id: userId,
@@ -56,6 +110,10 @@ async function handler(req, res) {
     switch (req.method) {
       case 'POST': {
         response = await POST(req.body, user.sub);
+        break;
+      }
+      case 'PUT': {
+        response = await PUT(req.body, user.sub);
         break;
       }
       default:

@@ -69,10 +69,7 @@
     "valid_file_types": [
       "application/pdf",
       "application/msword",
-      ".doc",
-      ".docx"
-    ],
-    "filepond_fileSize_key": "file_size",
-    "filepond_fileType_key": "file_type"
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ]
   }
 }
