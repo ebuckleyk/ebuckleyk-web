@@ -83,7 +83,7 @@ export default function Application({ router }) {
 
   if (!application) return null;
 
-  const isEditable = true; // application.status === 'received';
+  const isEditable = application.status === 'received';
   return (
     <Flex
       bgColor={'white'}
