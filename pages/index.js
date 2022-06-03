@@ -7,6 +7,7 @@ export default function Home() {
     <>
       <Box
         backdropFilter="blur(10px)"
+        boxShadow={'xl'}
         width={{ sm: '100%', md: '75%', lg: '50%' }}
         style={{ position: 'absolute', bottom: '30%' }}
         marginLeft={{ md: '-50%' }}

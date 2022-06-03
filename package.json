@@ -45,6 +45,8 @@
     "react-responsive": "^9.0.0-beta.6",
     "react-swipeable": "^6.2.1",
     "recharts": "^2.1.9",
+    "slate": "^0.80.0",
+    "slate-react": "^0.80.0",
     "swr": "^1.2.2",
     "uuid": "^8.3.2",
     "yup": "^0.32.11"

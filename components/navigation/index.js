@@ -318,16 +318,9 @@ export default function Navigation({ activeRoute, isLoading }) {
             variant="ghost"
           />
 
-          <IconButton
-            display={{ sm: !user ? 'flex' : 'none', md: 'none' }}
-            as="a"
-            href="/api/auth/login"
-            icon={<FaSignInAlt />}
-            variant="ghost"
-          />
           <Button
             // disabled // Disabled until production ready
-            display={{ base: 'none', md: !user ? 'flex' : 'none' }}
+            display={{ base: !user ? 'flex' : 'none' }}
             leftIcon={<FaSignInAlt />}
             as={Link}
             fontSize="sm"
