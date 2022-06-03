@@ -18,6 +18,7 @@ import NextImage from 'next/image';
 import { useEffect } from 'react';
 import { FaRegCircle } from 'react-icons/fa';
 import { EVENTS, GA } from '../../utils/analytics';
+import GlassCard from '../glass_card';
 
 function getDateDisplay(startDate, endDate, timeIn) {
   const s = new Date(startDate);
@@ -109,11 +110,10 @@ export default function ResumeCard({
   assets = []
 }) {
   return (
-    <Box
+    <GlassCard
       width={{ sm: '100%', '2xl': '80%' }}
       borderRadius={{ sm: 0, md: 20 }}
       as="article"
-      bgColor={'rgba(255, 255, 255, 0.8)'}
       padding={5}
     >
       <Flex
@@ -157,6 +157,6 @@ export default function ResumeCard({
           </HStack>
         </Flex>
       </Flex>
-    </Box>
+    </GlassCard>
   );
 }

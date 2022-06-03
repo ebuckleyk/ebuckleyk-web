@@ -33,6 +33,7 @@ import {
 import { FaGithub, FaSignInAlt, FaSignOutAlt } from 'react-icons/fa';
 import settings from '../../app.settings.json';
 import useAuth0User from '../../utils/hooks/useAuth0User';
+import GlassCard from '../glass_card';
 
 /**
  * navigation structure
@@ -98,7 +99,7 @@ function MobileNavItem({ label, children, href }) {
           pl={4}
           borderLeft={1}
           borderStyle="solid"
-          borderColor={useColorModeValue('gray.200', 'gray.700')}
+          borderColor={useColorModeValue('gray.400', 'gray.700')}
           align="start"
         >
           {children &&
@@ -117,15 +118,11 @@ function MobileNavItem({ label, children, href }) {
 
 function MobileNav() {
   return (
-    <Stack
-      bg={useColorModeValue('white', 'gray.800')}
-      p={4}
-      display={{ md: 'none' }}
-    >
+    <GlassCard as={Stack} p={4} display={{ md: 'none' }}>
       {settings.navigation.map((item) => {
         return <MobileNavItem key={item.label} {...item} />;
       })}
-    </Stack>
+    </GlassCard>
   );
 }
 
@@ -169,7 +166,6 @@ function DesktopSubNav({ label, href, subLabel }) {
 function DesktopNav({ activeRoute }) {
   const linkColor = useColorModeValue('gray.600', 'gray.200');
   const linkHoverColor = useColorModeValue('gray.800', 'white');
-  const popoverContentBgColor = useColorModeValue('white', 'gray.800');
 
   return (
     <Stack direction="row" spacing={4}>
@@ -209,7 +205,9 @@ function DesktopNav({ activeRoute }) {
                 <PopoverContent
                   border={0}
                   boxShadow="xl"
-                  bg={popoverContentBgColor}
+                  backdropFilter={'blur(10px)'}
+                  bgColor="rgba(255, 255, 255, .7)"
+                  // bg={popoverContentBgColor}
                   p={2}
                   minW="sm"
                 >
@@ -260,19 +258,9 @@ export default function Navigation({ activeRoute, isLoading }) {
     }
   }, [isLoading, onClose]);
   return (
-    <Box position={'absolute'} width="100%" zIndex={99}>
+    <GlassCard position={'fixed'} width="100%" zIndex={99} boxShadow="xl">
       <Overlay isOpen={isOpen} />
-      <Flex
-        bg={useColorModeValue('white', 'gray.600')}
-        color={useColorModeValue('gray.600', 'white')}
-        minH={'60px'}
-        py={{ base: 2 }}
-        px={{ base: 4 }}
-        borderBottom={1}
-        borderStyle="solid"
-        borderColor={useColorModeValue('gray.200', 'gray.900')}
-        align="center"
-      >
+      <Flex minH={'60px'} py={{ base: 2 }} px={{ base: 4 }} align="center">
         <Flex
           flex={{ base: 1, md: 'auto' }}
           ml={{ base: -2 }}
@@ -366,7 +354,7 @@ export default function Navigation({ activeRoute, isLoading }) {
                 as={LinkWrapper}
                 href="/profile"
               >
-                {`${user?.name}'s Profile`}
+                My Profile
               </MenuItem>
               <MenuItem
                 _hover={{
@@ -381,7 +369,7 @@ export default function Navigation({ activeRoute, isLoading }) {
                     : 'none'
                 }
               >
-                Award Committee Dashboard
+                Award Committee
               </MenuItem>
               <MenuDivider />
               <MenuItem icon={<FaSignOutAlt />} as="a" href="/api/auth/logout">
@@ -395,6 +383,6 @@ export default function Navigation({ activeRoute, isLoading }) {
       <Collapse in={isOpen} animateOpacity>
         <MobileNav />
       </Collapse>
-    </Box>
+    </GlassCard>
   );
 }

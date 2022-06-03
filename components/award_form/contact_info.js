@@ -138,7 +138,7 @@ function AwardFormContactInformation({ values, isEditable }) {
                 isInvalid={form.errors.state && form.touched.state}
               >
                 <FormLabel htmlFor="state">State</FormLabel>
-                <Select {...field} value={values.state} variant={'flushed'}>
+                <Select {...field} value={values.state}>
                   {[{ Abbrev: 99, Code: '' }, ...states].map((s) => {
                     return (
                       <option key={s.Abbrev} value={s.Code}>

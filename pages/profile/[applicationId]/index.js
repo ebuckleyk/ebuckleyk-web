@@ -1,6 +1,7 @@
 import { Flex, Heading, useToast } from '@chakra-ui/react';
 import { useCallback, useEffect, useState } from 'react';
 import AwardForm from '../../../components/award_form';
+import GlassCard from '../../../components/glass_card';
 import {
   getPreSignedUrlDownload,
   handleAwardApplicationAttachments,
@@ -85,8 +86,8 @@ export default function Application({ router }) {
 
   const isEditable = application.status === 'received';
   return (
-    <Flex
-      bgColor={'white'}
+    <GlassCard
+      as={Flex}
       p={5}
       borderRadius={{ md: 20 }}
       w={{ sm: '100%', md: '80%' }}
@@ -105,6 +106,6 @@ export default function Application({ router }) {
         activeCampaignId={application.campaign_id}
         onSelectFile={onSelectFile}
       />
-    </Flex>
+    </GlassCard>
   );
 }

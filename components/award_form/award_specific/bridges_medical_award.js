@@ -82,16 +82,16 @@ function BridgesMedicalAwardForm({ isEditable, onSelectFile }) {
         <FieldArray name="attachments">
           {({ form, remove }) => {
             return (
-              <FormControl isRequired>
+              <FormControl isInvalid={form.errors.attachments} isRequired>
                 <FormLabel>Attachments</FormLabel>
                 <FileZone
                   isEditable={isEditable}
-                  onAddFiles={(files) =>
+                  onAddFiles={(files) => {
                     form.setFieldValue('attachments', [
                       ...form.values.attachments,
                       ...files
-                    ])
-                  }
+                    ]);
+                  }}
                   files={form.values.attachments}
                   onRemoveFile={(file, idx) => {
                     const id = file._id;
@@ -105,7 +105,14 @@ function BridgesMedicalAwardForm({ isEditable, onSelectFile }) {
                     }
                   }}
                   onSelectFile={onSelectFile}
+                  onError={(msg) => {
+                    form.setFieldError('attachments', msg);
+                  }}
                 />
+                <FormHelperText>
+                  Only *.pdf, *.doc, and *.docx are accepted.
+                </FormHelperText>
+                <FormErrorMessage>{form.errors.attachments}</FormErrorMessage>
               </FormControl>
             );
           }}

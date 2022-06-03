@@ -68,7 +68,7 @@ export default function ProficiencyByLanguage() {
         <Radar
           name="Emmanuel K. Buckley"
           dataKey="ebuckleyk"
-          stroke="#8884d8"
+          stroke="#fff"
           fill="#42A5F5"
           fillOpacity={0.6}
         />

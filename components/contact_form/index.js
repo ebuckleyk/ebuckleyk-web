@@ -15,6 +15,7 @@ import {
 import { Formik, Field, Form } from 'formik';
 import * as Yup from 'yup';
 import { CONTACT_TYPE } from '../../utils/constants';
+import GlassCard from '../glass_card';
 import CaptchaField from '../shared/captcha_field';
 
 const initialValues = {
@@ -38,7 +39,7 @@ const schema = Yup.object().shape({
 
 export default function ContactForm({ onSubmit }) {
   return (
-    <Box p={5} borderRadius={{ md: 20 }} bgColor="white">
+    <GlassCard p={5} borderRadius={{ md: 20 }}>
       <Formik
         initialValues={initialValues}
         validationSchema={schema}
@@ -55,11 +56,19 @@ export default function ContactForm({ onSubmit }) {
                   return (
                     <FormControl>
                       <FormLabel htmlFor="inqType">Type of Inquiry</FormLabel>
-                      <Select {...field} value={inqType} variant={'flushed'}>
-                        <option value={CONTACT_TYPE.GENERAL}>
+                      <Select {...field} value={inqType}>
+                        <option
+                          style={{ color: 'black' }}
+                          value={CONTACT_TYPE.GENERAL}
+                        >
                           General Inquiry
                         </option>
-                        <option value={CONTACT_TYPE.CONSULT}>Consulting</option>
+                        <option
+                          style={{ color: 'black' }}
+                          value={CONTACT_TYPE.CONSULT}
+                        >
+                          Consulting
+                        </option>
                       </Select>
                     </FormControl>
                   );
@@ -128,6 +137,6 @@ export default function ContactForm({ onSubmit }) {
           );
         }}
       </Formik>
-    </Box>
+    </GlassCard>
   );
 }

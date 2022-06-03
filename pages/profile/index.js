@@ -16,6 +16,7 @@ import { useCallback } from 'react';
 import { withCaptcha } from '../../utils/api/helper';
 import { EVENTS, GA } from '../../utils/analytics';
 import ApplicationHistory from '../../components/profile/application_history';
+import GlassCard from '../../components/glass_card';
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 export default function Profile({ router }) {
@@ -108,8 +109,8 @@ export default function Profile({ router }) {
   if (!isLoggedIn) return <>Not Logged In</>;
 
   return (
-    <Flex
-      bgColor={'white'}
+    <GlassCard
+      as={Flex}
       p={5}
       borderRadius={{ md: 20 }}
       w={{ sm: '100%', md: '80%' }}
@@ -151,7 +152,7 @@ export default function Profile({ router }) {
           </TabPanels>
         </Tabs>
       </Stack>
-    </Flex>
+    </GlassCard>
   );
 }
 

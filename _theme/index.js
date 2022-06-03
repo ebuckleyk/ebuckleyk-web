@@ -10,10 +10,55 @@ const breakpoints = {
 };
 
 export default extendTheme(
-  { ...theme, breakpoints },
+  {
+    ...theme,
+    components: {
+      ...theme.components,
+      GlassCard: {
+        baseStyle: {
+          backdropFilter: 'blur(10px) saturate(100%)',
+          bgColor: 'rgba(255, 255, 255, .75)',
+          boxShadow: 'xl'
+        }
+      },
+      Select: {
+        ...theme.components.Select,
+        defaultProps: {
+          ...theme.components.Select.defaultProps,
+          variant: 'filled'
+        }
+      },
+      Input: {
+        ...theme.components.Input,
+        defaultProps: {
+          ...theme.components.Input.defaultProps,
+          variant: 'filled'
+        }
+      },
+      Textarea: {
+        ...theme.components.Textarea,
+        defaultProps: {
+          ...theme.components.Textarea.defaultProps,
+          variant: 'filled'
+        }
+      },
+      Editable: {
+        ...theme.components.Editable,
+        baseStyle: {
+          ...theme.components.Editable.baseStyle,
+          textarea: {
+            ...theme.components.Editable.baseStyle.textarea,
+            bgColor: 'white'
+          }
+        }
+      }
+    },
+    breakpoints
+  },
   withProse({
     baseStyle: {
-      bgColor: 'white',
+      backdropFilter: 'blur(10px) saturate(100%)',
+      bgColor: 'rgba(255, 255, 255, .75)',
       padding: 5
     }
   })

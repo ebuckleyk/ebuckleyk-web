@@ -22,7 +22,7 @@ function HeaderInfo({ name, email, profileImg, onUpdateBio, bio }) {
       </Flex>
       <Flex justifyContent={'center'}>
         <Editable
-          maxW={{ sm: '100%', md: 350 }}
+          maxW={{ sm: '100%', md: '50%' }}
           borderBottom={'1px'}
           borderBottomColor="gray.100"
           onSubmit={onUpdateBio}

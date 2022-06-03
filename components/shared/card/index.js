@@ -1,15 +1,17 @@
 import NextImage from 'next/image';
-import { Box, Button, Container, Flex, Text } from '@chakra-ui/react';
+import { Button, Container, Flex, Text } from '@chakra-ui/react';
 import RichText from '../../richtext';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import { EVENTS, GA } from '../../../utils/analytics';
+import GlassCard from '../../glass_card';
 
 function CardImage({ img }) {
   if (!img || !img?.url) return null;
 
   return (
     <Container
+      bgColor="whiteAlpha.400"
       boxShadow={'xl'}
       borderRadius={50}
       borderWidth={'2px'}
@@ -80,9 +82,7 @@ export default function Card({
   );
 
   return (
-    <Box
-      bgColor={'white'}
-      // opacity={0.8}
+    <GlassCard
       _hover={{
         opacity: 1
       }}
@@ -99,6 +99,6 @@ export default function Card({
       <CardContent {...{ isRichText, content, isPreview, isSafari }} />
       <Footer onClick={navigate} />
       {children}
-    </Box>
+    </GlassCard>
   );
 }

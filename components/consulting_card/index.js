@@ -1,15 +1,16 @@
-import { Heading, Box, Flex, Text } from '@chakra-ui/react';
+import { Heading, Flex, Text } from '@chakra-ui/react';
 import NextImage from 'next/image';
+import GlassCard from '../glass_card';
 
 export default function ConsultingCard({ companyName, companyLogo, website }) {
   return (
-    <Box
+    <GlassCard
       paddingTop={10}
       width={{ sm: '100%' }}
       borderRadius={{ sm: 0, md: 20 }}
-      bgColor={'white'}
     >
       <NextImage
+        style={{ backgroundColor: 'white' }}
         width={300}
         height={100}
         layout="responsive"
@@ -21,6 +22,6 @@ export default function ConsultingCard({ companyName, companyLogo, website }) {
           {website}
         </Text>
       </Flex>
-    </Box>
+    </GlassCard>
   );
 }

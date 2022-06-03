@@ -18,6 +18,7 @@ import {
 } from '@chakra-ui/react';
 import { FaFacebook, FaTwitter, FaBlog } from 'react-icons/fa';
 import RichText from '../richtext';
+import GlassCard from '../glass_card';
 
 const getConfig = (source) => {
   let IconType;
@@ -80,12 +81,8 @@ export default function BlogCard({
 
   return (
     <>
-      <Box
-        bgColor={'white'}
+      <GlassCard
         opacity={0.8}
-        _hover={{
-          opacity: 1
-        }}
         cursor={'pointer'}
         onClick={source === 'blog' ? navigate : onOpen}
         position={'relative'}
@@ -129,7 +126,7 @@ export default function BlogCard({
         <Box position={'absolute'} right={15} top={15}>
           {config.icon}
         </Box>
-      </Box>
+      </GlassCard>
 
       <Modal isOpen={isOpen} onClose={onClose} isCentered motionPreset="scale">
         <ModalOverlay />

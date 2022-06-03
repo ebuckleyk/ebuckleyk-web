@@ -26,6 +26,7 @@ import useAuth0User from '../../../utils/hooks/useAuth0User';
 import LinkWrapper from '../../../components/shared/link_wrapper';
 import { getSession } from '@auth0/nextjs-auth0';
 import { format } from 'date-fns';
+import GlassCard from '../../../components/glass_card';
 
 function Message({ children }) {
   return (
@@ -103,10 +104,10 @@ export default function Award({ award, router }) {
   ) : null;
 
   return (
-    <Tabs
+    <GlassCard
+      as={Tabs}
       isFitted
       minH={'500px'}
-      bgColor={'white'}
       borderRadius={{ sm: 0, md: 20 }}
       variant={'enclosed'}
       width={{ sm: '100%', md: '90%' }}
@@ -139,6 +140,7 @@ export default function Award({ award, router }) {
                 width={200}
                 height={200}
                 justify="center"
+                bgColor={'whiteAlpha.400'}
               >
                 <NextImage
                   layout="fill"
@@ -192,7 +194,7 @@ export default function Award({ award, router }) {
           ) : null}
         </TabPanel>
       </TabPanels>
-    </Tabs>
+    </GlassCard>
   );
 }
 

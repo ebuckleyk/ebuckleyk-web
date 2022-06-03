@@ -102,7 +102,7 @@ function CareerInSTEM({ isEditable, onSelectFile }) {
         <FieldArray name="attachments">
           {({ form, remove }) => {
             return (
-              <FormControl isRequired>
+              <FormControl isRequired isInvalid={form.errors.attachments}>
                 <FormLabel>Attachments</FormLabel>
                 <FileZone
                   onSelectFile={onSelectFile}
@@ -118,14 +118,21 @@ function CareerInSTEM({ isEditable, onSelectFile }) {
                     }
                   }}
                   files={form.values.attachments}
-                  onAddFiles={(files) =>
+                  onAddFiles={(files) => {
                     form.setFieldValue('attachments', [
                       ...form.values.attachments,
                       ...files
-                    ])
-                  }
+                    ]);
+                  }}
                   isEditable={isEditable}
+                  onError={(msg) => {
+                    form.setFieldError('attachments', msg);
+                  }}
                 />
+                <FormHelperText>
+                  Only *.pdf, *.doc, and *.docx are accepted.
+                </FormHelperText>
+                <FormErrorMessage>{form.errors.attachments}</FormErrorMessage>
               </FormControl>
             );
           }}
