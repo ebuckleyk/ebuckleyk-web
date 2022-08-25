@@ -28,7 +28,7 @@ function CardTitle({ title }) {
   if (!title) return null;
   return (
     <Container mt={5}>
-      <Text align="center" fontWeight={'bold'} fontSize={'large'}>
+      <Text as="span" align="center" fontWeight={'bold'} fontSize={'large'}>
         {title}
       </Text>
     </Container>

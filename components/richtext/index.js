@@ -19,7 +19,7 @@ import { ExternalLinkIcon } from '@chakra-ui/icons';
 
 export default function RichText({ richText, children, ...rest }) {
   return (
-    <Text fontSize={['sm', 'md']} {...rest}>
+    <Text fontSize={['sm', 'md']} as="span" {...rest}>
       {documentToReactComponents(richText || children, {
         renderMark: {
           [MARKS.BOLD]: (text) => <Text as="b">{text}</Text>,

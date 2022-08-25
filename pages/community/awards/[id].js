@@ -40,6 +40,51 @@ function Message({ children }) {
     </Flex>
   );
 }
+
+function PleaseSignIn({ isLoggedIn }) {
+  if (isLoggedIn) return null;
+  return (
+    <Message>
+      <Button variant={'link'} as={'a'} href={'/api/auth/login'}>
+        Please sign in!
+      </Button>
+    </Message>
+  );
+}
+
+function CurrentlyUnavailable({ isLoggedIn, activeCampaignId }) {
+  if (isLoggedIn && !activeCampaignId)
+    return (
+      <Message>
+        <Text>
+          This award is currently unavailable. Please check back later!
+        </Text>
+      </Message>
+    );
+  return null;
+}
+
+function PreviouslyApplied({ isLoggedIn, applicationId, cycleDate, as }) {
+  if (isLoggedIn && applicationId)
+    return (
+      <Message>
+        <Text textAlign={'center'}>
+          {"You've already applied to this award cycle of "}
+          {cycleDate}
+          {'.'}
+        </Text>
+        <Text>
+          {
+            'If you would like to check award status or update application, please click below.'
+          }
+        </Text>
+        <Button href="/profile" as={as} mt={5} variant="link">
+          Go To Profile
+        </Button>
+      </Message>
+    );
+  return null;
+}
 export default function Award({ award, router }) {
   const toast = useToast();
   const { user, isLoggedIn } = useAuth0User();
@@ -59,7 +104,6 @@ export default function Award({ award, router }) {
             attachments,
             captcha: token
           };
-
           const response = await fetch(`/api/awards/${award._id}`, {
             method: 'POST',
             headers: {
@@ -97,7 +141,7 @@ export default function Award({ award, router }) {
   );
 
   const cycleDate = award.activeCampaignId ? (
-    <Text fontWeight={'bold'}>
+    <Text as="span" fontWeight={'bold'}>
       {format(new Date(award.start), 'PP')} -{' '}
       {format(new Date(award.end), 'PP')}
     </Text>
@@ -154,36 +198,17 @@ export default function Award({ award, router }) {
           </Stack>
         </TabPanel>
         <TabPanel>
-          {!isLoggedIn ? (
-            <Message>
-              <Button variant={'link'} as={'a'} href={'/api/auth/login'}>
-                Please sign in!
-              </Button>
-            </Message>
-          ) : null}
-          {isLoggedIn && !award.activeCampaignId ? (
-            <Message>
-              <Text>
-                This award is currently unavailable. Please check back later!
-              </Text>
-            </Message>
-          ) : null}
-          {isLoggedIn && award.applicationId ? (
-            <Message>
-              <Text textAlign={'center'}>
-                {"You've already applied to this award cycle"}
-                {cycleDate}
-              </Text>
-              <Text>
-                {
-                  'If you would like to check award status or update application, please click below.'
-                }
-              </Text>
-              <Button href="/profile" as={LinkWrapper} mt={5} variant="link">
-                Go To Profile
-              </Button>
-            </Message>
-          ) : null}
+          <PleaseSignIn isLoggedIn={isLoggedIn} />
+          <CurrentlyUnavailable
+            isLoggedIn={isLoggedIn}
+            activeCampaignId={award.activeCampaignId}
+          />
+          <PreviouslyApplied
+            isLoggedIn={isLoggedIn}
+            applicationId={award.applicationId}
+            cycleDate={cycleDate}
+            as={LinkWrapper}
+          />
           {award.activeCampaignId && !award.applicationId && isLoggedIn ? (
             <AwardForm
               activeCampaignId={award.activeCampaignId}

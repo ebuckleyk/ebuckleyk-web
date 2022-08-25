@@ -14,7 +14,7 @@ app
   .setAutoCollectHeartbeat(false)
   .setInternalLogging(false, true)
   .setDistributedTracingMode(app.DistributedTracingModes.AI_AND_W3C)
-  .setWebSnippetInjection(false);
+  .enableAutoWebSnippetInjection(false);
 app.defaultClient.context.tags[app.defaultClient.context.keys.cloudRole] =
   'ebuckleyk-web';
 app.start();

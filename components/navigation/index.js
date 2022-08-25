@@ -202,15 +202,7 @@ function DesktopNav({ activeRoute }) {
               </PopoverTrigger>
 
               {item.children && (
-                <PopoverContent
-                  border={0}
-                  boxShadow="xl"
-                  backdropFilter={'blur(10px)'}
-                  bgColor="rgba(255, 255, 255, .7)"
-                  // bg={popoverContentBgColor}
-                  p={2}
-                  minW="sm"
-                >
+                <PopoverContent mt={1} border={0} p={2} minW="sm">
                   <Stack>
                     {item.children.map((child) => {
                       return <DesktopSubNav key={child.label} {...child} />;

@@ -1,26 +1,17 @@
-import {
-  Stack,
-  Button,
-  Flex,
-  Progress,
-  Accordion,
-  AccordionItem,
-  AccordionButton,
-  Box,
-  AccordionPanel,
-  AccordionIcon
-} from '@chakra-ui/react';
-import { Formik, Form } from 'formik';
+import { Progress } from '@chakra-ui/react';
 import { useMemo } from 'react';
 import * as Yup from 'yup';
-import BridgesMedicalAwardForm from './award_specific/bridges_medical_award';
-import AwardFormContactInformation from './contact_info';
-import CareerInSTEM from './award_specific/career_in_stem';
+import { FormFieldType, FormG, FormGConfig } from '@ebuckleyk/form-g';
 import CaptchaField from '../shared/captcha_field';
+import stem_definition from '../../form_definitions/stem';
+import bridges_definition from '../../form_definitions/bridges';
+import community_definition from '../../form_definitions/community';
+import states from '../../utils/state_abbrev.json';
 
-const application_form_lookup = {
-  medical: BridgesMedicalAwardForm,
-  stem: CareerInSTEM
+const appForm_definition_lookup = {
+  medical: bridges_definition,
+  stem: stem_definition,
+  community: community_definition
 };
 
 const getApplicationFormValues = (type, application) => {
@@ -30,14 +21,29 @@ const getApplicationFormValues = (type, application) => {
     medical: {
       institution: form.institution,
       gpa: Number(form.gpa),
-      message: form.message,
+      message:
+        typeof form.message === 'string'
+          ? [{ type: 'paragraph', text: form.message }]
+          : form.message,
       attachments: docs
     },
     stem: {
       institution: form.institution,
       gpa: Number(form.gpa),
-      message: form.message,
+      message:
+        typeof form.message === 'string'
+          ? [{ type: 'paragraph', text: form.message }]
+          : form.message,
       field_of_study: form.field_of_study,
+      attachments: docs
+    },
+    community: {
+      organization_name: form.organization_name,
+      community_desc: form.community_desc,
+      message:
+        typeof form.message === 'string'
+          ? [{ type: 'paragraph', text: form.message }]
+          : form.message,
       attachments: docs
     }
   };
@@ -72,21 +78,12 @@ export default function AwardForm({
   onSubmit,
   appType,
   user,
-  activeCampaignId,
   application,
   isEditable = true,
   onSelectFile
 }) {
-  const application_schema = useMemo(() => {
-    return Yup.object().shape({
-      ...AwardFormContactInformation.schema,
-      ...application_form_lookup[appType].schema
-    });
-  }, [appType]);
-
   const initialValues = useMemo(() => {
     let default_values = {
-      ...application_schema.getDefault(),
       first_name: user?.given_name,
       last_name: user?.family_name,
       email: user?.email,
@@ -118,77 +115,38 @@ export default function AwardForm({
     }
 
     return default_values;
-  }, [application_schema, user, application]);
+  }, [user, application]);
 
-  const AppForm = useMemo(() => application_form_lookup[appType], [appType]);
+  const form_definition = appForm_definition_lookup[appType];
+
+  const config = new FormGConfig({
+    isReadonly: !isEditable
+  });
+  config
+    .addFooterItem(<CaptchaField key="captcha" />)
+    .addFieldConfig('state_cfgKey', {
+      valueConfig: {
+        refetch: true,
+        value: () =>
+          [{ Abbrev: 99, Code: '', State: 'Select State...' }, ...states].map(
+            (s) => ({ display: s.State, value: s.Code })
+          )
+      }
+    })
+    .configureFormFieldType(FormFieldType.FileUpload, {
+      onClick: onSelectFile
+    });
+
   return (
-    <Formik
+    <FormG
+      submitLoadingText="Sending application..."
+      submitText={application?._id ? 'Update Application' : 'Apply'}
+      config={config}
+      instance={initialValues}
+      definition={form_definition}
       onSubmit={(values, actions) => {
         onSubmit({ ...values, appType }, () => actions.setSubmitting(false));
       }}
-      validateOnMount
-      enableReinitialize
-      initialValues={initialValues}
-      validationSchema={application_schema}
-    >
-      {({ values, errors, isValid, isSubmitting, setFieldValue, dirty }) => {
-        return (
-          <Stack spacing={5} as={Form}>
-            <PercentComplete {...{ values, errors }} />
-            <Accordion defaultIndex={[0, 1]} allowMultiple>
-              <AccordionItem>
-                <AccordionButton bgColor="blue.50">
-                  <Box flex="1" textAlign={'left'}>
-                    Eligibility
-                  </Box>
-                  <AccordionIcon />
-                </AccordionButton>
-                <AccordionPanel pb={4}>
-                  <AppForm
-                    {...{
-                      values,
-                      setFieldValue,
-                      activeCampaignId,
-                      userId: user?.user_id,
-                      isEditable,
-                      onSelectFile
-                    }}
-                  />
-                </AccordionPanel>
-              </AccordionItem>
-              <AccordionItem>
-                <AccordionButton bgColor="blue.50">
-                  <Box flex="1" textAlign={'left'}>
-                    Contact Information
-                  </Box>
-                  <AccordionIcon />
-                </AccordionButton>
-                <AccordionPanel pb={4}>
-                  <AwardFormContactInformation
-                    {...{ values, errors, user, isEditable }}
-                  />
-                </AccordionPanel>
-              </AccordionItem>
-            </Accordion>
-            <CaptchaField />
-            <Flex
-              visibility={dirty ? 'visible' : 'hidden'}
-              justifyContent={'flex-end'}
-            >
-              <Button
-                isDisabled={!isEditable}
-                isLoading={isSubmitting}
-                loadingText={'Sending application...'}
-                disabled={!isValid}
-                width={{ sm: '100%', lg: 'fit-content' }}
-                type="submit"
-              >
-                {application?._id ? 'Update Application' : 'Apply'}
-              </Button>
-            </Flex>
-          </Stack>
-        );
-      }}
-    </Formik>
+    />
   );
 }

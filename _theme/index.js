@@ -1,6 +1,10 @@
 import { extendTheme, theme } from '@chakra-ui/react';
 import { withProse } from '@nikolovlazar/chakra-ui-prose';
 
+const glassStyle = {
+  backdropFilter: 'blur(10px) saturate(100%)',
+  bgColor: 'rgba(255, 255, 255, .75)'
+};
 const breakpoints = {
   sm: '360px',
   md: '768px',
@@ -16,8 +20,7 @@ export default extendTheme(
       ...theme.components,
       GlassCard: {
         baseStyle: {
-          backdropFilter: 'blur(10px) saturate(100%)',
-          bgColor: 'rgba(255, 255, 255, .75)',
+          ...glassStyle,
           boxShadow: 'xl'
         }
       },
@@ -51,14 +54,40 @@ export default extendTheme(
             bgColor: 'white'
           }
         }
+      },
+      Menu: {
+        ...theme.components.Menu,
+        baseStyle: {
+          menu: {},
+          item: {
+            ...theme.components.Menu.baseStyle.item
+          },
+          list: {
+            ...theme.components.Menu.baseStyle.list,
+            ...glassStyle,
+            bgColor: 'rgba(255, 255, 255, .9)',
+            boxShadow: 'xl'
+          }
+        }
+      },
+      Popover: {
+        ...theme.components.Popover,
+        baseStyle: {
+          ...theme.components.Popover.baseStyle,
+          content: {
+            ...theme.components.Popover.baseStyle.content,
+            ...glassStyle,
+            bgColor: 'rgba(255, 255, 255, .8)',
+            boxShadow: 'xl'
+          }
+        }
       }
     },
     breakpoints
   },
   withProse({
     baseStyle: {
-      backdropFilter: 'blur(10px) saturate(100%)',
-      bgColor: 'rgba(255, 255, 255, .75)',
+      ...glassStyle,
       padding: 5
     }
   })

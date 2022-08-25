@@ -57,18 +57,10 @@ export default function ContactForm({ onSubmit }) {
                     <FormControl>
                       <FormLabel htmlFor="inqType">Type of Inquiry</FormLabel>
                       <Select {...field} value={inqType}>
-                        <option
-                          style={{ color: 'black' }}
-                          value={CONTACT_TYPE.GENERAL}
-                        >
+                        <option value={CONTACT_TYPE.GENERAL}>
                           General Inquiry
                         </option>
-                        <option
-                          style={{ color: 'black' }}
-                          value={CONTACT_TYPE.CONSULT}
-                        >
-                          Consulting
-                        </option>
+                        <option value={CONTACT_TYPE.CONSULT}>Consulting</option>
                       </Select>
                     </FormControl>
                   );

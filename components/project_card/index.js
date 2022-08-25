@@ -44,7 +44,7 @@ export default function ProjectCard({ img, title, description, github }) {
           <></>
         )}
         <Container>
-          <Text fontSize="large" fontWeight="bold" align="center" isTruncated>
+          <Text fontSize="large" fontWeight="bold" align="center">
             {title}
           </Text>
           <RichText
