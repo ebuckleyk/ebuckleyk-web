@@ -97,12 +97,7 @@ export default function BlogCard({
           </Container>
         )}
         <Container>
-          <Text
-            fontSize="large"
-            fontWeight={'bold'}
-            align={'center'}
-            isTruncated
-          >
+          <Text fontSize="large" fontWeight={'bold'} align={'center'}>
             {title}
           </Text>
           {source === 'blog' ? (

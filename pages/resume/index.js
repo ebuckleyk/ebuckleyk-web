@@ -3,45 +3,58 @@ import { differenceInMonths } from 'date-fns';
 import ResumeCard from '../../components/resumecard';
 import ResumeStats from '../../components/resumestats';
 import { resume_data as data } from '../../localdata';
+import { AnimatePresence, motion } from 'framer-motion';
+import { STAGGER_LOAD_ITEMS_ANIMATION } from '../../utils/animation';
 
 export default function Resume({ resume, stats }) {
   return (
-    <Grid
-      p={{ sm: 0, md: 5 }}
-      gap={3}
-      width={{ sm: '100%' }}
-      templateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(3, 1fr)' }}
-    >
-      <GridItem
-        key={0}
-        display="flex"
-        justifyContent={'center'}
-        colSpan={{ sm: 2, md: 1 }}
-        rowSpan={resume?.length ?? 0}
+    <AnimatePresence>
+      <Grid
+        as={motion.div}
+        {...STAGGER_LOAD_ITEMS_ANIMATION.containerProps}
+        variants={STAGGER_LOAD_ITEMS_ANIMATION.containerVariant}
+        p={{ sm: 0, md: 5 }}
+        gap={3}
+        width={{ sm: '100%' }}
+        templateColumns={{
+          sm: 'repeat(auto-fill, minmax(100%, 1fr))',
+          md: 'repeat(auto-fill, minmax(33%, 1fr))'
+        }}
       >
-        <ResumeStats stats={stats} />
-      </GridItem>
-      {resume.map((job) => {
-        return (
-          <GridItem
-            display={'flex'}
-            justifyContent="center"
-            key={job.startDate}
-            colSpan={2}
-          >
-            <ResumeCard
-              company={job.company}
-              logo={job.companyLogo}
-              startDate={job.startDate}
-              endDate={job.endDate}
-              roles={job.roles}
-              timeIn={job.timeAtCompanyInMonths}
-              assets={job.assets}
-            />
-          </GridItem>
-        );
-      })}
-    </Grid>
+        <GridItem
+          key={0}
+          display="flex"
+          justifyContent={'center'}
+          colSpan={{ sm: 2, md: 1 }}
+          rowSpan={resume?.length ?? 0}
+        >
+          <ResumeStats stats={stats} />
+        </GridItem>
+        {resume.map((job) => {
+          return (
+            <GridItem
+              as={motion.div}
+              whileHover={{ scale: 1.05 }}
+              variants={STAGGER_LOAD_ITEMS_ANIMATION.itemVariant}
+              display={'flex'}
+              justifyContent="center"
+              key={job.startDate}
+              colSpan={2}
+            >
+              <ResumeCard
+                company={job.company}
+                logo={job.companyLogo}
+                startDate={job.startDate}
+                endDate={job.endDate}
+                roles={job.roles}
+                timeIn={job.timeAtCompanyInMonths}
+                assets={job.assets}
+              />
+            </GridItem>
+          );
+        })}
+      </Grid>
+    </AnimatePresence>
   );
 }
 

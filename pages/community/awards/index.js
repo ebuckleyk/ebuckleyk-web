@@ -14,7 +14,7 @@ export default function Awards({ data }) {
   }, []);
 
   return (
-    <SimpleGrid>
+    <SimpleGrid w={{ sm: '100%', md: '80%' }}>
       <Stack spacing={3}>
         {data?.map((d) => {
           const title = (

@@ -77,7 +77,7 @@ export default function Application({ router }) {
     [application, toast]
   );
 
-  const onSelectFile = useCallback(async (file) => {
+  const onSelectFile = useCallback(async (_, file) => {
     const url = await getPreSignedUrlDownload(file.path, file.name);
     window.open(url.signedUrl, '_blank').focus();
   }, []);
