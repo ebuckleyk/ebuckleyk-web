@@ -1,10 +1,9 @@
 import { Grid, GridItem } from '@chakra-ui/react';
-import { differenceInMonths } from 'date-fns';
 import ResumeCard from '../../components/resumecard';
 import ResumeStats from '../../components/resumestats';
-import { resume_data as data } from '../../localdata';
 import { AnimatePresence, motion } from 'framer-motion';
 import { STAGGER_LOAD_ITEMS_ANIMATION } from '../../utils/animation';
+import web_public_api from '../../utils/api';
 
 export default function Resume({ resume, stats }) {
   return (
@@ -18,7 +17,8 @@ export default function Resume({ resume, stats }) {
         width={{ sm: '100%' }}
         templateColumns={{
           sm: 'repeat(auto-fill, minmax(100%, 1fr))',
-          md: 'repeat(auto-fill, minmax(33%, 1fr))'
+          md: 'repeat(auto-fill, minmax(25%, 1fr))',
+          lg: 'repeat(auto-fill, minmax(30%, 1fr))'
         }}
       >
         <GridItem
@@ -26,11 +26,11 @@ export default function Resume({ resume, stats }) {
           display="flex"
           justifyContent={'center'}
           colSpan={{ sm: 2, md: 1 }}
-          rowSpan={resume?.length ?? 0}
+          rowSpan={resume?.jobs?.length ?? 0}
         >
           <ResumeStats stats={stats} />
         </GridItem>
-        {resume.map((job) => {
+        {resume?.jobs?.map((job) => {
           return (
             <GridItem
               as={motion.div}
@@ -58,71 +58,25 @@ export default function Resume({ resume, stats }) {
   );
 }
 
-export async function getStaticProps() {
-  // TODO: Make this way more performant
-  let resumeData = data
-    .map((job) => {
-      return {
-        ...job,
-        startDate: convertDatesToDateObject(job.startDate),
-        endDate: convertDatesToDateObject(job.endDate || new Date()),
-        roles: job.roles
-          .map((r) => {
-            return {
-              ...r,
-              startDate: convertDatesToDateObject(r.startDate || job.startDate),
-              endDate: convertDatesToDateObject(r.endDate || job.endDate)
-            };
-          })
-          .sort((a, b) => b.startDate - a.startDate)
-      };
-    })
-    .sort((a, b) => b.startDate - a.startDate);
+export async function getServerSideProps(context) {
+  const resume_data_and_stats = await web_public_api('/resume-public');
 
-  resumeData = enrichData(resumeData);
+  const { resume, stats } = resume_data_and_stats;
+  const byCompany = {};
 
-  const { byCompany } = extractStatistics(resumeData);
-  const totalExperience = resumeData.reduce((prevVal, curVal) => {
-    return prevVal + curVal.timeAtCompanyInMonths;
-  }, 0);
+  stats[0].companies.forEach((c) => {
+    byCompany[c.company] = { experienceInMonths: c.expInMonths };
+  });
 
-  // did this because nextjs doesn't serialize dates for whatever reason
-  // https://github.com/vercel/next.js/discussions/11498#discussioncomment-2381120
   return {
     props: {
-      resume: JSON.parse(JSON.stringify(resumeData)),
+      resume,
       stats: {
-        totalExperience,
-        byCompany
+        byCompany,
+        totalExperience: stats[0].expInMonths
       }
     }
   };
-}
-
-function convertDatesToDateObject(date) {
-  return date ? new Date(date) : null;
-}
-
-function enrichData(resume = []) {
-  return resume.map((job) => {
-    return {
-      ...job,
-      timeAtCompanyInMonths: differenceInMonths(job.endDate, job.startDate)
-    };
-  });
-}
-
-function extractStatistics(resume = []) {
-  const byCompany = {};
-
-  resume.forEach((job) => {
-    byCompany[job.company] = {
-      ...(byCompany[job.company] || {}),
-      timeInRole: job.timeAtCompanyInMonths
-    };
-  });
-
-  return { byCompany };
 }
 
 Resume.displayName = 'Resume';

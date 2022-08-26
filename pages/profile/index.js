@@ -143,7 +143,7 @@ export default function Profile({ router }) {
             <TabPanel>
               <ApplicationHistory
                 onClick={(applicationId) =>
-                  router.push(`/profile/${applicationId}`)
+                  router.push(`/profile/application_history/${applicationId}`)
                 }
                 applications={applications}
               />
