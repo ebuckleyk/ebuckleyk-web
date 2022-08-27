@@ -10,13 +10,14 @@ const withMDX = require('@next/mdx')({
 
 const isProd = process.env.NODE_ENV === 'production';
 const webportalUrl = process.env.EBUCKLEYK_WEBPORTAL_URL || '';
+const cdn = process.env.NEXT_PUBLIC_CDN || '';
 
 const ContentSecurityPolicy = `
   default-src 'self';
   script-src 'self' ${isProd ? '' : "'unsafe-eval'"};
   style-src 'self' 'unsafe-inline';
   font-src 'self';
-  img-src 'self' https://www.cdkglobal.com https://lh3.googleusercontent.com data:;
+  img-src 'self' ${cdn} https://www.cdkglobal.com https://lh3.googleusercontent.com data:;
   connect-src 'self' ${webportalUrl} https://*.amazonaws.com https://www.google-analytics.com;
   script-src-elem 'self' https://www.googletagmanager.com https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/ 'sha256-GcS5prM4K7dXLg50kFkeZ3YjiSAar6n2S/amw3ulb3w=';
   frame-src 'self' https://www.youtube.com https://www.google.com/recaptcha/ https://recaptcha.google.com/recaptcha/;

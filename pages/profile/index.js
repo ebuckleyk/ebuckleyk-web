@@ -13,14 +13,20 @@ import useAuth0User from '../../utils/hooks/useAuth0User';
 import HeaderInfo from '../../components/profile/header_info';
 import ContactInfo from '../../components/profile/contact_info';
 import { useCallback } from 'react';
-import { withCaptcha } from '../../utils/api/helper';
+import {
+  getPreSignedUrlUpload,
+  getPublicProfileImagePrefix,
+  uploadToS3v2,
+  withCaptcha
+} from '../../utils/api/helper';
 import { EVENTS, GA } from '../../utils/analytics';
 import ApplicationHistory from '../../components/profile/application_history';
 import GlassCard from '../../components/glass_card';
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 export default function Profile({ router }) {
-  const { user, isLoading, isLoggedIn, checkSession } = useAuth0User();
+  const { user, isLoading, isLoggedIn, checkSession, profilePicture } =
+    useAuth0User();
   const toast = useToast();
   const { data: applications } = useSWR(
     '/api/profile/application_history',
@@ -50,6 +56,8 @@ export default function Profile({ router }) {
           });
 
           GA.event(EVENTS.UPDATE_BIO);
+          // force user session check to reset userprofile state
+          await checkSession();
         } catch (error) {
           toast({
             title: 'Error updating bio',
@@ -61,7 +69,65 @@ export default function Profile({ router }) {
         }
       });
     },
-    [toast]
+    [toast, checkSession]
+  );
+
+  const updateProfileImage = useCallback(
+    async (images = []) => {
+      const fileToUpload = images.length ? images[0] : undefined;
+      withCaptcha(async (token) => {
+        try {
+          if (!fileToUpload)
+            throw new Error('Error occurred retrieving image.');
+
+          const preSignedUrl = await getPreSignedUrlUpload(
+            fileToUpload.name,
+            fileToUpload.type,
+            getPublicProfileImagePrefix(user.user_id)
+          );
+
+          await uploadToS3v2(
+            fileToUpload,
+            preSignedUrl.signedUrl,
+            preSignedUrl.hostedContent
+          );
+
+          const res = await fetch('/api/profile/editProfileImage', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              profileUrl: preSignedUrl.hostedContent,
+              captcha: token
+            })
+          });
+
+          if (res.status !== 200) throw new Error();
+
+          toast({
+            titie: 'Profile image updated',
+            description: 'Profile image updated',
+            status: 'success',
+            duration: 1500,
+            isClosable: true
+          });
+
+          GA.event(EVENTS.UPDATE_PROFILE_IMG);
+          // force user session check to reset userprofile state
+          await checkSession();
+        } catch (error) {
+          toast({
+            title: 'Error updating profile image',
+            description: 'Please try again later.',
+            status: 'error',
+            duration: 5000,
+            isClosable: true
+          });
+        }
+      });
+    },
+    [toast, user, checkSession]
   );
 
   const updateContact = useCallback(
@@ -125,7 +191,8 @@ export default function Profile({ router }) {
           bio={user?.user_metadata?.bio}
           onUpdateBio={updateBio}
           name={user?.name}
-          profileImg={user?.picture}
+          profileImg={profilePicture}
+          onUpdateProfileImg={updateProfileImage}
         />
         <Tabs>
           <TabList>

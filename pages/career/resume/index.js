@@ -1,6 +1,7 @@
 import { Grid, GridItem } from '@chakra-ui/react';
 import { differenceInMonths } from 'date-fns';
 import { AnimatePresence, motion } from 'framer-motion';
+import React from 'react';
 import ResumeCard from '../../../components/resumecard';
 import ResumeStats from '../../../components/resumestats';
 import { STAGGER_LOAD_ITEMS_ANIMATION } from '../../../utils/animation';

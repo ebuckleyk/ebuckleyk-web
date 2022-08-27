@@ -7,17 +7,19 @@ import { withApplicationInsights } from '../../../utils/api/middleware';
 
 async function handler(req, res) {
   try {
+    const { user } = getSession(req, res);
+
     switch (req.method) {
       case 'POST': {
-        const { user } = getSession(req, res);
-        const bio = req.body.bio ?? ' ';
+        const profileImageUrl = req.body.profileUrl;
+        if (!profileImageUrl) throw Error('No profile image url received.');
 
         const client = await getAuth0ManagementClient('update:users');
 
         await client.updateUserMetadata(
           { id: user.sub },
           {
-            bio
+            profileImageUrl
           }
         );
         break;
@@ -25,7 +27,6 @@ async function handler(req, res) {
       default:
         throw new Error(`${req.method} not supported.`);
     }
-
     res.status(200).json({ success: true });
   } catch (err) {
     logger.error(err);

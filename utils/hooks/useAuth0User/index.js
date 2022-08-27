@@ -45,6 +45,9 @@ export default function useAuth0User() {
     isLoading,
     checkSession,
     inRoles,
-    isLoggedIn: !!user
+    isLoggedIn: !!user,
+    profilePicture: user?.user_metadata?.profileImageUrl
+      ? `${process.env.NEXT_PUBLIC_CDN}/${user.user_metadata.profileImageUrl}`
+      : user?.picture
   };
 }

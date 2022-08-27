@@ -1,8 +1,15 @@
 import { format, formatDistance } from 'date-fns';
 import { groupBy } from '..';
 
-export function getAwardCampaignApplicationDocS3Format(activeCampaignId) {
-  return `award_campaign/${activeCampaignId}/application_docs`;
+export function getAwardCampaignApplicationDocS3Format(
+  activeCampaignId,
+  userId
+) {
+  return `${userId}/award_campaign/${activeCampaignId}/application_docs`;
+}
+
+export function getPublicProfileImagePrefix(userId) {
+  return `public/${userId}/profileImages`;
 }
 
 export function getDateDisplay(publishDate) {
@@ -50,38 +57,6 @@ export async function uploadToS3v2(file, preSignedUrl) {
   }
 }
 
-export async function uploadToS3(filepond_file) {
-  const { file, serverId } = filepond_file;
-  const { name, type, size } = file;
-  const { signedUrl, hostedContent } = JSON.parse(serverId);
-  const headers = new Headers();
-  headers.append('Content-Type', type);
-
-  try {
-    const text = await (
-      await fetch(signedUrl, {
-        method: 'PUT',
-        headers,
-        body: file
-      })
-    ).text();
-
-    parseS3XmlResponse(text);
-    return Promise.resolve({ hostedContent, name, type, size });
-  } catch (err) {
-    if (err.message === 'token expired') {
-      const newSignedUrl = await getPreSignedUrlUpload(name, type);
-      await await fetch(newSignedUrl, {
-        method: 'PUT',
-        headers,
-        body: file
-      });
-      return Promise.resolve({ hostedContent, name, type, size });
-    }
-    return Promise.reject('failure');
-  }
-}
-
 export async function getPreSignedUrlUpload(fileName, fileType, prefix) {
   return await (
     await fetch(
@@ -109,7 +84,8 @@ function parseS3XmlResponse(xml) {
 
 export async function handleAwardApplicationAttachments(
   formAttachments,
-  activeCampaignId
+  activeCampaignId,
+  userId
 ) {
   try {
     const groupedDocs = groupBy(formAttachments, '_id');
@@ -126,7 +102,7 @@ export async function handleAwardApplicationAttachments(
         return getPreSignedUrlUpload(
           f.name,
           f.type,
-          getAwardCampaignApplicationDocS3Format(activeCampaignId)
+          getAwardCampaignApplicationDocS3Format(activeCampaignId, userId)
         );
       })
     );

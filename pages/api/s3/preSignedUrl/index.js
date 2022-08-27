@@ -13,24 +13,34 @@ const client = new S3Client({
   region: 'us-east-1'
 });
 
-const getBucketKey = (fileName, userId, prefix) => {
-  return `${userId}/${prefix}/${fileName}`;
+const getBucketKey = (fileName, prefix) => {
+  return `${prefix}/${fileName}`;
 };
 
 async function handler(req, res) {
   try {
-    const { user } = getSession(req, res);
-    const { fileName, prefix } = req.query;
+    let response = null;
+    switch (req.method) {
+      case 'GET': {
+        const { user } = getSession(req, res);
+        const { fileName, prefix } = req.query;
 
-    const key = getBucketKey(fileName, user.sub, prefix);
-    const command = new PutObjectCommand({
-      Bucket: process.env.S3_BUCKET,
-      Key: key
-    });
-    const signedUrl = await getSignedUrl(client, command, {
-      expiresIn: process.env.S3_PRESIGNED_LIFETIME
-    });
-    res.status(200).json({ signedUrl, hostedContent: key, fileName });
+        const key = getBucketKey(fileName, prefix);
+        const command = new PutObjectCommand({
+          Bucket: process.env.S3_BUCKET,
+          Key: key
+        });
+        const signedUrl = await getSignedUrl(client, command, {
+          expiresIn: process.env.S3_PRESIGNED_LIFETIME
+        });
+        response = { signedUrl, hostedContent: key, fileName };
+        break;
+      }
+      default:
+        throw new Error(`${req.method} not supported.`);
+    }
+
+    res.status(200).json(response);
   } catch (error) {
     logger.error(error);
     res.status(400).json({ error: 'An error occurred.', message: error });

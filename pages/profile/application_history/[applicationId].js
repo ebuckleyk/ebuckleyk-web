@@ -33,7 +33,8 @@ export default function Application({ router }) {
         try {
           const attachments = await handleAwardApplicationAttachments(
             form.attachments ?? [],
-            application.campaign_id
+            application.campaign_id,
+            user.user_id
           );
 
           const postData = {

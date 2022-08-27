@@ -251,7 +251,7 @@ function Overlay({ isOpen }) {
  */
 export default function Navigation({ activeRoute, isLoading }) {
   const { isOpen, onToggle, onClose } = useDisclosure();
-  const { user, isLoggedIn, inRoles } = useAuth0User();
+  const { user, isLoggedIn, inRoles, profilePicture } = useAuth0User();
 
   useEffect(() => {
     if (isLoading) {
@@ -336,7 +336,7 @@ export default function Navigation({ activeRoute, isLoading }) {
               <Avatar
                 referrerPolicy="no-referrer"
                 size="sm"
-                src={user?.picture}
+                src={profilePicture}
               />
             </MenuButton>
             <MenuList>

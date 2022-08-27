@@ -15,17 +15,26 @@ const client = new S3Client({
 
 async function handler(req, res) {
   try {
-    const { filePath } = req.query;
+    let response = null;
+    switch (req.method) {
+      case 'GET': {
+        const { filePath } = req.query;
 
-    const command = new GetObjectCommand({
-      Bucket: process.env.S3_BUCKET,
-      Key: filePath.replace(`${process.env.S3_BUCKET}/`, '')
-    });
-    const signedUrl = await getSignedUrl(client, command, {
-      expiresIn: process.env.S3_PRESIGNED_LIFETIME
-    });
+        const command = new GetObjectCommand({
+          Bucket: process.env.S3_BUCKET,
+          Key: filePath.replace(`${process.env.S3_BUCKET}/`, '')
+        });
+        const signedUrl = await getSignedUrl(client, command, {
+          expiresIn: process.env.S3_PRESIGNED_LIFETIME
+        });
+        response = { signedUrl };
+        break;
+      }
+      default:
+        throw new Error(`${req.method} not supported.`);
+    }
 
-    res.status(200).json({ signedUrl });
+    res.status(200).json(response);
   } catch (error) {
     logger.error(error);
     res.status(400).json({ error: 'An error occurred.', message: error });

@@ -95,7 +95,8 @@ export default function Award({ award, router }) {
         try {
           const attachments = await handleAwardApplicationAttachments(
             formInfo.attachments ?? [],
-            award.activeCampaignId
+            award.activeCampaignId,
+            user.user_id
           );
 
           const postData = {
