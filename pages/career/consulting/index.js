@@ -1,8 +1,9 @@
 import { Grid, GridItem } from '@chakra-ui/react';
 import { AnimatePresence, motion } from 'framer-motion';
-import ConsultingCard from '../../components/consulting_card';
-import { consulting_data as data } from '../../localdata';
-import { STAGGER_LOAD_ITEMS_ANIMATION } from '../../utils/animation';
+import ConsultingCard from '../../../components/consulting_card';
+import { consulting_data as data } from '../../../localdata';
+import { STAGGER_LOAD_ITEMS_ANIMATION } from '../../../utils/animation';
+
 export default function Consulting({ companies }) {
   return (
     <AnimatePresence>
@@ -22,7 +23,7 @@ export default function Consulting({ companies }) {
           return (
             <GridItem
               as={motion.div}
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.01 }}
               variants={STAGGER_LOAD_ITEMS_ANIMATION.itemVariant}
               key={company.companyName}
             >

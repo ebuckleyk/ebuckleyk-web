@@ -6,14 +6,21 @@ import logger from '../../../utils/logger';
 
 async function handler(req, res) {
   try {
-    if (req.method !== 'POST') throw new Error('Method not supported.');
+    switch (req.method) {
+      case 'POST': {
+        await api.sendContactEmail(
+          req.body.inqType,
+          req.body.name,
+          req.body.email,
+          req.body.message,
+          req.body.phone
+        );
+        break;
+      }
+      default:
+        throw new Error('Methodn not supported. ');
+    }
 
-    await api.sendContactEmail(
-      req.body.inqType,
-      req.body.name,
-      req.body.email,
-      req.body.message
-    );
     res.status(200).json({ success: true });
   } catch (error) {
     logger.error(error);

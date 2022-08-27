@@ -126,7 +126,8 @@ function MobileNav() {
   );
 }
 
-function DesktopSubNav({ label, href, subLabel }) {
+function DesktopSubNav({ label, href, subLabel, activeRoute }) {
+  const isActive = href === activeRoute;
   return (
     <LinkWrapper
       href={href}
@@ -134,6 +135,7 @@ function DesktopSubNav({ label, href, subLabel }) {
       display={'block'}
       p={2}
       rounded={'sm'}
+      bgColor={isActive ? 'blue.50' : ''}
       _hover={{ bg: useColorModeValue('blue.50', 'gray.900') }}
     >
       <Stack direction="row" align="center">
@@ -171,7 +173,8 @@ function DesktopNav({ activeRoute }) {
     <Stack direction="row" spacing={4}>
       {settings.navigation.map((item) => {
         const activeStyle =
-          activeRoute === item.href
+          activeRoute === item.href ||
+          new RegExp(item.label, 'i').test(activeRoute)
             ? { borderBottomColor: 'blue.100', borderBottomWidth: 'medium' }
             : {};
 
@@ -205,7 +208,13 @@ function DesktopNav({ activeRoute }) {
                 <PopoverContent mt={1} border={0} p={2} minW="sm">
                   <Stack>
                     {item.children.map((child) => {
-                      return <DesktopSubNav key={child.label} {...child} />;
+                      return (
+                        <DesktopSubNav
+                          key={child.label}
+                          {...child}
+                          activeRoute={activeRoute}
+                        />
+                      );
                     })}
                   </Stack>
                 </PopoverContent>
@@ -293,7 +302,7 @@ export default function Navigation({ activeRoute, isLoading }) {
           <Button
             display={{ base: 'none', md: 'flex' }}
             as="a"
-            href="https://github.com/ebuckley23/ebuckleyk-web"
+            href="https://github.com/ebuckleyk/ebuckleyk-web"
             target={'_blank'}
             leftIcon={<FaGithub />}
             fontSize="sm"
@@ -304,7 +313,7 @@ export default function Navigation({ activeRoute, isLoading }) {
           <IconButton
             display={{ sm: 'flex', md: 'none' }}
             as="a"
-            href="https://github.com/ebuckley23/ebuckleyk-web"
+            href="https://github.com/ebuckleyk/ebuckleyk-web"
             target="_blank"
             icon={<FaGithub />}
             variant="ghost"

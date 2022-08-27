@@ -1,9 +1,10 @@
 import { Grid, GridItem } from '@chakra-ui/react';
-import ResumeCard from '../../components/resumecard';
-import ResumeStats from '../../components/resumestats';
+import { differenceInMonths } from 'date-fns';
 import { AnimatePresence, motion } from 'framer-motion';
-import { STAGGER_LOAD_ITEMS_ANIMATION } from '../../utils/animation';
-import web_public_api from '../../utils/api';
+import ResumeCard from '../../../components/resumecard';
+import ResumeStats from '../../../components/resumestats';
+import { STAGGER_LOAD_ITEMS_ANIMATION } from '../../../utils/animation';
+import web_public_api from '../../../utils/api';
 
 export default function Resume({ resume, stats }) {
   return (
@@ -47,7 +48,6 @@ export default function Resume({ resume, stats }) {
                 startDate={job.startDate}
                 endDate={job.endDate}
                 roles={job.roles}
-                timeIn={job.timeAtCompanyInMonths}
                 assets={job.assets}
               />
             </GridItem>
@@ -67,10 +67,22 @@ export async function getServerSideProps(context) {
   stats[0].companies.forEach((c) => {
     byCompany[c.company] = { experienceInMonths: c.expInMonths };
   });
-
   return {
     props: {
-      resume,
+      resume: {
+        ...resume,
+        jobs: resume.jobs.sort((a, b) => {
+          const difA = differenceInMonths(
+            new Date(),
+            new Date(a.endDate || new Date())
+          );
+          const difB = differenceInMonths(
+            new Date(),
+            new Date(b.endDate || new Date())
+          );
+          return difA - difB;
+        })
+      },
       stats: {
         byCompany,
         totalExperience: stats[0].expInMonths

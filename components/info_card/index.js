@@ -41,20 +41,18 @@ function InfoCard({ text, subtext, style, to }) {
   );
 }
 
-export default function InfoCardCarousel() {
+export default function InfoCardCarousel({ quickLinks = [] }) {
   return (
     <Box bg={'rgba(0, 0, 0, 0.1)'} pt={5} pb={5}>
       <Carousel>
-        {settings.navigation
-          .filter((x) => x.isQuickLink)
-          .map((l) => (
-            <InfoCard
-              key={l.href}
-              to={l.href}
-              text={l.label}
-              subtext={l.subLabel}
-            />
-          ))}
+        {quickLinks.map((l) => (
+          <InfoCard
+            key={l.href}
+            to={l.href}
+            text={l.label}
+            subtext={l.subLabel}
+          />
+        ))}
       </Carousel>
     </Box>
   );

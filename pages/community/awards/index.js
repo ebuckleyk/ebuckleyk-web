@@ -1,9 +1,12 @@
 import { getSession } from '@auth0/nextjs-auth0';
-import { Badge, SimpleGrid, Stack, Text } from '@chakra-ui/react';
+import { Badge, Grid, GridItem, Text } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import Card from '../../../components/shared/card';
 import { EVENTS } from '../../../utils/analytics';
 import web_public_api from '../../../utils/api';
+import { STAGGER_LOAD_ITEMS_ANIMATION } from '../../../utils/animation';
+
 export default function Awards({ data }) {
   const [isSafari, setIsSafari] = useState(false);
 
@@ -14,8 +17,19 @@ export default function Awards({ data }) {
   }, []);
 
   return (
-    <SimpleGrid w={{ sm: '100%', md: '80%' }}>
-      <Stack spacing={3}>
+    <AnimatePresence>
+      <Grid
+        as={motion.div}
+        {...STAGGER_LOAD_ITEMS_ANIMATION.containerProps}
+        variants={STAGGER_LOAD_ITEMS_ANIMATION.containerVariant}
+        gap={3}
+        p={{ sm: 0, md: 5 }}
+        width={{ sm: '100%' }}
+        templateColumns={{
+          sm: 'repeat(auto-fill, minmax(100%, 1fr))',
+          md: 'repeat(auto-fill, minmax(33%, 1fr))'
+        }}
+      >
         {data?.map((d) => {
           const title = (
             <Text>
@@ -29,28 +43,37 @@ export default function Awards({ data }) {
             </Text>
           );
           return (
-            <Card
-              isSafari={isSafari}
-              isPreview
-              isRichText
-              navigateTo={`/community/awards/${d._id}`}
-              content={d.content}
-              title={title}
-              img={d.image}
+            <GridItem
+              as={motion.div}
+              whileHover={{ scale: 1.05 }}
+              variants={STAGGER_LOAD_ITEMS_ANIMATION.itemVariant}
               key={d._id}
-              gaEvent={EVENTS.VIEW_AWARD}
-            ></Card>
+            >
+              <Card
+                isSafari={isSafari}
+                isPreview
+                isRichText
+                navigateTo={`/community/awards/${d._id}`}
+                content={d.content}
+                title={title}
+                img={d.image}
+                key={d._id}
+                gaEvent={EVENTS.VIEW_AWARD}
+              />
+            </GridItem>
           );
         })}
-      </Stack>
-    </SimpleGrid>
+      </Grid>
+    </AnimatePresence>
   );
 }
 
 export async function getServerSideProps(context) {
   const { user } = (await getSession(context.req, context.res)) || {};
   const query = user ? `?userId=${user.sub}` : '';
-  const data = await web_public_api(`/award-public${query}`);
+  let data = await web_public_api(`/award-public${query}`);
+  // most recent expiring campaigns first
+  data = data.sort((a, b) => a.end - b.end);
   return {
     props: {
       data

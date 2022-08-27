@@ -5,7 +5,7 @@ import logger from '../../logger';
 
 sgMail.setApiKey(process.env.SENDGRID_APIKEY);
 
-const buildMessage = (inqType, name, message, emailAddress) => {
+const buildMessage = (inqType, name, message, emailAddress, phone) => {
   return {
     subject:
       inqType === CONTACT_TYPE.GENERAL
@@ -14,14 +14,20 @@ const buildMessage = (inqType, name, message, emailAddress) => {
     to: settings.social_media.email.url.replace('mailto:', ''),
     from: process.env.WEBSITE_FROM_ADDR,
     text: `${message}\n\n Contact Information: ${emailAddress}`,
-    html: `<p>${message}</p><p><strong>Contact Information:</strong> ${emailAddress}</p>`
+    html: `<p>${message}</p><p><strong>Contact Information:</strong>${emailAddress} ${phone}</p>`
   };
 };
 
-export async function sendContactEmail(inqType, name, emailAddress, message) {
+export async function sendContactEmail(
+  inqType,
+  name,
+  emailAddress,
+  message,
+  phone
+) {
   if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test')
     return;
-  const msg = buildMessage(inqType, name, message, emailAddress);
+  const msg = buildMessage(inqType, name, message, emailAddress, phone);
   try {
     await sgMail.send(msg);
   } catch (error) {

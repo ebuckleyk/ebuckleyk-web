@@ -13,19 +13,24 @@ import {
   AspectRatio,
   ModalBody
 } from '@chakra-ui/react';
-import { format } from 'date-fns';
+import { differenceInMonths, format } from 'date-fns';
 import NextImage from 'next/image';
 import { useEffect } from 'react';
 import { FaRegCircle } from 'react-icons/fa';
 import { EVENTS, GA } from '../../utils/analytics';
 import GlassCard from '../glass_card';
 
-function getDateDisplay(startDate, endDate, timeIn) {
+function getDateDisplay(startDate, endDate) {
   const s = new Date(startDate);
   const e = new Date(endDate);
   const startDateFormat = format(s, 'MMMM yyyy');
   const endDateFormat = endDate ? format(e, 'MMMM yyyy') : 'Present';
   let timeInSuffix = '';
+
+  const timeIn = differenceInMonths(
+    new Date(endDate || new Date()),
+    new Date(startDate)
+  );
 
   if (timeIn >= 12) {
     const t = (timeIn / 12).toFixed(1);
@@ -64,8 +69,8 @@ function VideoContent({ url }) {
 
 function Thumbnail({ asset }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const url = asset.type === 'image' ? asset.url : asset.thumbnail;
-  const isexternal_link = asset.type === 'external';
+  const url = asset.assetType === 'image' ? asset.url : asset.thumbnail;
+  const isexternal_link = asset.assetType === 'external';
   useEffect(() => {
     return () => onClose();
   }, [onClose]);
@@ -89,7 +94,7 @@ function Thumbnail({ asset }) {
       <Modal isCentered isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          {asset.type === 'image' ? (
+          {asset.assetType === 'image' ? (
             <ImageContent url={url} />
           ) : (
             <VideoContent url={asset.url} />
@@ -105,7 +110,6 @@ export default function ResumeCard({
   multiLocation = false,
   startDate,
   endDate,
-  timeIn,
   roles = [],
   assets = []
 }) {
@@ -135,7 +139,7 @@ export default function ResumeCard({
           </Box>
           <Box>
             <Text fontWeight={'bold'}>{company}</Text>
-            <Text>{getDateDisplay(startDate, endDate, timeIn)}</Text>
+            <Text>{getDateDisplay(startDate, endDate)}</Text>
             {!multiLocation ? <Text>{roles[0].location}</Text> : null}
           </Box>
         </Flex>
