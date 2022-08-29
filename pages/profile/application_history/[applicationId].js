@@ -75,7 +75,7 @@ export default function Application({ router }) {
         }
       });
     },
-    [application, toast]
+    [application, toast, user.user_id]
   );
 
   const onSelectFile = useCallback(async (_, file) => {

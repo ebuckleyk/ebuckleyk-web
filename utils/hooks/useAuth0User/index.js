@@ -29,6 +29,19 @@ const is_in_role = (user, roles = [], allInclusive = true) => {
   }
   return ret;
 };
+
+const normalizeProfileImageUrl = (url) => {
+  if (!url) return '';
+
+  if (url.includes('googleusercontent')) {
+    // enhance google image quality
+    return url.replace('s96-', 's300-');
+  } else if (url.includes('twimg')) {
+    // enhance twitter image quality
+    return url.replace('_normal', '');
+  }
+  return url;
+};
 export default function useAuth0User() {
   const { user, error, isLoading, checkSession } = useUser();
   const inRoles = useCallback(
@@ -46,8 +59,10 @@ export default function useAuth0User() {
     checkSession,
     inRoles,
     isLoggedIn: !!user,
-    profilePicture: user?.user_metadata?.profileImageUrl
-      ? `${process.env.NEXT_PUBLIC_CDN}/${user.user_metadata.profileImageUrl}`
-      : user?.picture
+    profilePicture: normalizeProfileImageUrl(
+      user?.user_metadata?.profileImageUrl
+        ? `${process.env.NEXT_PUBLIC_CDN}/${user.user_metadata.profileImageUrl}`
+        : user?.picture
+    )
   };
 }

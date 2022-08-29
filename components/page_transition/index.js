@@ -21,13 +21,12 @@ const variants = {
   }
 };
 
-export default function PageTransition({ children }) {
-  const { route } = useRouter(); // *Note: asPath may work better
+export default function PageTransition({ children, activeRoute }) {
   return (
     <div style={{ overflow: 'hidden' }}>
       <AnimatePresence initial={false} exitBeforeEnter>
         <motion.div
-          key={route}
+          key={activeRoute}
           variants={variants}
           animate="in"
           initial="out"
