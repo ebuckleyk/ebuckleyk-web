@@ -1,15 +1,17 @@
 import NextImage from 'next/image';
-import { Box, Button, Container, Flex, Text } from '@chakra-ui/react';
+import { Button, Container, Flex, Text } from '@chakra-ui/react';
 import RichText from '../../richtext';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import { EVENTS, GA } from '../../../utils/analytics';
+import GlassCard from '../../glass_card';
 
 function CardImage({ img }) {
   if (!img || !img?.url) return null;
 
   return (
     <Container
+      bgColor="whiteAlpha.400"
       boxShadow={'xl'}
       borderRadius={50}
       borderWidth={'2px'}
@@ -26,17 +28,25 @@ function CardTitle({ title }) {
   if (!title) return null;
   return (
     <Container mt={5}>
-      <Text align="center" fontWeight={'bold'} fontSize={'large'}>
+      <Text as="span" align="center" fontWeight={'bold'} fontSize={'large'}>
         {title}
       </Text>
     </Container>
   );
 }
 
-function CardContent({ isPreview, content, isRichText }) {
+function CardContent({ isPreview, content, isRichText, isSafari }) {
   if (!content) return null;
   const Content = isRichText ? RichText : Text;
-  return <Content noOfLines={isPreview ? 4 : Infinity}>{content}</Content>;
+  return (
+    <Content
+      maxHeight={isSafari ? '90px' : undefined}
+      overflow={isSafari ? 'hidden' : undefined}
+      noOfLines={isPreview ? 4 : Infinity}
+    >
+      {content}
+    </Content>
+  );
 }
 
 function Footer({ onClick }) {
@@ -57,7 +67,8 @@ export default function Card({
   navigateTo,
   gaEvent = EVENTS.VIEW_CARD,
   isPreview = true,
-  isRichText = false
+  isRichText = false,
+  isSafari = false
 }) {
   const router = useRouter();
 
@@ -71,9 +82,7 @@ export default function Card({
   );
 
   return (
-    <Box
-      bgColor={'white'}
-      // opacity={0.8}
+    <GlassCard
       _hover={{
         opacity: 1
       }}
@@ -87,9 +96,9 @@ export default function Card({
     >
       <CardImage img={img} />
       <CardTitle title={title} />
-      <CardContent {...{ isRichText, content, isPreview }} />
+      <CardContent {...{ isRichText, content, isPreview, isSafari }} />
       <Footer onClick={navigate} />
       {children}
-    </Box>
+    </GlassCard>
   );
 }

@@ -162,7 +162,7 @@ const getData = (companyStats = {}) => {
   return Object.keys(companyStats).map((k) => {
     return {
       name: k,
-      value: companyStats[k].timeInRole
+      value: companyStats[k].experienceInMonths
     };
   });
 };

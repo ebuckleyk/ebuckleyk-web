@@ -1,12 +1,12 @@
 import NextImage from 'next/image';
-import { Box, Flex, Heading, Stack } from '@chakra-ui/react';
+import { Flex, Heading, Stack } from '@chakra-ui/react';
 import * as api from '../../utils/api/handlers/contentful';
 import RichText from '../../components/richtext';
+import GlassCard from '../../components/glass_card';
 
 export default function BlogPost({ blog }) {
   return (
-    <Box
-      bgColor={'white'}
+    <GlassCard
       borderRadius={{ sm: 0, md: 20 }}
       width={{ sm: '100%', md: '90%' }}
     >
@@ -19,7 +19,7 @@ export default function BlogPost({ blog }) {
         </Flex>
         <RichText>{blog.content.json}</RichText>
       </Stack>
-    </Box>
+    </GlassCard>
   );
 }
 

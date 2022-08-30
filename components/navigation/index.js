@@ -33,6 +33,7 @@ import {
 import { FaGithub, FaSignInAlt, FaSignOutAlt } from 'react-icons/fa';
 import settings from '../../app.settings.json';
 import useAuth0User from '../../utils/hooks/useAuth0User';
+import GlassCard from '../glass_card';
 
 /**
  * navigation structure
@@ -98,7 +99,7 @@ function MobileNavItem({ label, children, href }) {
           pl={4}
           borderLeft={1}
           borderStyle="solid"
-          borderColor={useColorModeValue('gray.200', 'gray.700')}
+          borderColor={useColorModeValue('gray.400', 'gray.700')}
           align="start"
         >
           {children &&
@@ -117,19 +118,16 @@ function MobileNavItem({ label, children, href }) {
 
 function MobileNav() {
   return (
-    <Stack
-      bg={useColorModeValue('white', 'gray.800')}
-      p={4}
-      display={{ md: 'none' }}
-    >
+    <GlassCard as={Stack} p={4} display={{ md: 'none' }}>
       {settings.navigation.map((item) => {
         return <MobileNavItem key={item.label} {...item} />;
       })}
-    </Stack>
+    </GlassCard>
   );
 }
 
-function DesktopSubNav({ label, href, subLabel }) {
+function DesktopSubNav({ label, href, subLabel, activeRoute }) {
+  const isActive = href === activeRoute;
   return (
     <LinkWrapper
       href={href}
@@ -137,6 +135,7 @@ function DesktopSubNav({ label, href, subLabel }) {
       display={'block'}
       p={2}
       rounded={'sm'}
+      bgColor={isActive ? 'blue.50' : ''}
       _hover={{ bg: useColorModeValue('blue.50', 'gray.900') }}
     >
       <Stack direction="row" align="center">
@@ -169,13 +168,13 @@ function DesktopSubNav({ label, href, subLabel }) {
 function DesktopNav({ activeRoute }) {
   const linkColor = useColorModeValue('gray.600', 'gray.200');
   const linkHoverColor = useColorModeValue('gray.800', 'white');
-  const popoverContentBgColor = useColorModeValue('white', 'gray.800');
 
   return (
     <Stack direction="row" spacing={4}>
       {settings.navigation.map((item) => {
         const activeStyle =
-          activeRoute === item.href
+          activeRoute === item.href ||
+          new RegExp(item.label, 'i').test(activeRoute)
             ? { borderBottomColor: 'blue.100', borderBottomWidth: 'medium' }
             : {};
 
@@ -206,16 +205,16 @@ function DesktopNav({ activeRoute }) {
               </PopoverTrigger>
 
               {item.children && (
-                <PopoverContent
-                  border={0}
-                  boxShadow="xl"
-                  bg={popoverContentBgColor}
-                  p={2}
-                  minW="sm"
-                >
+                <PopoverContent mt={1} border={0} p={2} minW="sm">
                   <Stack>
                     {item.children.map((child) => {
-                      return <DesktopSubNav key={child.label} {...child} />;
+                      return (
+                        <DesktopSubNav
+                          key={child.label}
+                          {...child}
+                          activeRoute={activeRoute}
+                        />
+                      );
                     })}
                   </Stack>
                 </PopoverContent>
@@ -252,7 +251,7 @@ function Overlay({ isOpen }) {
  */
 export default function Navigation({ activeRoute, isLoading }) {
   const { isOpen, onToggle, onClose } = useDisclosure();
-  const { user, isLoggedIn, inRoles } = useAuth0User();
+  const { user, isLoggedIn, inRoles, profilePicture } = useAuth0User();
 
   useEffect(() => {
     if (isLoading) {
@@ -260,19 +259,9 @@ export default function Navigation({ activeRoute, isLoading }) {
     }
   }, [isLoading, onClose]);
   return (
-    <Box position={'absolute'} width="100%" zIndex={99}>
+    <GlassCard position={'fixed'} width="100%" zIndex={99} boxShadow="xl">
       <Overlay isOpen={isOpen} />
-      <Flex
-        bg={useColorModeValue('white', 'gray.600')}
-        color={useColorModeValue('gray.600', 'white')}
-        minH={'60px'}
-        py={{ base: 2 }}
-        px={{ base: 4 }}
-        borderBottom={1}
-        borderStyle="solid"
-        borderColor={useColorModeValue('gray.200', 'gray.900')}
-        align="center"
-      >
+      <Flex minH={'60px'} py={{ base: 2 }} px={{ base: 4 }} align="center">
         <Flex
           flex={{ base: 1, md: 'auto' }}
           ml={{ base: -2 }}
@@ -288,12 +277,7 @@ export default function Navigation({ activeRoute, isLoading }) {
           />
         </Flex>
         <Flex justify={{ base: 'center', md: 'start' }}>
-          <LinkWrapper
-            _hover={{
-              textDecoration: 'none'
-            }}
-            href={'/'}
-          >
+          <LinkWrapper href={'/'}>
             <NextImage
               src="/images/signature.png"
               alt="Emmanuel K. Buckley"
@@ -318,7 +302,7 @@ export default function Navigation({ activeRoute, isLoading }) {
           <Button
             display={{ base: 'none', md: 'flex' }}
             as="a"
-            href="https://github.com/ebuckley23/ebuckleyk-web"
+            href="https://github.com/ebuckleyk/ebuckleyk-web"
             target={'_blank'}
             leftIcon={<FaGithub />}
             fontSize="sm"
@@ -329,22 +313,15 @@ export default function Navigation({ activeRoute, isLoading }) {
           <IconButton
             display={{ sm: 'flex', md: 'none' }}
             as="a"
-            href="https://github.com/ebuckley23/ebuckleyk-web"
+            href="https://github.com/ebuckleyk/ebuckleyk-web"
             target="_blank"
             icon={<FaGithub />}
             variant="ghost"
           />
 
-          <IconButton
-            display={{ sm: !user ? 'flex' : 'none', md: 'none' }}
-            as="a"
-            href="/api/auth/login"
-            icon={<FaSignInAlt />}
-            variant="ghost"
-          />
           <Button
             // disabled // Disabled until production ready
-            display={{ base: 'none', md: !user ? 'flex' : 'none' }}
+            display={{ base: !user ? 'flex' : 'none' }}
             leftIcon={<FaSignInAlt />}
             as={Link}
             fontSize="sm"
@@ -359,19 +336,34 @@ export default function Navigation({ activeRoute, isLoading }) {
               <Avatar
                 referrerPolicy="no-referrer"
                 size="sm"
-                src={user?.picture}
+                src={profilePicture}
               />
             </MenuButton>
             <MenuList>
-              <MenuItem as={LinkWrapper} href="/profile">
-                Profile
+              <MenuItem
+                _hover={{
+                  bg: useColorModeValue('blue.50', 'gray.900'),
+                  textDecoration: 'none'
+                }}
+                as={LinkWrapper}
+                href="/profile"
+              >
+                My Profile
               </MenuItem>
               <MenuItem
+                _hover={{
+                  bg: useColorModeValue('blue.50', 'gray.900'),
+                  textDecoration: 'none'
+                }}
                 as={LinkWrapper}
                 href="/portal/dashboard"
-                display={inRoles('Admin') ? 'flex' : 'none'}
+                display={
+                  inRoles(['Admin', 'Committee Member'], false)
+                    ? 'flex'
+                    : 'none'
+                }
               >
-                Portal
+                Award Committee
               </MenuItem>
               <MenuDivider />
               <MenuItem icon={<FaSignOutAlt />} as="a" href="/api/auth/logout">
@@ -385,6 +377,6 @@ export default function Navigation({ activeRoute, isLoading }) {
       <Collapse in={isOpen} animateOpacity>
         <MobileNav />
       </Collapse>
-    </Box>
+    </GlassCard>
   );
 }

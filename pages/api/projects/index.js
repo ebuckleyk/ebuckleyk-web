@@ -1,5 +1,5 @@
 import { getAllProjects } from '../../../utils/api/handlers/contentful';
-import requestLogger from '../../../utils/api/middleware/requestLogger';
+import withApplicationInsights from '../../../utils/api/middleware/withApplicationInsights';
 import withCorrelationId from '../../../utils/api/middleware/withCorrelationId';
 import logger from '../../../utils/logger';
 
@@ -13,4 +13,4 @@ async function handler(req, res) {
   }
 }
 
-export default withCorrelationId(requestLogger(handler));
+export default withApplicationInsights(withCorrelationId(handler));
