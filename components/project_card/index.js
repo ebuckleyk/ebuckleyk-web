@@ -17,17 +17,14 @@ import {
 import { FaGithub } from 'react-icons/fa';
 import RichText from '../richtext';
 import { ExternalLinkIcon } from '@chakra-ui/icons';
+import GlassCard from '../glass_card';
 
 export default function ProjectCard({ img, title, description, github }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
   return (
     <>
-      <Box
-        bgColor="white"
-        opacity={0.8}
-        _hover={{
-          opacity: 1
-        }}
+      <GlassCard
         p={5}
         pos={'relative'}
         width={{ sm: '100%' }}
@@ -47,10 +44,16 @@ export default function ProjectCard({ img, title, description, github }) {
           <></>
         )}
         <Container>
-          <Text fontSize="large" fontWeight="bold" align="center" isTruncated>
+          <Text fontSize="large" fontWeight="bold" align="center">
             {title}
           </Text>
-          <RichText noOfLines={4}>{description.json}</RichText>
+          <RichText
+            maxHeight={isSafari ? '90px' : undefined}
+            overflow={isSafari ? 'hidden' : undefined}
+            noOfLines={4}
+          >
+            {description.json}
+          </RichText>
         </Container>
         <Flex justify={'flex-end'} alignItems="center">
           <Button
@@ -68,7 +71,7 @@ export default function ProjectCard({ img, title, description, github }) {
             Read More
           </Button>
         </Flex>
-      </Box>
+      </GlassCard>
 
       <Modal isOpen={isOpen} onClose={onClose} isCentered motionPreset="scale">
         <ModalOverlay />

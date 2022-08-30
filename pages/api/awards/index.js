@@ -1,7 +1,7 @@
-import requestLogger from '../../../utils/api/middleware/requestLogger';
 import withCorrelationId from '../../../utils/api/middleware/withCorrelationId';
 import logger from '../../../utils/logger';
 import web_public_api from '../../../utils/api';
+import { withApplicationInsights } from '../../../utils/api/middleware';
 
 async function handler(req, res) {
   try {
@@ -13,4 +13,4 @@ async function handler(req, res) {
   }
 }
 
-export default withCorrelationId(requestLogger(handler));
+export default withApplicationInsights(withCorrelationId(handler));

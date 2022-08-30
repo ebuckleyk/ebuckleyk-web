@@ -15,6 +15,7 @@ import {
 } from '@chakra-ui/react';
 import { EVENTS, GA } from '../../utils/analytics';
 import useResponsive from '../../utils/hooks/useResponsive';
+import GlassCard from '../glass_card';
 import PercentOfTimeSpentAtCompany from './percentOfTimeSpentAtCompany';
 import ProficiencyByDiscipline from './proficiencyByDiscipline';
 import ProficiencyByLanguage from './proficiencyByLanguage';
@@ -75,9 +76,8 @@ function DesktopDisplay({ companyStats }) {
 export default function ResumeStats({ stats }) {
   const responsive = useResponsive();
   return (
-    <Box
+    <GlassCard
       borderRadius={{ sm: 0, md: 20 }}
-      bgColor={'rgba(255, 255, 255, 0.8)'}
       width={{ sm: '100%', '2xl': '90%' }}
       height={'100%'}
     >
@@ -105,6 +105,6 @@ export default function ResumeStats({ stats }) {
           <DesktopDisplay companyStats={stats.byCompany} />
         )}
       </Stack>
-    </Box>
+    </GlassCard>
   );
 }

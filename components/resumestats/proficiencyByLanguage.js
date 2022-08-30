@@ -21,7 +21,7 @@ const data = [
     fullMark: 5
   },
   {
-    language: 'Javascript',
+    language: 'pHp',
     ebuckleyk: 2.5,
     fullMark: 5
   },
@@ -31,7 +31,7 @@ const data = [
     fullMark: 5
   },
   {
-    language: 'pHp',
+    language: 'nodejs',
     ebuckleyk: 3,
     fullMark: 5
   },
@@ -68,7 +68,7 @@ export default function ProficiencyByLanguage() {
         <Radar
           name="Emmanuel K. Buckley"
           dataKey="ebuckleyk"
-          stroke="#8884d8"
+          stroke="#fff"
           fill="#42A5F5"
           fillOpacity={0.6}
         />

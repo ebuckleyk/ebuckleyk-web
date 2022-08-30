@@ -11,17 +11,22 @@ import {
   useToast,
   Badge,
   Text,
-  Button
+  Button,
+  Box
 } from '@chakra-ui/react';
 import * as api from '../../../utils/api/handlers/contentful';
 import RichText from '../../../components/richtext';
 import AwardForm from '../../../components/award_form';
 import { useCallback } from 'react';
-import { withCaptcha, uploadToS3 } from '../../../utils/api/helper';
+import {
+  withCaptcha,
+  handleAwardApplicationAttachments
+} from '../../../utils/api/helper';
 import useAuth0User from '../../../utils/hooks/useAuth0User';
 import LinkWrapper from '../../../components/shared/link_wrapper';
 import { getSession } from '@auth0/nextjs-auth0';
 import { format } from 'date-fns';
+import GlassCard from '../../../components/glass_card';
 
 function Message({ children }) {
   return (
@@ -35,6 +40,51 @@ function Message({ children }) {
     </Flex>
   );
 }
+
+function PleaseSignIn({ isLoggedIn }) {
+  if (isLoggedIn) return null;
+  return (
+    <Message>
+      <Button variant={'link'} as={'a'} href={'/api/auth/login'}>
+        Please sign in!
+      </Button>
+    </Message>
+  );
+}
+
+function CurrentlyUnavailable({ isLoggedIn, activeCampaignId }) {
+  if (isLoggedIn && !activeCampaignId)
+    return (
+      <Message>
+        <Text>
+          This award is currently unavailable. Please check back later!
+        </Text>
+      </Message>
+    );
+  return null;
+}
+
+function PreviouslyApplied({ isLoggedIn, applicationId, cycleDate, as }) {
+  if (isLoggedIn && applicationId)
+    return (
+      <Message>
+        <Text textAlign={'center'}>
+          {"You've already applied to this award cycle of "}
+          {cycleDate}
+          {'.'}
+        </Text>
+        <Text>
+          {
+            'If you would like to check award status or update application, please click below.'
+          }
+        </Text>
+        <Button href="/profile" as={as} mt={5} variant="link">
+          Go To Profile
+        </Button>
+      </Message>
+    );
+  return null;
+}
 export default function Award({ award, router }) {
   const toast = useToast();
   const { user, isLoggedIn } = useAuth0User();
@@ -43,33 +93,25 @@ export default function Award({ award, router }) {
     async (formInfo, done) => {
       withCaptcha(async (token) => {
         try {
-          let s3FileLocations = [];
-
-          if (formInfo.attachments?.length) {
-            s3FileLocations = await Promise.all(
-              formInfo.attachments?.map((f) => {
-                return uploadToS3(f);
-              })
-            );
-          }
+          const attachments = await handleAwardApplicationAttachments(
+            formInfo.attachments ?? [],
+            award.activeCampaignId,
+            user?.user_id
+          );
 
           const postData = {
             ...formInfo,
             campaignId: award.activeCampaignId,
-            attachments: [...s3FileLocations],
+            attachments,
             captcha: token
           };
-
-          const response = await fetch(
-            `/api/awards/${award._id}?appType=${formInfo.appType}`,
-            {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify(postData)
-            }
-          );
+          const response = await fetch(`/api/awards/${award._id}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(postData)
+          });
 
           if (response.status !== 200) throw new Error();
           toast({
@@ -96,21 +138,21 @@ export default function Award({ award, router }) {
         }
       });
     },
-    [toast, award?._id, award?.activeCampaignId, router]
+    [toast, award?._id, award?.activeCampaignId, router, user?.user_id]
   );
 
   const cycleDate = award.activeCampaignId ? (
-    <Text fontWeight={'bold'}>
-      {format(new Date(award.start), 'PP')} - $
+    <Text as="span" fontWeight={'bold'}>
+      {format(new Date(award.start), 'PP')} -{' '}
       {format(new Date(award.end), 'PP')}
     </Text>
   ) : null;
 
   return (
-    <Tabs
+    <GlassCard
+      as={Tabs}
       isFitted
       minH={'500px'}
-      bgColor={'white'}
       borderRadius={{ sm: 0, md: 20 }}
       variant={'enclosed'}
       width={{ sm: '100%', md: '90%' }}
@@ -134,45 +176,43 @@ export default function Award({ award, router }) {
                 {award.name}
               </Heading>
             </Flex>
-            <Flex maxH={200} justify="center">
-              <NextImage src={award.image.url} width={200} height={300} />
-            </Flex>
+            <Box justifyContent={'center'} display="flex" w={'100%'}>
+              <Flex
+                pos="relative"
+                boxShadow={'xl'}
+                borderRadius={50}
+                borderWidth={2}
+                width={200}
+                height={200}
+                justify="center"
+                bgColor={'whiteAlpha.400'}
+              >
+                <NextImage
+                  layout="fill"
+                  src={award.image.url}
+                  width={200}
+                  height={300}
+                />
+              </Flex>
+            </Box>
             <RichText>{award.content}</RichText>
           </Stack>
         </TabPanel>
         <TabPanel>
-          {!isLoggedIn ? (
-            <Message>
-              <Button variant={'link'} as={'a'} href={'/api/auth/login'}>
-                Please sign in!
-              </Button>
-            </Message>
-          ) : null}
-          {award.activeCampaignId ? null : (
-            <Message>
-              <Text>
-                This award is currently unavailable. Please check back later!
-              </Text>
-            </Message>
-          )}
-          {award.applicationId ? (
-            <Message>
-              <Text textAlign={'center'}>
-                {"You've already applied to this award cycle"}
-                {cycleDate}
-              </Text>
-              <Text>
-                {
-                  'If you would like to check award status or update application, please click below.'
-                }
-              </Text>
-              <Button href="/profile" as={LinkWrapper} mt={5} variant="link">
-                Go To Profile
-              </Button>
-            </Message>
-          ) : null}
-          {award.activeCampaignId && !award.applicationId ? (
+          <PleaseSignIn isLoggedIn={isLoggedIn} />
+          <CurrentlyUnavailable
+            isLoggedIn={isLoggedIn}
+            activeCampaignId={award.activeCampaignId}
+          />
+          <PreviouslyApplied
+            isLoggedIn={isLoggedIn}
+            applicationId={award.applicationId}
+            cycleDate={cycleDate}
+            as={LinkWrapper}
+          />
+          {award.activeCampaignId && !award.applicationId && isLoggedIn ? (
             <AwardForm
+              activeCampaignId={award.activeCampaignId}
               user={user}
               appType={award.category}
               onSubmit={onSubmitInfo}
@@ -180,7 +220,7 @@ export default function Award({ award, router }) {
           ) : null}
         </TabPanel>
       </TabPanels>
-    </Tabs>
+    </GlassCard>
   );
 }
 

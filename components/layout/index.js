@@ -1,10 +1,9 @@
 import Head from 'next/head';
 import Script from 'next/script';
-import { Box, ScaleFade } from '@chakra-ui/react';
 import Navigation from '../navigation';
 import styles from './index.module.css';
-import Loader from '../loader';
 import settings from '../../app.settings.json';
+import PageTransition from '../page_transition';
 
 const HeaderInfo = ({ headerInfo }) => {
   const {
@@ -86,7 +85,6 @@ const SEO = ({
   ];
 };
 
-const backgroundImageUrl = '/images/backgroundv2@1920.jpg';
 export default function Layout({
   children,
   router,
@@ -113,24 +111,15 @@ export default function Layout({
           });
         `}
       </Script>
-      <Box
-        // minHeight={'100%'}
-        bgRepeat="no-repeat"
-        bgPos={'center'}
-        bgSize="cover"
-        bgImage={backgroundImageUrl}
-      >
+      <div className={styles['bg-container']}>
         <Navigation
           isLoading={navState.isLoading}
           activeRoute={navState.activeRoute}
         />
-        <ScaleFade key={router.route} initialScale={0.9} in="true">
-          <main className={styles.main}>
-            <Loader loading={navState.isLoading} />
-            {children}
-          </main>
-        </ScaleFade>
-      </Box>
+        <PageTransition activeRoute={navState.activeRoute}>
+          <main className={styles.main}>{children}</main>
+        </PageTransition>
+      </div>
     </>
   );
 }

@@ -1,5 +1,6 @@
 import {
   Avatar,
+  AvatarBadge,
   Editable,
   EditablePreview,
   EditableTextarea,
@@ -7,12 +8,50 @@ import {
   Heading,
   Text
 } from '@chakra-ui/react';
+import { EditIcon } from '@chakra-ui/icons';
+import { FileDrop } from '@ebuckleyk/ebuckleyk-component-lib';
 
-function HeaderInfo({ name, email, profileImg, onUpdateBio, bio }) {
+function AvatarBadgeImageUpload() {
+  return (
+    <AvatarBadge
+      _hover={{
+        cursor: 'pointer'
+      }}
+      bg="gray.50"
+      borderColor="transparent"
+    >
+      <EditIcon w={5} h={5} />
+    </AvatarBadge>
+  );
+}
+function HeaderInfo({
+  name,
+  email,
+  profileImg,
+  onUpdateBio,
+  bio,
+  onUpdateProfileImg
+}) {
   return (
     <>
       <Flex justifyContent={'center'}>
-        <Avatar size="2xl" src={profileImg ?? ''} />
+        <Avatar size="2xl" src={profileImg ?? ''}>
+          <FileDrop
+            accept={{
+              'image/png': [],
+              'image/jpeg': [],
+              'image/svg+xml': [],
+              'image/webp': []
+            }}
+            maxFiles={1}
+            maxSize={2 * (1024 * 1024)} // should be 2 MB
+            dropAreaComponent={<AvatarBadgeImageUpload />}
+            displayFileArea={false}
+            dropAreaProps={{ width: 'fit-content' }}
+            baseStyle={{}}
+            onAddFiles={onUpdateProfileImg}
+          />
+        </Avatar>
       </Flex>
       <Flex alignItems={'center'} flexDir="column">
         <Heading>{name}</Heading>
@@ -22,7 +61,7 @@ function HeaderInfo({ name, email, profileImg, onUpdateBio, bio }) {
       </Flex>
       <Flex justifyContent={'center'}>
         <Editable
-          maxW={{ sm: '100%', md: 350 }}
+          maxW={{ sm: '100%', md: '50%' }}
           borderBottom={'1px'}
           borderBottomColor="gray.100"
           onSubmit={onUpdateBio}

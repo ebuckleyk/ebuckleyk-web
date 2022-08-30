@@ -43,13 +43,12 @@ export default function HomeCard({}) {
             name="Emmanuel K. Buckley"
             src="/images/ebuckleyk.jpg"
           />
-          <Accordion width="100%" allowToggle defaultIndex={0}>
+          <Accordion width="100%" allowToggle={false} defaultIndex={0}>
             <AccordionItem border={'none'}>
               <AccordionButton flexDirection={'row'} justifyContent="center">
                 <Text color="white" fontSize="2xl" textAlign={'center'}>
                   Emmanuel K. Buckley
                 </Text>
-                <AccordionIcon position="absolute" color="white" right={10} />
               </AccordionButton>
               <AccordionPanel
                 pb={4}

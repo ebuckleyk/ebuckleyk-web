@@ -1,8 +1,8 @@
 import { getAllBlogs } from '../../../utils/api/handlers/contentful';
 import { getMyTwitterData } from '../../../utils/api/handlers/twitter';
 import logger from '../../../utils/logger';
-import requestLogger from '../../../utils/api/middleware/requestLogger';
 import withCorrelationId from '../../../utils/api/middleware/withCorrelationId';
+import { withApplicationInsights } from '../../../utils/api/middleware';
 
 function mergeData(data = []) {
   return data.sort((a, b) => b.date - a.date);
@@ -19,4 +19,4 @@ async function handler(req, res) {
   }
 }
 
-export default withCorrelationId(requestLogger(handler));
+export default withApplicationInsights(withCorrelationId(handler));

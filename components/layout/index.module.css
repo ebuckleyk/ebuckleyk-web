@@ -8,3 +8,27 @@
   align-items: center;
   justify-content: center;
 }
+
+.bg-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  transform: scale(1);
+}
+/* Fix for background image jumping on transitions */
+.bg-container::after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/images/backgroundv2@1920.jpg');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  z-index: -9999;
+}

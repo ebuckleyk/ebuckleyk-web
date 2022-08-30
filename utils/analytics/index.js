@@ -73,5 +73,10 @@ export const EVENTS = {
     action: 'update_contact_info',
     event_category: 'engagement',
     event_label: 'method'
+  },
+  UPDATE_PROFILE_IMG: {
+    action: 'update_profileImg',
+    event_category: 'engagement',
+    event_label: 'method'
   }
 };

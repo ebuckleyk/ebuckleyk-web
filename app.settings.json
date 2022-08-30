@@ -30,16 +30,20 @@
       "isQuickLink": true
     },
     {
-      "label": "Consulting",
-      "href": "/consulting",
-      "subLabel": "Information regarding my consulting services",
-      "isQuickLink": true
-    },
-    {
-      "label": "Resume",
-      "href": "/resume",
-      "subLabel": "Checkout my virtual resume",
-      "isQuickLink": true
+      "label": "Career",
+      "children": [
+        {
+          "label": "Consulting",
+          "subLabel": "Information regarding my consulting services",
+          "href": "/career/consulting",
+          "isQuickLink": true
+        },
+        {
+          "label": "Resume",
+          "subLabel": "View Emmanuel Buckley's Resume",
+          "href": "/career/resume"
+        }
+      ]
     },
     {
       "label": "Community",
@@ -47,7 +51,8 @@
         {
           "label": "Scholarships & Awards",
           "subLabel": "View Available Scholarships & Awards",
-          "href": "/community/awards"
+          "href": "/community/awards",
+          "isQuickLink": true
         }
       ]
     },
@@ -69,10 +74,7 @@
     "valid_file_types": [
       "application/pdf",
       "application/msword",
-      ".doc",
-      ".docx"
-    ],
-    "filepond_fileSize_key": "file_size",
-    "filepond_fileType_key": "file_type"
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ]
   }
 }

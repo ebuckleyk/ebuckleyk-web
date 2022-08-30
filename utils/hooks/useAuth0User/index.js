@@ -20,7 +20,7 @@ const is_in_role = (user, roles = [], allInclusive = true) => {
   if (allInclusive) return is_in_all_roles(roles, user);
 
   let ret = false;
-  for (let i = 0; i < roles; i++) {
+  for (let i = 0; i < roles.length; i++) {
     const check_role = roles[i];
     if (user[role_namespace].includes(check_role)) {
       ret = true;
@@ -28,6 +28,19 @@ const is_in_role = (user, roles = [], allInclusive = true) => {
     }
   }
   return ret;
+};
+
+const normalizeProfileImageUrl = (url) => {
+  if (!url) return '';
+
+  if (url.includes('googleusercontent')) {
+    // enhance google image quality
+    return url.replace('s96-', 's300-');
+  } else if (url.includes('twimg')) {
+    // enhance twitter image quality
+    return url.replace('_normal', '');
+  }
+  return url;
 };
 export default function useAuth0User() {
   const { user, error, isLoading, checkSession } = useUser();
@@ -45,6 +58,11 @@ export default function useAuth0User() {
     isLoading,
     checkSession,
     inRoles,
-    isLoggedIn: !!user
+    isLoggedIn: !!user,
+    profilePicture: normalizeProfileImageUrl(
+      user?.user_metadata?.profileImageUrl
+        ? `${process.env.NEXT_PUBLIC_CDN}/${user.user_metadata.profileImageUrl}`
+        : user?.picture
+    )
   };
 }
