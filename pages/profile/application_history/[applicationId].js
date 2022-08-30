@@ -34,7 +34,7 @@ export default function Application({ router }) {
           const attachments = await handleAwardApplicationAttachments(
             form.attachments ?? [],
             application.campaign_id,
-            user.user_id
+            user?.user_id
           );
 
           const postData = {
@@ -75,7 +75,7 @@ export default function Application({ router }) {
         }
       });
     },
-    [application, toast, user.user_id]
+    [application, toast, user?.user_id]
   );
 
   const onSelectFile = useCallback(async (_, file) => {

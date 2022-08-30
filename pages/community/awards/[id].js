@@ -96,7 +96,7 @@ export default function Award({ award, router }) {
           const attachments = await handleAwardApplicationAttachments(
             formInfo.attachments ?? [],
             award.activeCampaignId,
-            user.user_id
+            user?.user_id
           );
 
           const postData = {
@@ -138,7 +138,7 @@ export default function Award({ award, router }) {
         }
       });
     },
-    [toast, award?._id, award?.activeCampaignId, router]
+    [toast, award?._id, award?.activeCampaignId, router, user?.user_id]
   );
 
   const cycleDate = award.activeCampaignId ? (
