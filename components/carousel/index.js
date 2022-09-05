@@ -57,7 +57,7 @@ const Carousel = ({ children, autoPlay = false }) => {
       w = '100%';
     }
 
-    setConfig({ transformPerc: t, width: w });
+    setConfig((prev) => ({ ...prev, transformPerc: t, width: w }));
   }, [
     config.transformPerc,
     config.width,

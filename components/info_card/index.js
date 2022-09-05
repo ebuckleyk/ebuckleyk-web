@@ -1,9 +1,6 @@
 import React from 'react';
-import NextLink from 'next/link';
-import { Link, Flex, Text, Box } from '@chakra-ui/react';
-import { InfoOutlineIcon } from '@chakra-ui/icons';
+import { Flex, Text, Box } from '@chakra-ui/react';
 import Carousel from '../carousel';
-import settings from '../../app.settings.json';
 
 function InfoCard({ text, subtext, style, to }) {
   return (
@@ -18,17 +15,6 @@ function InfoCard({ text, subtext, style, to }) {
       height={75}
       textAlign="center"
     >
-      <NextLink href={to} passHref>
-        <Link>
-          <InfoOutlineIcon
-            right={'25%'}
-            top={5}
-            position={'absolute'}
-            fontSize={'lg'}
-            color="white"
-          />
-        </Link>
-      </NextLink>
       <Flex flexDir={'column'}>
         <Text fontSize={'lg'} color="white">
           {text}
@@ -44,7 +30,7 @@ function InfoCard({ text, subtext, style, to }) {
 export default function InfoCardCarousel({ quickLinks = [] }) {
   return (
     <Box bg={'rgba(0, 0, 0, 0.1)'} pt={5} pb={5}>
-      <Carousel>
+      <Carousel autoPlay={false}>
         {quickLinks.map((l) => (
           <InfoCard
             key={l.href}

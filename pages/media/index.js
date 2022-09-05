@@ -6,10 +6,13 @@ import {
   Button,
   Select,
   HStack,
-  StackDivider
+  StackDivider,
+  IconButton
 } from '@chakra-ui/react';
-import GlassCard from '../../components/glass_card';
+import { AiFillCamera } from 'react-icons/ai';
+import { BiCameraMovie } from 'react-icons/bi';
 import web_public_api from '../../utils/api';
+import FilterOptionsContainer from '../../components/shared/filter_options_container';
 
 const MediaGallery = dynamic(() => import('../../components/media_gallery'), {
   ssr: true
@@ -23,12 +26,18 @@ function ImageVideoOptions({ activeOpt, onClick }) {
       <Button isActive={activeOpt === 'both'} onClick={() => onClick('both')}>
         All
       </Button>
-      <Button isActive={activeOpt === 'image'} onClick={() => onClick('image')}>
-        Images
-      </Button>
-      <Button isActive={activeOpt === 'video'} onClick={() => onClick('video')}>
-        Videos
-      </Button>
+      <IconButton
+        isActive={activeOpt === 'image'}
+        onClick={() => onClick('image')}
+        colorScheme={'orange'}
+        icon={<AiFillCamera />}
+      />
+      <IconButton
+        isActive={activeOpt === 'video'}
+        onClick={() => onClick('video')}
+        colorScheme={'blue'}
+        icon={<BiCameraMovie />}
+      />
     </ButtonGroup>
   );
 }
@@ -84,16 +93,7 @@ export default function Media({ media }) {
 
   return (
     <>
-      <GlassCard
-        w={{ sm: '100%', md: '50%' }}
-        borderRadius={'0px 0px 5px 5px'}
-        style={{
-          marginTop: '-18px',
-          marginBottom: '18px',
-          position: 'fixed',
-          zIndex: 1
-        }}
-      >
+      <FilterOptionsContainer>
         <HStack divider={<StackDivider />}>
           <ImageVideoOptions
             activeOpt={imageVideoOpt}
@@ -101,7 +101,7 @@ export default function Media({ media }) {
           />
           <CategoryOptions activeOpt={categoryOpt} onChange={setCategoryOpt} />
         </HStack>
-      </GlassCard>
+      </FilterOptionsContainer>
       <Box w={{ sm: '100%', lg: '75%' }} mt={7} position="relative">
         <MediaGallery media={items} galleryName="media-highlights" />
       </Box>
