@@ -23,7 +23,6 @@ export default function Consulting({ companies }) {
           return (
             <GridItem
               as={motion.div}
-              whileHover={{ scale: 1.01 }}
               variants={STAGGER_LOAD_ITEMS_ANIMATION.itemVariant}
               key={company.companyName}
             >

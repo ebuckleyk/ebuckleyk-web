@@ -33,6 +33,7 @@
     "date-fns": "^2.29.1",
     "formik": "^2.2.9",
     "framer-motion": "^7.2.0",
+    "lightgallery": "^2.6.0",
     "needle": "^3.1.0",
     "next": "12.2.5",
     "pino-logflare": "^0.3.12",

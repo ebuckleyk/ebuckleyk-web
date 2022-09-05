@@ -8,7 +8,7 @@ const variants = {
     y: 0,
     transition: {
       duration: 0.75,
-      delay: 0.5
+      delay: 0
     }
   },
   out: {
@@ -21,12 +21,14 @@ const variants = {
   }
 };
 
-export default function PageTransition({ children, activeRoute }) {
+export default function PageTransition({ children }) {
+  const router = useRouter();
+
   return (
     <div style={{ overflow: 'hidden' }}>
       <AnimatePresence initial={false} exitBeforeEnter>
         <motion.div
-          key={activeRoute}
+          key={router.pathname}
           variants={variants}
           animate="in"
           initial="out"
