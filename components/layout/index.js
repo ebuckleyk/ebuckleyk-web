@@ -110,6 +110,7 @@ export default function Layout({ children, navState, headerInfo = {} }) {
 
       <div className={styles.bg}>
         <NextImage
+          priority
           alt="tech"
           src="/images/backgroundv2@1920.jpg"
           layout="fill"

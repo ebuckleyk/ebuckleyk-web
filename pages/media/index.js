@@ -46,7 +46,7 @@ function CategoryOptions({ activeOpt, onChange }) {
   return (
     <Select
       variant={'flushed'}
-      placeholder="Categories..."
+      placeholder="All Categories"
       onChange={(a) => onChange(a.target.value)}
       value={activeOpt}
     >

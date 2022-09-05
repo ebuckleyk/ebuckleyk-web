@@ -4,12 +4,14 @@ import lgThumbnail from 'lightgallery/plugins/thumbnail';
 import lgZoom from 'lightgallery/plugins/zoom';
 import lgVideo from 'lightgallery/plugins/video';
 import lgHash from 'lightgallery/plugins/hash';
+import { AnimatePresence, motion } from 'framer-motion';
+import { STAGGER_LOAD_ITEMS_ANIMATION } from '../../utils/animation';
+import styles from './index.module.css';
 
 import 'lightgallery/css/lightgallery.css';
 import 'lightgallery/css/lg-zoom.css';
 import 'lightgallery/css/lg-thumbnail.css';
 import 'lightgallery/css/lg-video.css';
-import styles from './index.module.css';
 
 const PlayBtnOverlay = ({ show }) => {
   if (!show) return;
@@ -27,69 +29,81 @@ const PlayBtnOverlay = ({ show }) => {
 
 export default function MediaGallery({ media = [], galleryName }) {
   return (
-    <LightGallery
-      galleryId={galleryName}
-      elementClassNames={styles['lg-custom']}
-      mode="lg-fade"
-      download={false}
-      plugins={[lgThumbnail, lgZoom, lgVideo, lgHash]}
-    >
-      {media.map((m) => {
-        const src = `${process.env.NEXT_PUBLIC_CDN}/${m.src}`;
-        const thumbnail = `${process.env.NEXT_PUBLIC_CDN}/${m.thumbnail}`;
-        const dataSize = `${m.size.width}-${m.size.height}`;
-        const isVideo = m.mediaType.includes('video');
-        const html = `
-            <div class='lightGallery-captions'>
-              <h4>${m.title}</h4>
-              <p>${m.description ?? ''}</p>
-            </div>
-          `;
-        let mediaProps = {
-          'data-lg-size': dataSize,
-          'data-sub-html': html,
-          'data-slide-name': m.mediaName
-        };
-        if (isVideo) {
-          const json = JSON.stringify({
-            source: [
-              {
-                src,
-                type: m.mediaType
-              }
-            ],
-            attributes: { preload: false, controls: true }
-          });
-          mediaProps = {
-            ...mediaProps,
-            'data-video': json,
-            'data-poster': thumbnail
-          };
-        } else {
-          mediaProps = {
-            ...mediaProps,
-            'data-src': src
-          };
-        }
+    <AnimatePresence>
+      <motion.div
+        {...STAGGER_LOAD_ITEMS_ANIMATION.containerProps}
+        variants={STAGGER_LOAD_ITEMS_ANIMATION.containerVariant}
+      >
+        <LightGallery
+          galleryId={galleryName}
+          elementClassNames={styles['lg-custom']}
+          mode="lg-fade"
+          download={false}
+          plugins={[lgThumbnail, lgZoom, lgVideo, lgHash]}
+        >
+          {media.map((m) => {
+            const src = `${process.env.NEXT_PUBLIC_CDN}/${m.src}`;
+            const thumbnail = `${process.env.NEXT_PUBLIC_CDN}/${m.thumbnail}`;
+            const dataSize = `${m.size.width}-${m.size.height}`;
+            const isVideo = m.mediaType.includes('video');
+            const html = `
+                <div class='lightGallery-captions'>
+                  <h4>${m.title}</h4>
+                  <p>${m.description ?? ''}</p>
+                </div>
+              `;
+            let mediaProps = {
+              'data-lg-size': dataSize,
+              'data-sub-html': html,
+              'data-slide-name': m.mediaName
+            };
+            if (isVideo) {
+              const json = JSON.stringify({
+                source: [
+                  {
+                    src,
+                    type: m.mediaType
+                  }
+                ],
+                attributes: { preload: false, controls: true }
+              });
+              mediaProps = {
+                ...mediaProps,
+                'data-video': json,
+                'data-poster': thumbnail
+              };
+            } else {
+              mediaProps = {
+                ...mediaProps,
+                'data-src': src
+              };
+            }
 
-        return (
-          <div className={styles['lg-custom-item']} key={m._id} {...mediaProps}>
-            <NextImage
-              alt={m.mediaName}
-              quality={100}
-              src={thumbnail}
-              width={m.size.width}
-              height={m.size.height}
-              style={{
-                objectFit: 'contain',
-                height: 'auto',
-                width: 'auto'
-              }}
-            />
-            <PlayBtnOverlay show={isVideo} />
-          </div>
-        );
-      })}
-    </LightGallery>
+            return (
+              <motion.div
+                variants={STAGGER_LOAD_ITEMS_ANIMATION.itemVariant}
+                className={styles['lg-custom-item']}
+                key={m._id}
+                {...mediaProps}
+              >
+                <NextImage
+                  alt={m.mediaName}
+                  quality={100}
+                  src={thumbnail}
+                  width={m.size.width}
+                  height={m.size.height}
+                  style={{
+                    objectFit: 'contain',
+                    height: 'auto',
+                    width: 'auto'
+                  }}
+                />
+                <PlayBtnOverlay show={isVideo} />
+              </motion.div>
+            );
+          })}
+        </LightGallery>
+      </motion.div>
+    </AnimatePresence>
   );
 }
