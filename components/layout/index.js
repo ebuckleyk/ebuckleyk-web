@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import Script from 'next/script';
+import NextImage from 'next/image';
 import Navigation from '../navigation';
 import styles from './index.module.css';
 import settings from '../../app.settings.json';
@@ -85,12 +86,7 @@ const SEO = ({
   ];
 };
 
-export default function Layout({
-  children,
-  router,
-  navState,
-  headerInfo = {}
-}) {
+export default function Layout({ children, navState, headerInfo = {} }) {
   return (
     <>
       <HeaderInfo headerInfo={headerInfo} />
@@ -111,15 +107,23 @@ export default function Layout({
           });
         `}
       </Script>
-      <div className={styles['bg-container']}>
-        <Navigation
-          isLoading={navState.isLoading}
-          activeRoute={navState.activeRoute}
+
+      <div className={styles.bg}>
+        <NextImage
+          alt="tech"
+          src="/images/backgroundv2@1920.jpg"
+          layout="fill"
+          objectFit="cover"
+          quality={100}
         />
-        <PageTransition activeRoute={navState.activeRoute}>
-          <main className={styles.main}>{children}</main>
-        </PageTransition>
       </div>
+      <Navigation
+        isLoading={navState.isLoading}
+        activeRoute={navState.activeRoute}
+      />
+      <PageTransition>
+        <main className={styles.main}>{children}</main>
+      </PageTransition>
     </>
   );
 }

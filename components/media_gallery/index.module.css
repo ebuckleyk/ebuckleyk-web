@@ -1,0 +1,50 @@
+.lg-custom {
+  column-gap: 0px;
+  column-fill: initial;
+}
+
+.lg-custom-item {
+  margin: 5px;
+  border-radius: 5px;
+  overflow: hidden;
+  position: relative;
+}
+
+.lg-custom-item:hover {
+  cursor: pointer;
+}
+
+.lg-custom-item:hover img {
+  transition: all 0.5s ease-in-out;
+  opacity: 0.75;
+  backdrop-filter: blur(10px) saturate(100%);
+  background-color: rgba(255, 255, 255, 0.75);
+}
+
+/* Super Helpful Site: https://w3bits.com/labs/css-masonry/*/
+/* Masonry on tablets */
+@media only screen and (min-width: 768px) and (max-width: 1199px) {
+  .lg-custom {
+    column-count: 3;
+  }
+}
+
+/* Masonry on big screens */
+@media only screen and (min-width: 1200px) {
+  .lg-custom {
+    column-count: 4;
+  }
+}
+
+.playBtnOverlay {
+  position: absolute;
+  max-width: 700px;
+  width: 100px;
+  height: 100px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  fill: #fff;
+  transition: all 0.2s ease;
+  opacity: 0.75;
+}

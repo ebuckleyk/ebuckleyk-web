@@ -40,6 +40,7 @@ function CardContent({ isPreview, content, isRichText, isSafari }) {
   const Content = isRichText ? RichText : Text;
   return (
     <Content
+      p={1}
       maxHeight={isSafari ? '90px' : undefined}
       overflow={isSafari ? 'hidden' : undefined}
       noOfLines={isPreview ? 4 : Infinity}

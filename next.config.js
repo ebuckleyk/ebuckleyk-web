@@ -21,7 +21,7 @@ const ContentSecurityPolicy = `
   connect-src 'self' ${webportalUrl} https://*.amazonaws.com https://www.google-analytics.com;
   script-src-elem 'self' https://www.googletagmanager.com https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/ 'sha256-GcS5prM4K7dXLg50kFkeZ3YjiSAar6n2S/amw3ulb3w=';
   frame-src 'self' https://www.youtube.com https://www.google.com/recaptcha/ https://recaptcha.google.com/recaptcha/;
-  media-src 'self';
+  media-src 'self' ${cdn};
 `;
 const securityHeaders = [
   {
@@ -65,6 +65,11 @@ const securityHeaders = [
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    images: {
+      allowFutureImage: true
+    }
+  },
   reactStrictMode: true,
   pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
   pwa: {
@@ -84,7 +89,8 @@ const nextConfig = {
       'media-exp1.licdn.com',
       'i.ytimg.com',
       'image.isu.pub',
-      'images.ctfassets.net'
+      'images.ctfassets.net',
+      `${cdn.replace('https://', '')}`
     ]
   },
   async headers() {

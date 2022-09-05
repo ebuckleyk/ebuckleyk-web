@@ -15,6 +15,9 @@
     },
     "email": {
       "url": "mailto:me@ebuckleyk.com"
+    },
+    "github": {
+      "url": "https://github.com/ebuckleyk"
     }
   },
   "navigation": [
@@ -60,6 +63,10 @@
       "label": "Contact",
       "href": "/contact",
       "subLabel": "Let's talk!"
+    },
+    {
+      "label": "Media",
+      "href": "/media"
     }
   ],
   "api": {
