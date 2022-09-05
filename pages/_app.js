@@ -22,7 +22,8 @@ function MyApp({ Component, pageProps, router }) {
       setNavState((prevState) => ({
         ...prevState,
         activeRoute: url,
-        isLoading: url !== router.pathname
+        isLoading: true
+        // isLoading: url !== router.pathname
       }));
     };
 

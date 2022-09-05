@@ -36,7 +36,6 @@ export default function Resume({ resume, stats }) {
           return (
             <GridItem
               as={motion.div}
-              whileHover={{ scale: 1.05 }}
               variants={STAGGER_LOAD_ITEMS_ANIMATION.itemVariant}
               display={'flex'}
               justifyContent="center"

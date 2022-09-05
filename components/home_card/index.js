@@ -3,7 +3,8 @@ import {
   FaFacebook,
   FaInstagram,
   FaTwitter,
-  FaRegEnvelope
+  FaRegEnvelope,
+  FaGithub
 } from 'react-icons/fa';
 import {
   IconButton,
@@ -16,7 +17,6 @@ import {
   AccordionItem,
   AccordionPanel,
   Flex,
-  AccordionIcon,
   useDisclosure,
   Modal,
   ModalOverlay,
@@ -99,6 +99,15 @@ export default function HomeCard({}) {
                 colorScheme={'messenger'}
                 aria-label="Contact me"
                 icon={<FaRegEnvelope />}
+              />
+              <IconButton
+                as="a"
+                target={'_blank'}
+                href={settings.social_media.github.url}
+                size={'sm'}
+                colorScheme="gray"
+                aria-label="Follow me on Github"
+                icon={<FaGithub />}
               />
             </HStack>
           </Accordion>

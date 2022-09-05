@@ -26,7 +26,6 @@ export default function Projects() {
           return (
             <GridItem
               as={motion.div}
-              whileHover={{ scale: 1.05 }}
               variants={STAGGER_LOAD_ITEMS_ANIMATION.itemVariant}
               key={d.id}
             >
