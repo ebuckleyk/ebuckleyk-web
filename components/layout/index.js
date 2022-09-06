@@ -5,6 +5,7 @@ import Navigation from '../navigation';
 import styles from './index.module.css';
 import settings from '../../app.settings.json';
 import PageTransition from '../page_transition';
+import Loader from '../loader';
 
 const HeaderInfo = ({ headerInfo }) => {
   const {
@@ -122,6 +123,7 @@ export default function Layout({ children, navState, headerInfo = {} }) {
         isLoading={navState.isLoading}
         activeRoute={navState.activeRoute}
       />
+      <Loader show={navState.isLoading} />
       <PageTransition>
         <main className={styles.main}>{children}</main>
       </PageTransition>

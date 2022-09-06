@@ -13,10 +13,7 @@ import { AiFillCamera } from 'react-icons/ai';
 import { BiCameraMovie } from 'react-icons/bi';
 import web_public_api from '../../utils/api';
 import FilterOptionsContainer from '../../components/shared/filter_options_container';
-
-const MediaGallery = dynamic(() => import('../../components/media_gallery'), {
-  ssr: true
-});
+import MediaGallery from '../../components/media_gallery';
 
 const DEFAULT_IMAGE_VIDEO_OPTION = 'both';
 const DEFAULT_CATEGORY_OPTION = '';

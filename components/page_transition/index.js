@@ -26,7 +26,7 @@ export default function PageTransition({ children }) {
 
   return (
     <div style={{ overflow: 'hidden' }}>
-      <AnimatePresence initial={false} exitBeforeEnter>
+      <AnimatePresence initial={false} mode="wait">
         <motion.div
           key={router.pathname}
           variants={variants}

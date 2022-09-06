@@ -78,5 +78,10 @@ export const EVENTS = {
     action: 'update_profileImg',
     event_category: 'engagement',
     event_label: 'method'
+  },
+  VIEW_MEDIA: {
+    action: 'view_media',
+    event_category: 'engagement',
+    event_label: 'content_type'
   }
 };
