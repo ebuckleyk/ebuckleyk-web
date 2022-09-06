@@ -26,7 +26,6 @@ import {
   PopoverTrigger,
   Stack,
   Text,
-  useBreakpointValue,
   useColorModeValue,
   useDisclosure
 } from '@chakra-ui/react';
@@ -34,6 +33,7 @@ import { FaGithub, FaSignInAlt, FaSignOutAlt } from 'react-icons/fa';
 import settings from '../../app.settings.json';
 import useAuth0User from '../../utils/hooks/useAuth0User';
 import GlassCard from '../glass_card';
+import Overlay from '../shared/overlay';
 
 /**
  * navigation structure
@@ -61,14 +61,21 @@ const LinkWrapper = React.forwardRef(function T(props, ref) {
   );
 });
 
-function MobileNavItem({ label, children, href }) {
+function MobileNavItem({
+  label,
+  children,
+  href,
+  isActiveRouteItem,
+  activeRoute
+}) {
   const { isOpen, onToggle } = useDisclosure();
-
+  const activeStyle = isActiveRouteItem ? { backgroundColor: 'blue.100' } : {};
   return (
     <Stack spacing={4} onClick={children && onToggle}>
       <Flex
+        {...activeStyle}
         py={2}
-        as={LinkWrapper}
+        as={children ? 'span' : LinkWrapper} // parent tabs shouldn't close
         href={href ?? '#'}
         justify="space-between"
         align="center"
@@ -104,8 +111,21 @@ function MobileNavItem({ label, children, href }) {
         >
           {children &&
             children.map((child) => {
+              const isActiveChild =
+                activeRoute === child.href ||
+                new RegExp(child.href, 'i').test(activeRoute);
+              const cActiveChild = isActiveChild
+                ? { borderBottomColor: 'blue.100', borderBottomWidth: 1 }
+                : {};
+
               return (
-                <LinkWrapper key={child.label} py={2} href={child.href}>
+                <LinkWrapper
+                  width={'100%'}
+                  {...cActiveChild}
+                  key={child.label}
+                  py={2}
+                  href={child.href}
+                >
                   {child.label}
                 </LinkWrapper>
               );
@@ -116,11 +136,24 @@ function MobileNavItem({ label, children, href }) {
   );
 }
 
-function MobileNav() {
+function MobileNav({ activeRoute }) {
   return (
     <GlassCard as={Stack} p={4} display={{ md: 'none' }}>
       {settings.navigation.map((item) => {
-        return <MobileNavItem key={item.label} {...item} />;
+        const isActiveRouteItem =
+          activeRoute === item.href ||
+          new RegExp(item.label, 'i').test(activeRoute);
+
+        return (
+          <MobileNavItem
+            key={item.label}
+            {...{
+              ...item,
+              isActiveRouteItem,
+              activeRoute
+            }}
+          />
+        );
       })}
     </GlassCard>
   );
@@ -227,24 +260,6 @@ function DesktopNav({ activeRoute }) {
   );
 }
 
-function Overlay({ isOpen }) {
-  if (!isOpen) return null;
-  return (
-    <div
-      style={{
-        position: 'fixed',
-        zIndex: -1,
-        left: 0,
-        top: 0,
-        width: '100%',
-        height: '100%',
-        overflow: 'auto',
-        backgroundColor: 'rgb(0,0,0)',
-        backgroundColor: 'rgba(0,0,0,0.4)'
-      }}
-    />
-  );
-}
 /**
  *
  * @see https://chakra-templates.dev/navigation/navbar
@@ -260,7 +275,7 @@ export default function Navigation({ activeRoute, isLoading }) {
   }, [isLoading, onClose]);
   return (
     <GlassCard position={'fixed'} width="100%" zIndex={99} boxShadow="xl">
-      <Overlay isOpen={isOpen} />
+      <Overlay show={isOpen} style={{ zIndex: -1 }} />
       <Flex minH={'60px'} py={{ base: 2 }} px={{ base: 4 }} align="center">
         <Flex
           flex={{ base: 1, md: 'auto' }}
@@ -268,6 +283,8 @@ export default function Navigation({ activeRoute, isLoading }) {
           display={{ base: 'flex', md: 'none' }}
         >
           <IconButton
+            transition={'all .25s ease-in-out'}
+            transform={isOpen ? 'rotate(180deg)' : ''}
             onClick={onToggle}
             icon={
               isOpen ? <CloseIcon w={3} h={3} /> : <HamburgerIcon w={5} h={5} />
@@ -279,6 +296,7 @@ export default function Navigation({ activeRoute, isLoading }) {
         <Flex justify={{ base: 'center', md: 'start' }}>
           <LinkWrapper href={'/'}>
             <NextImage
+              priority
               src="/images/signature.png"
               alt="Emmanuel K. Buckley"
               width={150}
@@ -375,7 +393,7 @@ export default function Navigation({ activeRoute, isLoading }) {
       </Flex>
 
       <Collapse in={isOpen} animateOpacity>
-        <MobileNav />
+        <MobileNav activeRoute={activeRoute} />
       </Collapse>
     </GlassCard>
   );

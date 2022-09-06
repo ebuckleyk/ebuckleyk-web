@@ -12,6 +12,8 @@ import 'lightgallery/css/lightgallery.css';
 import 'lightgallery/css/lg-zoom.css';
 import 'lightgallery/css/lg-thumbnail.css';
 import 'lightgallery/css/lg-video.css';
+import 'lightgallery/css/lg-transitions.css';
+import 'lightgallery/css/lg-fullscreen.css';
 
 const PlayBtnOverlay = ({ show }) => {
   if (!show) return;
@@ -29,12 +31,14 @@ const PlayBtnOverlay = ({ show }) => {
 
 export default function MediaGallery({ media = [], galleryName }) {
   return (
-    <AnimatePresence>
+    <AnimatePresence mode="popLayout">
       <motion.div
         {...STAGGER_LOAD_ITEMS_ANIMATION.containerProps}
         variants={STAGGER_LOAD_ITEMS_ANIMATION.containerVariant}
       >
         <LightGallery
+          speed={500}
+          licenseKey={process.env.NEXT_PUBLIC_LG_LICENSE_KEY}
           galleryId={galleryName}
           elementClassNames={styles['lg-custom']}
           mode="lg-fade"
