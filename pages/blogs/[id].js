@@ -1,5 +1,6 @@
 import NextImage from 'next/image';
 import { Flex, Heading, Stack } from '@chakra-ui/react';
+import log from 'next-axiom';
 import * as api from '../../utils/api/handlers/contentful';
 import RichText from '../../components/richtext';
 import GlassCard from '../../components/glass_card';
@@ -24,6 +25,11 @@ export default function BlogPost({ blog }) {
 }
 
 export async function getServerSideProps(context) {
+  const { req } = context;
+  log.info(
+    `[getServerSideProps] BlogPost - ${req.method} - ${req.url}`,
+    context.params
+  );
   const blog = await api.getBlogById(context.params.id);
   return {
     props: {

@@ -1,5 +1,5 @@
 import needle from 'needle';
-import logger from '../../logger';
+import { log } from 'next-axiom';
 import settings from '../../../app.settings.json';
 
 export async function validateCaptcha(captcha) {
@@ -14,10 +14,10 @@ export async function validateCaptcha(captcha) {
         }
       }
     );
-    logger.info('Received response from recaptchaApi');
+    log.info('Received response from recaptchaApi');
     return response.body.success;
   } catch (error) {
-    logger.error(error);
+    log.error(error);
     throw new Error('Request to validate captcha failed');
   }
 }

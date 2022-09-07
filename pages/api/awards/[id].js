@@ -3,7 +3,7 @@ import web_public_api from '../../../utils/api';
 import { withApplicationInsights } from '../../../utils/api/middleware';
 import withCaptchaValidation from '../../../utils/api/middleware/withCaptchaValidation';
 import withCorrelationId from '../../../utils/api/middleware/withCorrelationId';
-import logger from '../../../utils/logger';
+import { log } from 'next-axiom';
 
 const PUT = async (formData, userId) => {
   const {
@@ -121,8 +121,8 @@ async function handler(req, res) {
     }
     res.status(200).json(response);
   } catch (error) {
-    logger.error(error);
-    res.status(400).json({ error: 'An error occurred.', message: error });
+    log.error(error);
+    res.status(400).json({ error: 'An error occurred.' });
   }
 }
 

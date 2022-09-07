@@ -2,7 +2,7 @@ import * as api from '../../../utils/api/handlers/sendgrid';
 import { withApplicationInsights } from '../../../utils/api/middleware';
 import withCaptchaValidation from '../../../utils/api/middleware/withCaptchaValidation';
 import withCorrelationId from '../../../utils/api/middleware/withCorrelationId';
-import logger from '../../../utils/logger';
+import { log } from 'next-axiom';
 
 async function handler(req, res) {
   try {
@@ -23,10 +23,15 @@ async function handler(req, res) {
 
     res.status(200).json({ success: true });
   } catch (error) {
-    logger.error(error);
+    const correlationId = res.getHeader('x-requestId');
+    log.error(error.message, {
+      ...(req.query ?? {}),
+      ...(req.body ?? {}),
+      correlationId
+    });
     res
       .status(400)
-      .json({ error: 'An error occurred.', message: error.message });
+      .json({ error: 'An error occurred.', requestId: correlationId });
   }
 }
 

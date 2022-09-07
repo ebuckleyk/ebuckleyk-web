@@ -14,6 +14,7 @@ import {
   Button,
   Box
 } from '@chakra-ui/react';
+import { log } from 'next-axiom';
 import * as api from '../../../utils/api/handlers/contentful';
 import RichText from '../../../components/richtext';
 import AwardForm from '../../../components/award_form';
@@ -225,6 +226,11 @@ export default function Award({ award, router }) {
 }
 
 export async function getServerSideProps(context) {
+  const { req } = context;
+  log.info(
+    `[getServerSideProps] Award - ${req.method} - ${req.url}`,
+    context.params
+  );
   const { user } = (await getSession(context.req, context.res)) || {};
   const data = await api.getAwardById(context.params.id, user?.sub);
   return {

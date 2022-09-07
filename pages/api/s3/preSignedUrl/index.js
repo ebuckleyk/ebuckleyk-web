@@ -1,9 +1,9 @@
 import { getSession, withApiAuthRequired } from '@auth0/nextjs-auth0';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { log } from 'next-axiom';
 import { withApplicationInsights } from '../../../../utils/api/middleware';
 import withCorrelationId from '../../../../utils/api/middleware/withCorrelationId';
-import logger from '../../../../utils/logger';
 
 const client = new S3Client({
   credentials: {
@@ -42,8 +42,15 @@ async function handler(req, res) {
 
     res.status(200).json(response);
   } catch (error) {
-    logger.error(error);
-    res.status(400).json({ error: 'An error occurred.', message: error });
+    const correlationId = res.getHeader('x-requestId');
+    log.error(error.message, {
+      ...(req.query ?? {}),
+      ...(req.body ?? {}),
+      correlationId
+    });
+    res
+      .status(400)
+      .json({ error: 'An error occurred.', requestId: correlationId });
   }
 }
 

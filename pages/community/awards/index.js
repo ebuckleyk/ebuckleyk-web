@@ -2,6 +2,7 @@ import { getSession } from '@auth0/nextjs-auth0';
 import { Badge, Grid, GridItem, Text } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { log } from 'next-axiom';
 import Card from '../../../components/shared/card';
 import { EVENTS } from '../../../utils/analytics';
 import web_public_api from '../../../utils/api';
@@ -68,6 +69,11 @@ export default function Awards({ data }) {
 }
 
 export async function getServerSideProps(context) {
+  const { req } = context;
+  log.info(
+    `[getServerSideProps] Awards - ${req.method} - ${req.url}`,
+    context.params
+  );
   const { user } = (await getSession(context.req, context.res)) || {};
   const query = user ? `?userId=${user.sub}` : '';
   let data = await web_public_api(`/award-public${query}`);

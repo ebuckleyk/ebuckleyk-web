@@ -7,6 +7,7 @@ const withMDX = require('@next/mdx')({
     providerImportSource: '@mdx-js/react'
   }
 });
+const { withAxiom } = require('next-axiom');
 
 const isProd = process.env.NODE_ENV === 'production';
 const webportalUrl = process.env.EBUCKLEYK_WEBPORTAL_URL || '';
@@ -121,4 +122,4 @@ const nextConfig = {
   }
 };
 
-module.exports = withPWA(withMDX(nextConfig));
+module.exports = withAxiom(withPWA(withMDX(nextConfig)));

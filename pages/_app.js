@@ -5,6 +5,8 @@ import { UserProvider } from '@auth0/nextjs-auth0';
 import theme from '../_theme';
 import Layout from '../components/layout';
 import { GA } from '../utils/analytics';
+import ErrorBoundary from '../components/error_boundary';
+export { reportWebVitals } from 'next-axiom';
 
 function MyApp({ Component, pageProps, router }) {
   const [navState, setNavState] = useState({
@@ -49,7 +51,11 @@ function MyApp({ Component, pageProps, router }) {
   return (
     <ChakraProvider {...{ theme }}>
       <UserProvider profileUrl="/api/profile">
-        {getLayout(<Component {...pageProps} router={router} />)}
+        {getLayout(
+          <ErrorBoundary>
+            <Component {...pageProps} router={router} />
+          </ErrorBoundary>
+        )}
       </UserProvider>
     </ChakraProvider>
   );
