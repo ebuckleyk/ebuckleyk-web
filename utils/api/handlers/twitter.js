@@ -1,6 +1,6 @@
 import needle from 'needle';
+import { log } from 'next-axiom';
 import settings from '../../../app.settings.json';
-import logger from '../../logger';
 import { getDateDisplay } from '../helper';
 
 export async function getMyTwitterData() {
@@ -23,7 +23,7 @@ export async function getMyTwitterData() {
     );
 
     if (!response.body) {
-      logger.error('getMyTwitterData() - response body is empty');
+      log.error('getMyTwitterData() - response body is empty');
       throw new Error('Error occurred retrieving data');
     }
 
@@ -41,7 +41,7 @@ export async function getMyTwitterData() {
         };
       });
   } catch (error) {
-    logger.error(error);
+    log.error(error);
     throw new Error(error);
   }
 }

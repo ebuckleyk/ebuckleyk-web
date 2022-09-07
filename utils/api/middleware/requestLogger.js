@@ -1,4 +1,4 @@
-import logger from '../../logger';
+import { log } from 'next-axiom';
 
 const requestLogger = (handler) => (req, res) => {
   let params = {};
@@ -7,7 +7,7 @@ const requestLogger = (handler) => (req, res) => {
     ? (params = { ...params, requestId: res.getHeader('x-requestId') })
     : null;
 
-  logger.info(
+  log.info(
     `${req.method} - ${req.url}`,
     Object.keys(params).length ? params : null
   );

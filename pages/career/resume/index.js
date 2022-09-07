@@ -2,6 +2,7 @@ import { Grid, GridItem } from '@chakra-ui/react';
 import { differenceInMonths } from 'date-fns';
 import { AnimatePresence, motion } from 'framer-motion';
 import React from 'react';
+import { log } from 'next-axiom';
 import ResumeCard from '../../../components/resumecard';
 import ResumeStats from '../../../components/resumestats';
 import { STAGGER_LOAD_ITEMS_ANIMATION } from '../../../utils/animation';
@@ -59,7 +60,12 @@ export default function Resume({ resume, stats }) {
 }
 
 export async function getServerSideProps(context) {
-  const resume_data_and_stats = await web_public_api('/resume-public');
+  const { req } = context;
+  log.info(`[getServerSideProps] Resume - ${req.method} - ${req.url}`);
+  const resume_data_and_stats = await web_public_api(
+    '/resume-public',
+    context.params
+  );
 
   const { resume, stats } = resume_data_and_stats;
   const byCompany = {};

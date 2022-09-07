@@ -11,6 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { AiFillCamera } from 'react-icons/ai';
 import { BiCameraMovie } from 'react-icons/bi';
+import { log } from 'next-axiom';
 import web_public_api from '../../utils/api';
 import FilterOptionsContainer from '../../components/shared/filter_options_container';
 import MediaGallery from '../../components/media_gallery';
@@ -107,6 +108,11 @@ export default function Media({ media }) {
 }
 
 export async function getServerSideProps(context) {
+  const { req } = context;
+  log.info(
+    `[getServerSideProps] Media - ${req.method} - ${req.url}`,
+    context.params
+  );
   const media = await web_public_api('/media-public');
   return {
     props: {

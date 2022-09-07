@@ -1,7 +1,7 @@
 import needle from 'needle';
 import { getDateDisplay } from '../helper';
 import settings from '../../../app.settings.json';
-import logger from '../../logger';
+import { log } from 'next-axiom';
 import web_public_api from '..';
 
 // see for graphql exploration: https://graphql.contentful.com/content/v1/spaces/{spaceId}/explore?access_token={access_token}
@@ -162,7 +162,7 @@ async function baseQuery(query) {
     }
     return response.body.data;
   } catch (error) {
-    logger.error(error);
+    log.error(error);
     throw new Error(error);
   }
 }

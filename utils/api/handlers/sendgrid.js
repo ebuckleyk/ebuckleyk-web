@@ -1,7 +1,7 @@
 import sgMail from '@sendgrid/mail';
+import { log } from 'next-axiom';
 import settings from '../../../app.settings.json';
 import { CONTACT_TYPE } from '../../constants';
-import logger from '../../logger';
 
 sgMail.setApiKey(process.env.SENDGRID_APIKEY);
 
@@ -32,7 +32,7 @@ export async function sendContactEmail(
     await sgMail.send(msg);
   } catch (error) {
     // log error
-    logger.error(error);
+    log.error(error);
     throw new Error('Problem sending email');
   }
 }

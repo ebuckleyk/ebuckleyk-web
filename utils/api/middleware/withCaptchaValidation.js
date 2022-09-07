@@ -1,4 +1,4 @@
-import logger from '../../logger';
+import { log } from 'next-axiom';
 import { validateCaptcha } from '../handlers/recaptcha';
 
 const withCaptchaValidation = (handler) => async (req, res) => {
@@ -9,10 +9,8 @@ const withCaptchaValidation = (handler) => async (req, res) => {
     if (!isValid) throw new Error('Captcha is incorrect.');
     return handler(req, res);
   } catch (error) {
-    logger.error(error);
-    res
-      .status(400)
-      .send({ error: 'An error occurred.', message: error.message });
+    log.error(error);
+    res.status(400).send({ error: 'An error occurred.' });
   }
 };
 
