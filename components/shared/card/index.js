@@ -19,7 +19,15 @@ function CardImage({ img }) {
       height={200}
       pos="relative"
     >
-      <NextImage objectFit="cover" src={img.url} layout="fill" />
+      <NextImage
+        data-testid="NEXT IMAGE"
+        objectFit="cover"
+        style={{
+          borderRadius: 50
+        }}
+        src={img.url}
+        layout="fill"
+      />
     </Container>
   );
 }
