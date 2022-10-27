@@ -190,6 +190,9 @@ export default function Award({ award, router }) {
               >
                 <NextImage
                   layout="fill"
+                  style={{
+                    borderRadius: 50
+                  }}
                   src={award.image.url}
                   width={200}
                   height={300}

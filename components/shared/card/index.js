@@ -20,7 +20,6 @@ function CardImage({ img }) {
       pos="relative"
     >
       <NextImage
-        data-testid="NEXT IMAGE"
         objectFit="cover"
         style={{
           borderRadius: 50
